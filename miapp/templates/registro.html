@@ -1,103 +1,93 @@
 {% extends 'base.html' %}
-
 {% block title %}Registro{% endblock %}
 
 {% block content %}
-
 <style>
-body {
-    background-image: url("https://4529938.fs1.hubspotusercontent-na1.net/hubfs/4529938/productos-tecnologicos-2.jpg");
-    background-size: cover;
-    background-position: center;
-    background-repeat: no-repeat;
-    background-attachment: fixed;
+/* Fondo general */
+body { 
+    background-image: url("https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?q=80&w=2564&auto=format&fit=crop"); 
+    background-size: cover; 
+    background-attachment: fixed; 
 }
 
-.register-container{
-    max-width:500px;
-    margin:auto;
+/* Tarjeta principal */
+.auth-card { 
+    max-width: 450px; 
+    margin: 40px auto; /* Redujimos un poco el margen para que no empuje el navbar */
+    background: rgba(15, 23, 42, 0.75); 
+    backdrop-filter: blur(15px); 
+    border: 1px solid rgba(255,255,255,0.1); 
+    padding: 40px; 
+    border-radius: 25px; 
+    color: white; 
+    box-shadow: 0 20px 50px rgba(0,0,0,0.5); 
 }
 
-.register-card{
-    background:white;
-    padding:35px;
-    border-radius:25px;
-    box-shadow:0 15px 40px rgba(0,0,0,.10);
-    animation:fadeIn .5s ease;
+/* ESTO ES LO NUEVO: Títulos de cada cajita limpios y modernos */
+.auth-card label {
+    display: block;
+    color: #93c5fd; /* Un celestito claro */
+    margin-bottom: 5px;
+    font-size: 0.9rem;
+    font-weight: 600;
+    text-align: left;
 }
 
-.register-title{
-    text-align:center;
-    font-weight:700;
-    margin-bottom:25px;
-    color:#0f172a;
+/* Seguimos ocultando las instrucciones largas y feas de Django */
+.helptext, ul.errorlist {
+    display: none !important;
 }
 
-.register-card p{
-    margin-bottom:15px;
+/* Las cajas de texto */
+.auth-card input { 
+    width: 100%; 
+    padding: 12px; 
+    background: rgba(255,255,255,0.05); 
+    border: 1px solid rgba(255,255,255,0.2); 
+    border-radius: 12px; 
+    color: white; 
+    margin-bottom: 20px; 
+    transition: 0.3s;
 }
 
-.register-card label{
-    font-weight:600;
-    color:#334155;
-    margin-bottom:6px;
-    display:block;
+.auth-card input:focus { 
+    outline: none;
+    border-color: #3b82f6; 
+    box-shadow: 0 0 15px rgba(59,130,246,0.5); 
+    background: rgba(255,255,255,0.1);
 }
 
-.register-card input{
-    width:100%;
-    padding:12px;
-    border-radius:12px;
-    border:1px solid #dbeafe;
-    transition:.3s;
+/* Botón principal */
+.btn-auth { 
+    width: 100%; 
+    padding: 14px; 
+    background: linear-gradient(135deg, #3b82f6, #2563eb); 
+    border: none; 
+    color: white; 
+    font-weight: 700; 
+    border-radius: 12px; 
+    transition: 0.3s;
 }
 
-.register-card input:focus{
-    outline:none;
-    border-color:#3b82f6;
-    box-shadow:0 0 0 .2rem rgba(59,130,246,.15);
-}
-
-.btn-register{
-    width:100%;
-    padding:14px;
-    border:none;
-    border-radius:12px;
-    background:linear-gradient(135deg,#10b981,#059669);
-    color:white;
-    font-weight:600;
-    transition:.3s;
-}
-
-.btn-register:hover{
-    transform:translateY(-2px);
-    box-shadow:0 10px 20px rgba(16,185,129,.25);
-}
-
-@keyframes fadeIn{
-    from{opacity:0; transform:translateY(20px);}
-    to{opacity:1; transform:translateY(0);}
+.btn-auth:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 10px 25px rgba(59,130,246,0.6);
 }
 </style>
 
-<div class="register-container">
-
-    <div class="register-card">
-
-        <h2 class="register-title">📝 Crear cuenta</h2>
-
-        <form method="POST">
-            {% csrf_token %}
-
-            {{ form.as_p }}
-
-            <button class="btn-register">
-                🚀 Registrarse
-            </button>
-        </form>
-
+<div class="auth-card">
+    <h2 class="text-center fw-bold mb-4">📝 Crear Cuenta</h2>
+    
+    <form method="POST">
+        {% csrf_token %}
+        {{ form.as_p }}
+        
+        <button class="btn-auth mt-2">Registrarse</button>
+    </form>
+    
+    <div class="text-center mt-4">
+        <span class="text-white-50">¿Ya tienes cuenta?</span> 
+        <a href="{% url 'login' %}" class="text-info fw-bold text-decoration-none">Inicia sesión</a>
     </div>
-
 </div>
-
 {% endblock %}
