@@ -1,0 +1,136 @@
+{% extends 'base.html' %}
+
+{% block title %}Formulario Producto{% endblock %}
+
+{% block content %}
+
+<style>
+body {
+    background-image: url("https://4529938.fs1.hubspotusercontent-na1.net/hubfs/4529938/productos-tecnologicos-2.jpg");
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    background-attachment: fixed;
+}
+
+.form-container{
+    max-width:650px;
+    margin:auto;
+}
+
+.form-card{
+    background:white;
+    border:none;
+    border-radius:25px;
+    padding:35px;
+    box-shadow:0 15px 40px rgba(0,0,0,.10);
+    animation:fadeIn .5s ease;
+}
+
+.form-title{
+    text-align:center;
+    font-weight:700;
+    color:#0f172a;
+    margin-bottom:30px;
+}
+
+.form-card p{
+    margin-bottom:18px;
+}
+
+.form-card label{
+    display:block;
+    margin-bottom:8px;
+    font-weight:600;
+    color:#334155;
+}
+
+.form-card input,
+.form-card textarea,
+.form-card select{
+    width:100%;
+    padding:12px 15px;
+    border:1px solid #dbeafe;
+    border-radius:12px;
+    transition:.3s;
+}
+
+.form-card input:focus,
+.form-card textarea:focus,
+.form-card select:focus{
+    outline:none;
+    border-color:#3b82f6;
+    box-shadow:0 0 0 .2rem rgba(59,130,246,.15);
+}
+
+.btn-guardar{
+    width:100%;
+    padding:14px;
+    border:none;
+    border-radius:12px;
+    background:linear-gradient(135deg,#10b981,#059669);
+    color:white;
+    font-size:1rem;
+    font-weight:600;
+    transition:.3s;
+}
+
+.btn-guardar:hover{
+    transform:translateY(-2px);
+    box-shadow:0 10px 20px rgba(16,185,129,.25);
+}
+
+.badge-form{
+    display:inline-block;
+    background:#dbeafe;
+    color:#2563eb;
+    padding:8px 18px;
+    border-radius:25px;
+    font-size:.85rem;
+    font-weight:600;
+    margin-bottom:15px;
+}
+
+@keyframes fadeIn{
+    from{
+        opacity:0;
+        transform:translateY(20px);
+    }
+    to{
+        opacity:1;
+        transform:translateY(0);
+    }
+}
+</style>
+
+<div class="form-container">
+
+```
+<div class="form-card">
+
+    <div class="text-center">
+        <span class="badge-form">
+            Gestión de Productos
+        </span>
+    </div>
+
+    <h2 class="form-title">
+        {{ form.instance.id|yesno:"✏️ Editar Producto,➕ Agregar Producto" }}
+    </h2>
+
+    <form method="POST" enctype="multipart/form-data">
+        {% csrf_token %}
+
+        {{ form.as_p }}
+
+        <button class="btn-guardar">
+            💾 Guardar Producto
+        </button>
+    </form>
+
+</div>
+```
+
+</div>
+
+{% endblock %}

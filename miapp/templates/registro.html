@@ -1,0 +1,103 @@
+{% extends 'base.html' %}
+
+{% block title %}Registro{% endblock %}
+
+{% block content %}
+
+<style>
+body {
+    background-image: url("https://4529938.fs1.hubspotusercontent-na1.net/hubfs/4529938/productos-tecnologicos-2.jpg");
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    background-attachment: fixed;
+}
+
+.register-container{
+    max-width:500px;
+    margin:auto;
+}
+
+.register-card{
+    background:white;
+    padding:35px;
+    border-radius:25px;
+    box-shadow:0 15px 40px rgba(0,0,0,.10);
+    animation:fadeIn .5s ease;
+}
+
+.register-title{
+    text-align:center;
+    font-weight:700;
+    margin-bottom:25px;
+    color:#0f172a;
+}
+
+.register-card p{
+    margin-bottom:15px;
+}
+
+.register-card label{
+    font-weight:600;
+    color:#334155;
+    margin-bottom:6px;
+    display:block;
+}
+
+.register-card input{
+    width:100%;
+    padding:12px;
+    border-radius:12px;
+    border:1px solid #dbeafe;
+    transition:.3s;
+}
+
+.register-card input:focus{
+    outline:none;
+    border-color:#3b82f6;
+    box-shadow:0 0 0 .2rem rgba(59,130,246,.15);
+}
+
+.btn-register{
+    width:100%;
+    padding:14px;
+    border:none;
+    border-radius:12px;
+    background:linear-gradient(135deg,#10b981,#059669);
+    color:white;
+    font-weight:600;
+    transition:.3s;
+}
+
+.btn-register:hover{
+    transform:translateY(-2px);
+    box-shadow:0 10px 20px rgba(16,185,129,.25);
+}
+
+@keyframes fadeIn{
+    from{opacity:0; transform:translateY(20px);}
+    to{opacity:1; transform:translateY(0);}
+}
+</style>
+
+<div class="register-container">
+
+    <div class="register-card">
+
+        <h2 class="register-title">📝 Crear cuenta</h2>
+
+        <form method="POST">
+            {% csrf_token %}
+
+            {{ form.as_p }}
+
+            <button class="btn-register">
+                🚀 Registrarse
+            </button>
+        </form>
+
+    </div>
+
+</div>
+
+{% endblock %}
