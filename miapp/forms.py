@@ -1,7 +1,7 @@
 from django import forms
-from .models import Producto
 from django.contrib.auth.models import User
-
+from django.contrib.auth.forms import UserCreationForm
+from .models import Producto
 
 # 🟢 PRODUCTO
 class ProductoForm(forms.ModelForm):
@@ -9,20 +9,16 @@ class ProductoForm(forms.ModelForm):
         model = Producto
         fields = ['nombre', 'precio', 'descripcion', 'imagen']
 
-
 # 🔵 REGISTRO
-class RegistroForm(forms.ModelForm):
-    password = forms.CharField(widget=forms.PasswordInput)
-    password2 = forms.CharField(widget=forms.PasswordInput)
-
+class RegistroForm(UserCreationForm):
     class Meta:
         model = User
-        fields = ['username', 'email', 'password']
+        fields = ['username', 'email'] 
 
-    def clean(self):
-        cleaned_data = super().clean()
-        p1 = cleaned_data.get("password")
-        p2 = cleaned_data.get("password2")
-
-        if p1 != p2:
-            raise forms.ValidationError("Las contraseñas no coinciden")
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        # 🚫 BORRAMOS LOS TEXTOS DE AYUDA DE DJANGO DE RAÍZ 🚫
+        if 'password1' in self.fields:
+            self.fields['password1'].help_text = ""
+        if 'password2' in self.fields:
+            self.fields['password2'].help_text = ""

@@ -1,17 +1,15 @@
 from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth import login, logout
+from django.contrib.auth.decorators import login_required, user_passes_test
 from django.contrib.auth.forms import AuthenticationForm
-from django.contrib.auth.decorators import login_required
 from django.http import JsonResponse
 from django.db.models import Q
-from .models import Carrito
-from .models import Favorito
 from django.core.paginator import Paginator
 from django.contrib import messages
 
-from .models import Producto, Categoria
+# Importamos todos tus modelos y formularios limpios
+from .models import Producto, Categoria, Carrito, Favorito
 from .forms import ProductoForm, RegistroForm
-from django.contrib.auth.decorators import user_passes_test
 
 def es_admin(user):
     return user.is_authenticated and user.is_staff
@@ -33,10 +31,10 @@ def home(request):
             Q(descripcion__icontains=query)
         )
 
-    # 👈 PAGINACIÓN: Muestra 6 productos por página
+    # PAGINACIÓN: Muestra 6 productos por página
     paginator = Paginator(productos_list, 6) 
     page_number = request.GET.get('page')
-    productos = paginator.get_page(page_number) # Esto reemplaza tu antigua variable 'productos'
+    productos = paginator.get_page(page_number) 
 
     destacados = Producto.objects.filter(destacado=True)[:3]
     categorias = Categoria.objects.all()
@@ -66,7 +64,6 @@ def crear(request):
 # ✏️ EDITAR
 @user_passes_test(es_admin)
 def editar(request, id):
-    # 👇 Quitamos la restricción de usuario
     producto = get_object_or_404(Producto, id=id)
     form = ProductoForm(request.POST or None, instance=producto)
 
@@ -81,7 +78,6 @@ def editar(request, id):
 # 🗑️ ELIMINAR
 @user_passes_test(es_admin)
 def eliminar(request, id):
-    # 👇 Quitamos la restricción de usuario
     producto = get_object_or_404(Producto, id=id)
 
     if request.method == "POST":
@@ -91,37 +87,45 @@ def eliminar(request, id):
 
     return render(request, 'confirmar_eliminar.html', {'producto': producto})
 
+
 # 🔐 REGISTRO
 def registro(request):
-    form = RegistroForm(request.POST or None)
-
-    if form.is_valid():
-        user = form.save(commit=False)
-        user.set_password(form.cleaned_data['password'])
-        user.save()
-
-        login(request, user)
-        return redirect('home')
-
+    if request.method == 'POST':
+        form = RegistroForm(request.POST)
+        if form.is_valid():
+            user = form.save()
+            login(request, user)
+            messages.success(request, f"¡Bienvenido {user.username}! Tu cuenta ha sido creada.")
+            return redirect('home')
+        else:
+            print(form.errors) 
+    else:
+        form = RegistroForm()
+    
     return render(request, 'registro.html', {'form': form})
 
 
 # 🔵 LOGIN
 def login_view(request):
-    form = AuthenticationForm(data=request.POST or None)
-
-    if request.method == "POST" and form.is_valid():
-        user = form.get_user()
-        login(request, user)
-        return redirect('home')
-
+    if request.method == 'POST':
+        form = AuthenticationForm(data=request.POST)
+        if form.is_valid():
+            user = form.get_user()
+            login(request, user)
+            messages.success(request, f"¡Qué bueno verte de nuevo, {user.username}! 👋")
+            return redirect('home')
+        else:
+            messages.error(request, "Usuario o contraseña incorrectos. Intentá de nuevo.")
+    else:
+        form = AuthenticationForm()
     return render(request, 'login.html', {'form': form})
 
 
-# 🔴 LOGOUT
+# 🔴 LOGOUT 
 def logout_view(request):
     logout(request)
-    return redirect('login')
+    messages.info(request, "Has cerrado sesión correctamente. ¡Vuelve pronto!")
+    return redirect('home')
 
 
 # 📄 DETALLE
@@ -165,23 +169,22 @@ def buscar_productos(request):
     return JsonResponse({'productos': data})
 
 
+# 🛒 CARRITO Y FAVORITOS
 @login_required
 def agregar_al_carrito(request, id):
     producto = get_object_or_404(Producto, id=id)
-    # Busca si ya está en el carrito, si no, lo crea
     carrito_item, created = Carrito.objects.get_or_create(usuario=request.user, producto=producto)
     
     if not created:
         carrito_item.cantidad += 1
         carrito_item.save()
         
-    messages.success(request, f'"{producto.nombre}" agregado al carrito.')
-    return redirect('home')
+    messages.success(request, f"✨ ¡'{producto.nombre}' agregado a tu carrito!")
+    return redirect('ver_carrito') 
 
 @login_required
 def ver_carrito(request):
     items = Carrito.objects.filter(usuario=request.user)
-    # Calcula el total iterando los items
     total = sum(item.producto.precio * item.cantidad for item in items)
     
     return render(request, 'carrito.html', {'items': items, 'total': total})
@@ -196,7 +199,6 @@ def eliminar_del_carrito(request, id):
 @login_required
 def toggle_favorito(request, id):
     producto = get_object_or_404(Producto, id=id)
-    # Busca si existe el favorito
     favorito = Favorito.objects.filter(usuario=request.user, producto=producto).first()
     
     if favorito:
@@ -206,5 +208,4 @@ def toggle_favorito(request, id):
         Favorito.objects.create(usuario=request.user, producto=producto)
         messages.success(request, f'"{producto.nombre}" agregado a favoritos. ❤️')
         
-    # Redirige a la misma página donde estaba el usuario
     return redirect(request.META.get('HTTP_REFERER', 'home'))

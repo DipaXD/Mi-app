@@ -1,120 +1,41 @@
 {% extends 'base.html' %}
-{% block title %}Iniciar Sesión{% endblock %}
+{% block title %}Iniciar Sesión | Mi Tienda{% endblock %}
 {% block content %}
 
 <style>
-/* 🌟 FONDO MODERNO Y OSCURO */
-body {
-    background-image: url("https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?q=80&w=2564&auto=format&fit=crop");
-    background-size: cover;
-    background-position: center;
-    background-repeat: no-repeat;
-    background-attachment: fixed;
-    /* Le quitamos el display: flex para que no rompa el navbar */
-}
-
-/* 💳 TARJETA GLASSMORPHISM CENTRADA */
-.auth-container {
-    width: 100%;
-    max-width: 450px;
-    margin: 100px auto; /* Esto empuja la tarjeta hacia abajo y la centra */
-}
-
-.auth-card {
-    background: rgba(15, 23, 42, 0.75);
-    backdrop-filter: blur(15px);
-    border: 1px solid rgba(255, 255, 255, 0.1);
-    border-radius: 25px;
-    padding: 40px;
-    box-shadow: 0 20px 50px rgba(0,0,0,0.5);
-    color: white;
-}
-
-/* ✨ TÍTULO */
-.auth-title {
-    text-align: center;
-    font-weight: 800;
-    margin-bottom: 30px;
-}
-
-/* 🏷️ LABELS SUTILES */
-.auth-card label {
-    display: block;
-    color: #93c5fd;
-    margin-bottom: 8px;
-    font-size: 0.9rem;
-    font-weight: 600;
-}
-
-/* Ocultar textos largos y feos de Django */
-.helptext, ul.errorlist {
-    display: none !important;
-}
-
-/* 🖊️ INPUTS OSCUROS CON BRILLO */
-.auth-card input {
-    width: 100%;
-    padding: 12px 15px;
-    background: rgba(255, 255, 255, 0.05);
-    border: 1px solid rgba(255,255,255,0.2);
-    border-radius: 12px;
-    color: white;
-    margin-bottom: 20px;
-    transition: 0.3s;
-}
-
-.auth-card input:focus {
-    outline: none;
-    border-color: #3b82f6;
-    box-shadow: 0 0 15px rgba(59, 130, 246, 0.5);
-    background: rgba(255, 255, 255, 0.1);
-}
-
-/* 🚀 BOTÓN MODERNO CON GRADIENTE */
-.btn-auth {
-    width: 100%;
-    padding: 14px;
-    border: none;
-    border-radius: 12px;
-    background: linear-gradient(135deg, #3b82f6, #2563eb);
-    color: white;
-    font-weight: 700;
-    transition: 0.3s;
-    box-shadow: 0 0 15px rgba(59,130,246,0.4);
-}
-
-.btn-auth:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 10px 25px rgba(59,130,246,0.6);
-}
-
-/* 🔗 ENLACE DE PIE DE PÁGINA */
-.auth-footer {
-    text-align: center;
-    margin-top: 20px;
-    color: #94a3b8;
-}
-
-.auth-footer a {
-    color: #60a5fa;
-    font-weight: 700;
-    text-decoration: none;
-}
+    .auth-card { max-width: 450px; margin: 60px auto; padding: 40px; border-top: 4px solid var(--primary); }
+    .error-box { background: rgba(220, 38, 38, 0.1); border-left: 4px solid #ef4444; color: #f87171; padding: 15px 20px; border-radius: 8px; margin-bottom: 20px; }
+    ul.errorlist { display: none !important; }
 </style>
 
-<div class="auth-container">
-    <div class="auth-card">
-        <h2 class="auth-title">✨ Iniciar sesión</h2>
-        
-        <form method="POST">
-            {% csrf_token %}
-            {{ form.as_p }}
-            <button class="btn-auth mt-2">Entrar a mi cuenta</button>
-        </form>
-        
-        <div class="auth-footer">
-            ¿No tienes cuenta? <a href="{% url 'registro' %}">Regístrate aquí</a>
+<div class="glass-panel auth-card animate__animated animate__fadeInUp">
+    <div class="text-center mb-5">
+        <div class="d-inline-block p-3 rounded-circle mb-3" style="background: rgba(14,165,233,0.1);">
+            <i class="fa-solid fa-right-to-bracket fs-1 text-primary"></i>
         </div>
+        <h2 class="fw-bolder text-white m-0 display-6">¡Hola de nuevo!</h2>
+        <p class="text-secondary mt-2">Ingresa a tu cuenta para continuar</p>
+    </div>
+
+    <form method="POST">
+        {% csrf_token %}
+        
+        {% if form.errors %}
+            <div class="error-box animate__animated animate__headShake">
+                <p class="m-0 fw-bold"><i class="fa-solid fa-triangle-exclamation"></i> Usuario o contraseña incorrectos.</p>
+            </div>
+        {% endif %}
+
+        {{ form.as_p }}
+
+        <button class="btn btn-gradient w-100 py-3 rounded-pill fw-bold text-uppercase mt-4 fs-5" type="submit">
+            Iniciar Sesión <i class="fa-solid fa-arrow-right ms-2"></i>
+        </button>
+    </form>
+    
+    <div class="text-center mt-4 pt-4" style="border-top: 1px solid rgba(255,255,255,0.05);">
+        <span class="text-secondary">¿No tienes una cuenta?</span> 
+        <a href="{% url 'registro' %}" class="text-primary fw-bold text-decoration-none ms-1">Regístrate aquí</a>
     </div>
 </div>
 {% endblock %}

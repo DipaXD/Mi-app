@@ -1,93 +1,75 @@
 {% extends 'base.html' %}
-{% block title %}Registro{% endblock %}
-
+{% block title %}Crear Cuenta | Mi Tienda{% endblock %}
 {% block content %}
+
 <style>
-/* Fondo general */
-body { 
-    background-image: url("https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?q=80&w=2564&auto=format&fit=crop"); 
-    background-size: cover; 
-    background-attachment: fixed; 
-}
-
-/* Tarjeta principal */
-.auth-card { 
-    max-width: 450px; 
-    margin: 40px auto; /* Redujimos un poco el margen para que no empuje el navbar */
-    background: rgba(15, 23, 42, 0.75); 
-    backdrop-filter: blur(15px); 
-    border: 1px solid rgba(255,255,255,0.1); 
-    padding: 40px; 
-    border-radius: 25px; 
-    color: white; 
-    box-shadow: 0 20px 50px rgba(0,0,0,0.5); 
-}
-
-/* ESTO ES LO NUEVO: Títulos de cada cajita limpios y modernos */
-.auth-card label {
-    display: block;
-    color: #93c5fd; /* Un celestito claro */
-    margin-bottom: 5px;
-    font-size: 0.9rem;
-    font-weight: 600;
-    text-align: left;
-}
-
-/* Seguimos ocultando las instrucciones largas y feas de Django */
-.helptext, ul.errorlist {
-    display: none !important;
-}
-
-/* Las cajas de texto */
-.auth-card input { 
-    width: 100%; 
-    padding: 12px; 
-    background: rgba(255,255,255,0.05); 
-    border: 1px solid rgba(255,255,255,0.2); 
-    border-radius: 12px; 
-    color: white; 
-    margin-bottom: 20px; 
-    transition: 0.3s;
-}
-
-.auth-card input:focus { 
-    outline: none;
-    border-color: #3b82f6; 
-    box-shadow: 0 0 15px rgba(59,130,246,0.5); 
-    background: rgba(255,255,255,0.1);
-}
-
-/* Botón principal */
-.btn-auth { 
-    width: 100%; 
-    padding: 14px; 
-    background: linear-gradient(135deg, #3b82f6, #2563eb); 
-    border: none; 
-    color: white; 
-    font-weight: 700; 
-    border-radius: 12px; 
-    transition: 0.3s;
-}
-
-.btn-auth:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 10px 25px rgba(59,130,246,0.6);
-}
+    .auth-card { max-width: 450px; margin: 60px auto; padding: 40px; border-top: 4px solid var(--secondary); }
+    .password-policies { list-style: none; padding: 20px; background: rgba(0,0,0,0.4); border-radius: 15px; margin-top: 20px;}
+    .policy-item { margin-bottom: 10px; display: flex; align-items: center; gap: 12px; color: #64748b; font-weight: 600; transition: 0.3s; }
+    .policy-item.valid { color: #10b981 !important; }
+    .icon { font-size: 1.2rem; }
+    .error-box { background: rgba(220, 38, 38, 0.1); border-left: 4px solid #ef4444; color: #f87171; padding: 15px 20px; border-radius: 8px; margin-bottom: 20px; }
+    ul.errorlist { display: none !important; }
 </style>
 
-<div class="auth-card">
-    <h2 class="text-center fw-bold mb-4">📝 Crear Cuenta</h2>
-    
-    <form method="POST">
+<div class="glass-panel auth-card animate__animated animate__zoomIn">
+    <div class="text-center mb-4">
+        <div class="d-inline-block p-3 rounded-circle mb-3" style="background: rgba(139, 92, 246, 0.1);">
+            <i class="fa-solid fa-user-plus fs-1" style="color: var(--secondary);"></i>
+        </div>
+        <h2 class="fw-bolder text-white m-0 display-6">Crear Cuenta</h2>
+        <p class="text-secondary mt-2">Únete a nuestra plataforma</p>
+    </div>
+
+    <form method="POST" id="registerForm">
         {% csrf_token %}
-        {{ form.as_p }}
         
-        <button class="btn-auth mt-2">Registrarse</button>
+        {% if form.errors %}
+            <div class="error-box animate__animated animate__headShake">
+                {% for field in form %}
+                    {% for error in field.errors %}
+                        <p class="m-0 mb-1 fw-bold"><i class="fa-solid fa-triangle-exclamation"></i> {{ error }}</p>
+                    {% endfor %}
+                {% endfor %}
+            </div>
+        {% endif %}
+
+        {{ form.as_p }}
+
+        <ul class="password-policies">
+            <li id="policy-length" class="policy-item"><span class="icon"><i class="fa-regular fa-circle-xmark"></i></span> 6+ caracteres</li>
+            <li id="policy-upper" class="policy-item"><span class="icon"><i class="fa-regular fa-circle-xmark"></i></span> Una mayúscula</li>
+            <li id="policy-lower" class="policy-item"><span class="icon"><i class="fa-regular fa-circle-xmark"></i></span> Una minúscula</li>
+            <li id="policy-number" class="policy-item"><span class="icon"><i class="fa-regular fa-circle-xmark"></i></span> Un número</li>
+        </ul>
+
+        <button class="btn btn-gradient w-100 py-3 rounded-pill fw-bold text-uppercase mt-4 fs-5" type="submit">
+            Registrarse <i class="fa-solid fa-arrow-right ms-2"></i>
+        </button>
     </form>
     
-    <div class="text-center mt-4">
-        <span class="text-white-50">¿Ya tienes cuenta?</span> 
-        <a href="{% url 'login' %}" class="text-info fw-bold text-decoration-none">Inicia sesión</a>
+    <div class="text-center mt-4 pt-4" style="border-top: 1px solid rgba(255,255,255,0.05);">
+        <span class="text-secondary">¿Ya tienes cuenta?</span> 
+        <a href="{% url 'login' %}" class="text-primary fw-bold text-decoration-none ms-1">Inicia sesión</a>
     </div>
 </div>
+
+<script>
+    const passwordInput = document.querySelector('input[name="password1"]');
+    const update = (id, valid) => {
+        const el = document.getElementById(id);
+        if(!el) return;
+        el.className = valid ? "policy-item valid" : "policy-item";
+        el.querySelector(".icon").innerHTML = valid ? '<i class="fa-solid fa-circle-check"></i>' : '<i class="fa-regular fa-circle-xmark"></i>';
+    };
+    if(passwordInput) {
+        passwordInput.addEventListener("input", () => {
+            const p = passwordInput.value;
+            update("policy-length", p.length > 6);
+            update("policy-upper", /[A-Z]/.test(p));
+            update("policy-lower", /[a-z]/.test(p));
+            update("policy-number", /[0-9]/.test(p));
+        });
+    }
+</script>
 {% endblock %}

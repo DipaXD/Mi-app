@@ -1,34 +1,16 @@
 {% extends 'base.html' %}
+{% block title %}Eliminar Producto{% endblock %}
 {% block content %}
 
-<style>
-body {
-    background-image: url("https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?q=80&w=2564&auto=format&fit=crop");
-    background-size: cover;
-    background-attachment: fixed;
-}
-.delete-card {
-    max-width: 500px;
-    margin: 100px auto;
-    background: rgba(15, 23, 42, 0.8);
-    backdrop-filter: blur(15px);
-    border: 1px solid rgba(239, 68, 68, 0.3);
-    border-radius: 25px;
-    padding: 40px;
-    box-shadow: 0 15px 40px rgba(239, 68, 68, 0.2); /* Brillo rojo */
-    color: white;
-    text-align: center;
-}
-</style>
-
-<div class="delete-card">
+<div class="glass-card text-center mx-auto p-5" style="max-width: 500px; margin-top: 100px; border-color: rgba(239, 68, 68, 0.4); box-shadow: 0 15px 40px rgba(239, 68, 68, 0.15);">
+    <div class="mb-4" style="font-size: 4rem;">⚠️</div>
     <h3 class="fw-bold mb-3">¿Seguro que quieres eliminar?</h3>
-    <p class="fs-5 text-warning mb-4"><strong>{{ producto.nombre }}</strong></p>
+    <p class="fs-4 text-white mb-5" style="border-bottom: 2px solid rgba(239,68,68,0.5); display: inline-block; padding-bottom: 10px;">{{ producto.nombre }}</p>
     
     <form method="POST" class="d-flex justify-content-center gap-3">
         {% csrf_token %}
-        <a href="/" class="btn btn-secondary px-4 py-2 rounded-3 fw-bold">Cancelar</a>
-        <button class="btn btn-danger px-4 py-2 rounded-3 fw-bold" style="box-shadow: 0 0 15px rgba(239,68,68,0.5);">Sí, eliminar</button>
+        <a href="/" class="btn btn-outline-light px-4 py-3 rounded-pill fw-bold w-50">Cancelar</a>
+        <button class="btn btn-danger px-4 py-3 rounded-pill fw-bold w-50" style="box-shadow: 0 0 20px rgba(239,68,68,0.4);">Sí, eliminar</button>
     </form>
 </div>
 {% endblock %}

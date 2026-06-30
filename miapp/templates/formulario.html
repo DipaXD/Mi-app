@@ -2,87 +2,15 @@
 {% block title %}Formulario Producto{% endblock %}
 {% block content %}
 
-<style>
-body {
-    background-image: url("https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?q=80&w=2564&auto=format&fit=crop");
-    background-size: cover;
-    background-attachment: fixed;
-}
-
-.form-container {
-    max-width: 600px;
-    margin: 50px auto;
-}
-
-.form-card {
-    background: rgba(15, 23, 42, 0.75);
-    backdrop-filter: blur(15px);
-    border: 1px solid rgba(255, 255, 255, 0.1);
-    border-radius: 25px;
-    padding: 40px;
-    box-shadow: 0 20px 50px rgba(0,0,0,0.5);
-    color: white;
-}
-
-.form-title {
-    text-align: center;
-    font-weight: 800;
-    margin-bottom: 30px;
-    color: white;
-}
-
-.form-card label {
-    font-weight: 600;
-    color: rgba(255,255,255,0.9);
-    margin-bottom: 8px;
-    margin-top: 15px;
-}
-
-.form-card input, .form-card textarea, .form-card select {
-    width: 100%;
-    padding: 12px 15px;
-    background: rgba(255, 255, 255, 0.05);
-    border: 1px solid rgba(255,255,255,0.2);
-    border-radius: 12px;
-    color: white;
-    transition: 0.3s;
-}
-
-.form-card input:focus, .form-card textarea:focus, .form-card select:focus {
-    outline: none;
-    border-color: #3b82f6;
-    box-shadow: 0 0 15px rgba(59, 130, 246, 0.5); /* El brillo al escribir */
-    background: rgba(255, 255, 255, 0.1);
-}
-
-.btn-guardar {
-    width: 100%;
-    padding: 14px;
-    margin-top: 25px;
-    border: none;
-    border-radius: 12px;
-    background: linear-gradient(135deg, #10b981, #059669);
-    color: white;
-    font-weight: 700;
-    transition: 0.3s;
-}
-
-.btn-guardar:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 10px 25px rgba(16, 185, 129, 0.4);
-}
-</style>
-
-<div class="form-container">
-    <div class="form-card">
-        <h2 class="form-title">
-            {{ form.instance.id|yesno:"✏️ Editar Producto,✨ Agregar Producto" }}
-        </h2>
-        <form method="POST" enctype="multipart/form-data">
-            {% csrf_token %}
-            {{ form.as_p }}
-            <button class="btn-guardar">💾 Guardar Cambios</button>
-        </form>
-    </div>
+<div class="glass-card mx-auto p-4 p-md-5" style="max-width: 600px; margin-top: 40px;">
+    <h2 class="fw-bold text-center mb-4">
+        {{ form.instance.id|yesno:"✏️ Editar Producto,✨ Agregar Producto" }}
+    </h2>
+    <form method="POST" enctype="multipart/form-data">
+        {% csrf_token %}
+        {{ form.as_p }}
+        <button class="btn btn-glow w-100 py-3 mt-4 fw-bold fs-5 rounded-pill">💾 Guardar Cambios</button>
+        <a href="/" class="btn btn-outline-light w-100 py-2 mt-3 fw-bold rounded-pill">Cancelar</a>
+    </form>
 </div>
 {% endblock %}

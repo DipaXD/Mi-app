@@ -1,370 +1,161 @@
 {% extends 'base.html' %}
+{% block title %}Inicio | Mi Tienda{% endblock %}
 
-{% block content %}
-
+{% block hero %}
 <style>
-/* 🌟 ESTILOS GENERALES Y FONDO */
-body {
-    margin: 0;
-    font-family: 'Poppins', sans-serif;
-}
+    /* HERO SECTION INSPIRACIÓN */
+    .hero-section {
+        background: linear-gradient(rgba(15, 23, 42, 0.6), rgba(15, 23, 42, 0.9)), url('https://images.unsplash.com/photo-1441986300917-64674bd600d8?q=80&w=2670') center/cover;
+        padding: 120px 20px;
+        text-align: center;
+        border-bottom: 1px solid rgba(255,255,255,0.1);
+    }
+    .hero-title { font-size: 4rem; font-weight: 800; text-shadow: 0 10px 30px rgba(0,0,0,0.8); }
+    .search-box { max-width: 650px; margin: 30px auto; position: relative; }
+    .search-box i { position: absolute; left: 20px; top: 50%; transform: translateY(-50%); color: #0ea5e9; font-size: 1.2rem;}
+    .search-box input { padding: 20px 20px 20px 50px; border-radius: 50px; font-size: 1.1rem; border: 2px solid rgba(255,255,255,0.2) !important; background: rgba(0,0,0,0.5) !important;}
+    
+    /* BLOQUES DE COLORES TIPO INSPIRACIÓN */
+    .color-blocks { margin-top: -1px; }
+    .block-1 { background: #0ea5e9; color: white; } /* Celeste */
+    .block-2 { background: #0284c7; color: white; } /* Azul más oscuro */
+    .block-3 { background: #f59e0b; color: #0f172a; } /* Amarillo vibrante */
+    .info-block { padding: 40px 20px; text-align: center; height: 100%; transition: 0.3s; }
+    .info-block:hover { filter: brightness(1.1); transform: translateY(-5px); }
+    .info-block i { font-size: 2.5rem; margin-bottom: 15px; }
 
-body::before {
-    content: "";
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background-image: url("https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?q=80&w=2564&auto=format&fit=crop");
-    background-size: cover;
-    background-position: center;
-    background-repeat: no-repeat;
-    filter: brightness(0.35); /* Un toque más oscuro para resaltar el brillo de las tarjetas */
-    z-index: -1;
-}
-
-.content-wrapper {
-    position: relative;
-    z-index: 2;
-    padding-bottom: 50px;
-}
-
-/* ✨ TEXTOS PRINCIPALES */
-.home-title {
-    color: #ffffff;
-    font-size: 3.5rem;
-    font-weight: 800;
-    letter-spacing: -1px;
-    text-shadow: 0 0 20px rgba(255, 255, 255, 0.3);
-    margin-bottom: 10px;
-}
-
-.home-subtitle {
-    color: rgba(255, 255, 255, 0.85);
-    font-weight: 300;
-}
-
-.section-title {
-    color: white;
-    font-weight: 700;
-    margin-bottom: 25px;
-    text-shadow: 0 4px 10px rgba(0,0,0,0.5);
-    display: inline-block;
-    border-bottom: 3px solid #3b82f6;
-    padding-bottom: 5px;
-}
-
-/* 🔎 BUSCADOR AESTHETIC */
-.search-box {
-    max-width: 600px;
-    margin: 40px auto;
-    position: relative;
-}
-
-.search-box input {
-    width: 100%;
-    padding: 18px 25px;
-    border-radius: 30px;
-    border: 2px solid rgba(255, 255, 255, 0.2);
-    background: rgba(255, 255, 255, 0.1);
-    color: white;
-    font-size: 1.1rem;
-    backdrop-filter: blur(10px);
-    transition: all 0.4s ease;
-    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
-}
-
-.search-box input::placeholder {
-    color: rgba(255, 255, 255, 0.6);
-}
-
-.search-box input:focus {
-    outline: none;
-    background: rgba(255, 255, 255, 0.2);
-    border-color: #3b82f6;
-    box-shadow: 0 0 20px rgba(59, 130, 246, 0.6);
-}
-
-/* 🏷️ CATEGORÍAS */
-.category-btn {
-    background: rgba(255, 255, 255, 0.1);
-    color: white;
-    border: 1px solid rgba(255, 255, 255, 0.3);
-    border-radius: 20px;
-    padding: 8px 20px;
-    margin: 5px;
-    backdrop-filter: blur(5px);
-    transition: 0.3s;
-    text-decoration: none;
-    display: inline-block;
-}
-
-.category-btn:hover {
-    background: #3b82f6;
-    border-color: #3b82f6;
-    box-shadow: 0 0 15px rgba(59, 130, 246, 0.5);
-    color: white;
-}
-
-/* 💳 TARJETAS DE PRODUCTOS */
-.product-card {
-    background: rgba(255, 255, 255, 0.95);
-    border: 1px solid rgba(255, 255, 255, 0.5);
-    border-radius: 25px;
-    overflow: hidden;
-    box-shadow: 0 15px 35px rgba(0, 0, 0, 0.2);
-    transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-    height: 100%;
-    display: flex;
-    flex-direction: column;
-}
-
-.product-card:hover {
-    transform: translateY(-12px);
-    box-shadow: 0 20px 40px rgba(59, 130, 246, 0.4);
-}
-
-.product-img {
-    width: 100%;
-    height: 220px;
-    object-fit: cover;
-    border-bottom: 1px solid rgba(0,0,0,0.05);
-}
-
-.card-body {
-    padding: 25px;
-    display: flex;
-    flex-direction: column;
-    flex-grow: 1;
-}
-
-.card-body h5 {
-    font-weight: 700;
-    color: #1e293b;
-    margin-bottom: 10px;
-}
-
-.card-body p {
-    color: #64748b;
-    font-size: 0.9rem;
-    flex-grow: 1;
-}
-
-.price {
-    color: #10b981;
-    font-size: 1.5rem;
-    font-weight: 800;
-    margin-bottom: 15px;
-}
-
-.btn-action {
-    border-radius: 12px;
-    font-weight: 600;
-    padding: 10px;
-    transition: 0.3s;
-}
-
-.btn-action:hover {
-    transform: scale(1.02);
-}
-
-/* 📄 PAGINACIÓN */
-.pagination {
-    background: rgba(255, 255, 255, 0.1);
-    backdrop-filter: blur(10px);
-    border-radius: 20px;
-    padding: 10px;
-    box-shadow: 0 10px 30px rgba(0,0,0,0.3);
-}
-
-.page-link {
-    background: transparent;
-    border: none;
-    color: white;
-    font-weight: 600;
-    border-radius: 10px;
-    margin: 0 5px;
-}
-
-.page-link:hover {
-    background: rgba(255,255,255,0.2);
-    color: white;
-}
-
-.page-item.disabled .page-link {
-    background: transparent;
-    color: rgba(255,255,255,0.5);
-}
+    /* TARJETAS DE PRODUCTO MEJORADAS */
+    .product-card { background: var(--glass-bg); backdrop-filter: blur(10px); border: 1px solid rgba(255,255,255,0.05); border-radius: 20px; overflow: hidden; transition: 0.4s; }
+    .product-card:hover { transform: translateY(-10px); box-shadow: 0 20px 40px rgba(14, 165, 233, 0.2); border-color: rgba(14, 165, 233, 0.5); }
+    .product-img { width: 100%; height: 250px; object-fit: contain; padding: 15px; transition: 0.5s; }
+    .product-card:hover .product-img { transform: scale(1.05); }
+    .img-wrapper { overflow: hidden; border-bottom: 2px solid rgba(255,255,255,0.05); }
+    .section-title { font-weight: 800; font-size: 2rem; display: inline-block; position: relative; margin-bottom: 30px;}
+    .section-title::after { content: ''; position: absolute; left: 0; bottom: -5px; width: 50%; height: 4px; background: var(--primary); border-radius: 2px; }
 </style>
 
-<div class="content-wrapper">
-
-    <div class="text-center mt-5 pt-4">
-        <h1 class="home-title">Mi Tienda Online</h1>
-        <p class="fs-5 home-subtitle">
-            Descubre nuestros productos destacados y encuentra lo que necesitas.
-        </p>
-    </div>
-
+<div class="hero-section animate__animated animate__fadeIn">
+    <h1 class="hero-title text-white">Mi Tienda <span style="color: var(--primary);">Online</span></h1>
+    <p class="fs-4 text-light mt-3" style="opacity: 0.9;">Descubre nuestros productos con el mejor estilo.</p>
+    
     <div class="search-box">
-        <input type="text" id="buscador" placeholder="✨ Busca productos, categorías o marcas...">
+        <i class="fa-solid fa-magnifying-glass"></i>
+        <input type="text" id="buscador" placeholder="Busca productos, categorías o marcas...">
     </div>
-
-    <div class="text-center mb-5">
-        <a href="/" class="category-btn">Todos</a>
-        {% for cat in categorias %}
-            <a href="?cat={{ cat.id }}" class="category-btn">
-                {{ cat.nombre }}
-            </a>
-        {% endfor %}
-    </div>
-
-    <h3 class="section-title">🔥 Destacados</h3>
-
-    <div class="row g-4 mb-5">
-        {% for p in destacados %}
-        <div class="col-md-4">
-            <div class="product-card">
-                {% if p.imagen %}
-                <img src="{{ p.imagen.url }}" class="product-img">
-                {% endif %}
-                <div class="card-body">
-                    <h5>{{ p.nombre }}</h5>
-                    <div class="price">${{ p.precio }}</div>
-                    <a href="{% url 'detalle' p.id %}" class="btn btn-primary btn-action w-100 mt-auto">👀 Ver producto</a>
-                    
-                    {% if user.is_staff %}
-                    <div class="d-flex gap-2 mt-2">
-                        <a href="{% url 'editar' p.id %}" class="btn btn-warning btn-action w-50">Editar</a>
-                        <form action="{% url 'eliminar' p.id %}" method="POST" class="w-50 m-0">
-                            {% csrf_token %}
-                            <button class="btn btn-danger btn-action w-100">Eliminar</button>
-                        </form>
-                    </div>
-                    {% endif %}
-                </div>
-            </div>
-        </div>
-        {% endfor %}
-    </div>
-
-    <h3 class="section-title">✨ Nuestro Catálogo</h3>
-    <div id="productos" class="row g-4">
-        {% for producto in productos %}
-        <div class="col-md-4">
-            <div class="product-card">
-                {% if producto.imagen %}
-                <img src="{{ producto.imagen.url }}" class="product-img">
-                {% endif %}
-                <div class="card-body">
-                    <h5>{{ producto.nombre }}</h5>
-                    <p>{{ producto.descripcion|truncatechars:70 }}</p>
-                    <div class="price">${{ producto.precio }}</div>
-                    
-                    <a href="{% url 'detalle' producto.id %}" class="btn btn-primary btn-action w-100 mt-auto">👀 Ver producto</a>
-                    
-                    {% if user.is_staff %}
-                    <div class="d-flex gap-2 mt-2">
-                        <a href="{% url 'editar' producto.id %}" class="btn btn-warning btn-action w-50">Editar</a>
-                        <form action="{% url 'eliminar' producto.id %}" method="POST" class="w-50 m-0">
-                            {% csrf_token %}
-                            <button class="btn btn-danger btn-action w-100">Eliminar</button>
-                        </form>
-                    </div>
-                    {% endif %}
-                </div>
-            </div>
-        </div>
-        {% endfor %}
-    </div>
-
 </div>
 
-<div class="mt-5 mb-5 d-flex justify-content-center">
-    <nav>
-        <ul class="pagination">
-            {% if productos.has_previous %}
-                <li class="page-item">
-                    <a class="page-link" href="?page=1{% if request.GET.q %}&q={{ request.GET.q }}{% endif %}">&laquo; Primera</a>
-                </li>
-                <li class="page-item">
-                    <a class="page-link" href="?page={{ productos.previous_page_number }}{% if request.GET.q %}&q={{ request.GET.q }}{% endif %}">Anterior</a>
-                </li>
-            {% endif %}
+<div class="container-fluid px-0 color-blocks animate__animated animate__fadeInUp">
+    <div class="row g-0">
+        <div class="col-md-4">
+            <div class="info-block block-1">
+                <i class="fa-solid fa-truck-fast"></i>
+                <h3 class="fw-bold">Envíos Rápidos</h3>
+                <p class="m-0">Llegamos a todo el país en tiempo récord.</p>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="info-block block-2">
+                <i class="fa-solid fa-shield-halved"></i>
+                <h3 class="fw-bold">Compra Segura</h3>
+                <p class="m-0">Tus datos están 100% protegidos siempre.</p>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="info-block block-3">
+                <i class="fa-solid fa-headset"></i>
+                <h3 class="fw-bold">Atención 24/7</h3>
+                <p class="m-0">Estamos aquí para ayudarte en cualquier momento.</p>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
 
-            <li class="page-item disabled">
-                <span class="page-link">
-                    Página {{ productos.number }} de {{ productos.paginator.num_pages }}
-                </span>
-            </li>
+{% block content %}
+<div class="text-center my-5 animate__animated animate__fadeIn">
+    <a href="/" class="btn btn-outline-light rounded-pill px-4 py-2 mx-1 fw-bold">Todos</a>
+    {% for cat in categorias %}
+        <a href="?cat={{ cat.id }}" class="btn btn-outline-info rounded-pill px-4 py-2 mx-1 fw-bold">{{ cat.nombre }}</a>
+    {% endfor %}
+</div>
 
-            {% if productos.has_next %}
-                <li class="page-item">
-                    <a class="page-link" href="?page={{ productos.next_page_number }}{% if request.GET.q %}&q={{ request.GET.q }}{% endif %}">Siguiente</a>
-                </li>
-                <li class="page-item">
-                    <a class="page-link" href="?page={{ productos.paginator.num_pages }}{% if request.GET.q %}&q={{ request.GET.q }}{% endif %}">Última &raquo;</a>
-                </li>
-            {% endif %}
-        </ul>
-    </nav>
+<h3 class="section-title animate__animated animate__fadeInLeft"><i class="fa-solid fa-fire text-warning"></i> Destacados</h3>
+<div class="row g-4 mb-5">
+    {% for p in destacados %}
+    <div class="col-md-4 animate__animated animate__zoomIn">
+        <div class="product-card d-flex flex-column h-100">
+            <div class="img-wrapper">
+                {% if p.imagen %} <img src="{{ p.imagen.url }}" class="product-img"> {% endif %}
+            </div>
+            <div class="p-4 d-flex flex-column flex-grow-1">
+                <h4 class="fw-bold mb-1">{{ p.nombre }}</h4>
+                <p class="text-info fw-bold fs-3 m-0 mb-3">${{ p.precio }}</p>
+                <div class="mt-auto">
+                    <a href="{% url 'detalle' p.id %}" class="btn btn-gradient w-100 rounded-pill py-2 mb-2"><i class="fa-regular fa-eye"></i> Ver producto</a>
+                    {% if user.is_staff %}
+                    <div class="d-flex gap-2">
+                        <a href="{% url 'editar' p.id %}" class="btn btn-warning w-50 rounded-pill fw-bold"><i class="fa-solid fa-pen"></i></a>
+                        <form action="{% url 'eliminar' p.id %}" method="POST" class="w-50 m-0">
+                            {% csrf_token %}
+                            <button class="btn btn-danger w-100 rounded-pill fw-bold"><i class="fa-solid fa-trash"></i></button>
+                        </form>
+                    </div>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
+    {% endfor %}
+</div>
+
+<h3 class="section-title mt-4 animate__animated animate__fadeInLeft"><i class="fa-solid fa-star text-primary"></i> Nuestro Catálogo</h3>
+<div id="productos" class="row g-4 mb-5">
+    {% for producto in productos %}
+    <div class="col-md-4">
+        <div class="product-card d-flex flex-column h-100">
+            <div class="img-wrapper">
+                {% if producto.imagen %} <img src="{{ producto.imagen.url }}" class="product-img"> {% endif %}
+            </div>
+            <div class="p-4 d-flex flex-column flex-grow-1">
+                <h4 class="fw-bold mb-2">{{ producto.nombre }}</h4>
+                <p class="text-secondary small flex-grow-1">{{ producto.descripcion|truncatechars:70 }}</p>
+                <p class="text-info fw-bold fs-3 mb-3">${{ producto.precio }}</p>
+                <div class="mt-auto">
+                    <a href="{% url 'detalle' producto.id %}" class="btn btn-outline-light w-100 rounded-pill py-2 mb-2"><i class="fa-regular fa-eye"></i> Ver producto</a>
+                </div>
+            </div>
+        </div>
+    </div>
+    {% endfor %}
 </div>
 
 <script>
-// Le pasamos la variable booleana de Django a Javascript
 const esAdmin = {{ user.is_staff|yesno:"true,false" }};
-
 const input = document.getElementById("buscador");
 const contenedor = document.getElementById("productos");
 
 input.addEventListener("keyup", function () {
     let q = input.value;
-
     fetch(`/api/buscar/?q=${encodeURIComponent(q)}`)
         .then(res => res.json())
         .then(data => {
             contenedor.innerHTML = "";
             data.productos.forEach(p => {
                 const img = p.imagen ? `<img src="${p.imagen}" class="product-img">` : '';
-
-                // 👇 SEGURIDAD APLICADA AL BUSCADOR
-                const botonesAdmin = esAdmin ? `
-                    <div class="d-flex gap-2 mt-2">
-                        <a href="/editar/${p.id}/" class="btn btn-warning btn-action w-50">
-                            Editar
-                        </a>
-                        <form action="/eliminar/${p.id}/" method="POST" class="w-50 m-0">
-                            {% csrf_token %}
-                            <button class="btn btn-danger btn-action w-100">
-                                Eliminar
-                            </button>
-                        </form>
-                    </div>
-                ` : '';
-
                 contenedor.innerHTML += `
-                    <div class="col-md-4">
-                        <div class="product-card">
-                            ${img}
-                            <div class="card-body">
-                                <h5>${p.nombre}</h5>
-                                <p>${p.descripcion ? p.descripcion.slice(0,70) : ''}</p>
-                                <div class="price">$${p.precio}</div>
-                                
-                                <a href="/producto/${p.id}/" class="btn btn-primary btn-action w-100 mt-auto">
-                                    👀 Ver producto
-                                </a>
-                                
-                                ${botonesAdmin}
-                                
+                    <div class="col-md-4 animate__animated animate__fadeIn">
+                        <div class="product-card d-flex flex-column h-100">
+                            <div class="img-wrapper">${img}</div>
+                            <div class="p-4 d-flex flex-column flex-grow-1">
+                                <h4 class="fw-bold mb-2">${p.nombre}</h4>
+                                <p class="text-secondary small flex-grow-1">${p.descripcion ? p.descripcion.slice(0,70) : ''}</p>
+                                <p class="text-info fw-bold fs-3 mb-3">$${p.precio}</p>
+                                <a href="/producto/${p.id}/" class="btn btn-outline-light w-100 rounded-pill py-2 mb-2"><i class="fa-regular fa-eye"></i> Ver producto</a>
                             </div>
                         </div>
-                    </div>
-                `;
+                    </div>`;
             });
         });
 });
 </script>
-
 {% endblock %}
