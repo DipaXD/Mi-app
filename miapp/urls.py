@@ -19,4 +19,5 @@ urlpatterns = [
     path('carrito/agregar/<int:id>/', views.agregar_al_carrito, name='agregar_al_carrito'),
     path('carrito/eliminar/<int:id>/', views.eliminar_del_carrito, name='eliminar_del_carrito'),
     path('favoritos/toggle/<int:id>/', views.toggle_favorito, name='toggle_favorito'),
+    path('dashboard/', views.dashboard, name='dashboard'),
 ]

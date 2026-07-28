@@ -27,13 +27,15 @@
             min-height: 100vh;
             margin: 0;
             padding-bottom: 50px;
+            transition: background-color 0.3s ease, color 0.3s ease;
         }
 
-        /* Fondo global inmersivo */
+        /* Fondo para el MODO OSCURO (Tu foto de la tienda) */
         body::before {
             content: ''; position: fixed; top: 0; left: 0; width: 100%; height: 100%;
             background: url("https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?q=80&w=2564") center/cover no-repeat;
             filter: brightness(0.25) blur(3px); z-index: -1;
+            transition: all 0.4s ease;
         }
 
         /* NAVBAR PRO */
@@ -84,41 +86,139 @@
         ::-webkit-scrollbar { width: 8px; }
         ::-webkit-scrollbar-track { background: var(--dark-bg); }
         ::-webkit-scrollbar-thumb { background: var(--primary); border-radius: 10px; }
+
+        /* ==========================================
+           MODO CLARO (Fondo limpio y textos adaptados)
+           ========================================== */
+        body.light-mode {
+            background-color: #f8fafc !important;
+            color: #0f172a !important;
+        }
+
+        /* Cambiamos el fondo para que en modo claro sea un tono minimalista claro */
+        body.light-mode::before {
+            background: #f1f5f9 !important;
+            filter: none !important;
+            opacity: 1 !important;
+        }
+
+        body.light-mode .glass-panel {
+            background: rgba(255, 255, 255, 0.95) !important;
+            backdrop-filter: blur(12px);
+            border: 1px solid rgba(0, 0, 0, 0.08) !important;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.06) !important;
+        }
+
+        /* Navbar en modo claro */
+        body.light-mode .navbar-brand {
+            color: #0f172a !important;
+        }
+
+        body.light-mode .nav-link {
+            color: #334155 !important;
+        }
+
+        body.light-mode .nav-link:hover {
+            color: #0f172a !important;
+            background: rgba(0, 0, 0, 0.05) !important;
+        }
+
+        /* Clases dinámicas para títulos y textos principales de la portada */
+        .text-dynamic {
+            color: #ffffff !important;
+            text-shadow: 0 2px 4px rgba(0,0,0,0.5);
+        }
+
+        .text-dynamic-muted {
+            color: rgba(255, 255, 255, 0.9) !important;
+            text-shadow: 0 1px 3px rgba(0,0,0,0.5);
+        }
+
+        body.light-mode .text-dynamic {
+            color: #0f172a !important;
+            text-shadow: none !important;
+        }
+
+        body.light-mode .text-dynamic-muted {
+            color: #334155 !important;
+            text-shadow: none !important;
+        }
+
+        /* Forzar visibilidad absoluta de textos generales en modo claro */
+        body.light-mode h1, 
+        body.light-mode h2, 
+        body.light-mode h3, 
+        body.light-mode h4, 
+        body.light-mode h5, 
+        body.light-mode h6, 
+        body.light-mode p,
+        body.light-mode span, 
+        body.light-mode strong,
+        body.light-mode small,
+        body.light-mode li, 
+        body.light-mode label,
+        body.light-mode .text-white,
+        body.light-mode .text-light,
+        body.light-mode .text-secondary {
+            color: #0f172a !important;
+        }
+
+        body.light-mode input, 
+        body.light-mode textarea, 
+        body.light-mode select {
+            background: rgba(255, 255, 255, 0.95) !important;
+            color: #0f172a !important;
+            border: 1px solid rgba(0, 0, 0, 0.2) !important;
+        }
+
+        body.light-mode input::placeholder, 
+        body.light-mode textarea::placeholder {
+            color: #64748b !important;
+        }
+
+        body.light-mode .table {
+            color: #0f172a !important;
+        }
     </style>
 </head>
 <body>
 
-<nav class="navbar navbar-expand-lg navbar-dark navbar-pro sticky-top animate__animated animate__fadeInDown">
-    <div class="container">
-        <a class="navbar-brand fs-4" href="/">MI<span>TIENDA</span></a>
-        <button class="navbar-toggler border-0" data-bs-toggle="collapse" data-bs-target="#nav">
+<nav class="navbar navbar-expand-lg navbar-dark glass-panel m-3 p-3 sticky-top" style="border-radius: 0.75rem;">
+    <div class="container-fluid">
+        <a class="navbar-brand fs-4 fw-bold" href="{% url 'home' %}">MI<span>TIENDA</span></a>
+        <button class="navbar-toggler border-0" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
             <span class="navbar-toggler-icon"></span>
         </button>
-        <div class="collapse navbar-collapse" id="nav">
-            <ul class="navbar-nav ms-auto align-items-center">
-                <li class="nav-item"><a class="nav-link px-3" href="/"><i class="fa-solid fa-house"></i> Inicio</a></li>
-                {% if user.is_staff %}
-                    <li class="nav-item"><a class="nav-link px-3" href="{% url 'crear' %}"><i class="fa-solid fa-plus"></i> Agregar</a></li>
-                {% endif %}
+        <div class="collapse navbar-collapse justify-content-end" id="navbarNav">
+            <ul class="navbar-nav align-items-center gap-2">
+                <li class="nav-item"><a class="nav-link px-3" href="{% url 'home' %}"><i class="fa-solid fa-house"></i> Inicio</a></li>
                 
                 {% if user.is_authenticated %}
                     <li class="nav-item"><a class="nav-link px-3" href="{% url 'ver_carrito' %}"><i class="fa-solid fa-cart-shopping"></i> Carrito</a></li>
-                    <li class="nav-item"><a class="nav-link px-3" href="{% url 'perfil' %}"><i class="fa-solid fa-gear"></i> Perfil</a></li>
-                    <li class="nav-item mx-3 mt-2 mt-lg-0">
-                        <span class="badge bg-dark border border-secondary px-4 py-2 rounded-pill shadow-sm" style="font-size: 0.85rem;">
-                            {% if user.is_staff %}<i class="fa-solid fa-crown text-warning"></i>{% else %}<i class="fa-solid fa-user text-info"></i>{% endif %} {{ user.username }}
-                        </span>
-                    </li>
-                    <li class="nav-item mt-2 mt-lg-0">
-                        <form action="{% url 'logout' %}" method="POST" class="m-0">
+                    <li class="nav-item"><a class="nav-link px-3" href="{% url 'perfil' %}"><i class="fa-solid fa-user"></i> Perfil</a></li>
+                    
+                    {% if user.is_staff %}
+                        <li class="nav-item"><a class="nav-link px-3" href="{% url 'crear' %}"><i class="fa-solid fa-plus"></i> Agregar</a></li>
+                        <li class="nav-item"><a class="nav-link px-3 text-warning fw-bold" href="{% url 'dashboard' %}"><i class="fa-solid fa-chart-line"></i> Panel de Control</a></li>
+                    {% endif %}
+
+                    <li class="nav-item">
+                        <form action="{% url 'logout' %}" method="POST" class="d-inline">
                             {% csrf_token %}
-                            <button class="btn btn-outline-danger btn-sm px-4 rounded-pill fw-bold"><i class="fa-solid fa-right-from-bracket"></i> Salir</button>
+                            <button type="submit" class="btn btn-sm btn-outline-danger rounded-pill px-3 py-2"><i class="fa-solid fa-right-from-bracket"></i> Salir</button>
                         </form>
                     </li>
                 {% else %}
-                    <li class="nav-item"><a class="nav-link px-4" href="{% url 'login' %}">Ingresar</a></li>
-                    <li class="nav-item"><a class="btn btn-gradient px-4 py-2 rounded-pill ms-2" href="{% url 'registro' %}">Regístrate</a></li>
+                    <li class="nav-item"><a class="nav-link px-3" href="{% url 'login' %}">Ingresar</a></li>
+                    <li class="nav-item"><a class="btn btn-success rounded-pill px-4 text-white fw-bold" href="{% url 'registro' %}">Registrarse</a></li>
                 {% endif %}
+
+                <!-- Botón Modo Oscuro / Claro -->
+                <li class="nav-item d-flex align-items-center ms-2">
+                    <button onclick="toggleTheme()" class="btn btn-sm btn-outline-secondary rounded-circle" id="theme-btn" style="width: 40px; height: 40px;" title="Cambiar tema">
+                        <i class="fa-solid fa-moon" id="theme-icon"></i>
+                    </button>
+                </li>
             </ul>
         </div>
     </div>
@@ -142,5 +242,39 @@
 </div>
 
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+
+<!-- Script para el Modo Oscuro/Claro automático con persistencia -->
+<script>
+function toggleTheme() {
+    let body = document.body;
+    let icon = document.getElementById('theme-icon');
+    
+    body.classList.toggle('light-mode');
+    
+    if (body.classList.contains('light-mode')) {
+        localStorage.setItem('theme', 'light');
+        icon.classList.remove('fa-moon');
+        icon.classList.add('fa-sun');
+    } else {
+        localStorage.setItem('theme', 'dark');
+        icon.classList.remove('fa-sun');
+        icon.classList.add('fa-moon');
+    }
+}
+
+// Cargar preferencia guardada al iniciar la página
+window.addEventListener('DOMContentLoaded', () => {
+    let savedTheme = localStorage.getItem('theme');
+    let icon = document.getElementById('theme-icon');
+    
+    if (savedTheme === 'light') {
+        document.body.classList.add('light-mode');
+        if(icon) {
+            icon.classList.remove('fa-moon');
+            icon.classList.add('fa-sun');
+        }
+    }
+});
+</script>
 </body>
 </html>

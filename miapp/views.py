@@ -6,6 +6,9 @@ from django.http import JsonResponse
 from django.db.models import Q
 from django.core.paginator import Paginator
 from django.contrib import messages
+from django.contrib.auth.decorators import user_passes_test
+from django.contrib.auth.models import User
+from django.shortcuts import render, redirect
 
 # Importamos todos tus modelos y formularios limpios
 from .models import Producto, Categoria, Carrito, Favorito
@@ -13,6 +16,16 @@ from .forms import ProductoForm, RegistroForm
 
 def es_admin(user):
     return user.is_authenticated and user.is_staff
+
+def crear_producto(views, request):
+    if request.method == 'POST':
+        form = ProductoForm(request.POST, request.FILES)
+        if form.is_valid():
+            form.save()
+            return redirect('home')
+    else:
+        form = ProductoForm()
+    return render(request, 'crear_producto.html', {'form': form})
 
 # 🏠 HOME
 @login_required
@@ -209,3 +222,20 @@ def toggle_favorito(request, id):
         messages.success(request, f'"{producto.nombre}" agregado a favoritos. ❤️')
         
     return redirect(request.META.get('HTTP_REFERER', 'home'))
+
+def es_admin(user):
+    return user.is_staff
+
+@user_passes_test(es_admin)
+def dashboard(request):
+    total_productos = Producto.objects.count()
+    total_usuarios = User.objects.count()
+    total_favoritos = Favorito.objects.count()
+    productos = Producto.objects.all().order_by('-id')
+    
+    return render(request, 'dashboard.html', {
+        'total_productos': total_productos,
+        'total_usuarios': total_usuarios,
+        'total_favoritos': total_favoritos,
+        'productos': productos
+    })

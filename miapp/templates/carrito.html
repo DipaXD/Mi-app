@@ -1,62 +1,79 @@
 {% extends 'base.html' %}
-{% block title %}Mi Carrito | Mi Tienda{% endblock %}
+{% block title %}Carrito de Compras | Mi Tienda{% endblock %}
 {% block content %}
+<div class="animate__animated animate__fadeIn" style="margin-top: 40px;">
+    <h2 class="fw-bold text-white mb-4"><i class="fa-solid fa-cart-shopping text-warning me-2"></i> Tu Carrito de Compras</h2>
 
-<style>
-.table-glass td, .table-glass th { background: transparent !important; color: white; border-bottom: 1px solid rgba(255,255,255,0.05); padding: 25px 15px; vertical-align: middle;}
-.table-glass th { color: var(--primary) !important; font-weight: 800; text-transform: uppercase; letter-spacing: 1px; border-bottom: 2px solid rgba(14,165,233,0.3); }
-</style>
-
-<div class="glass-panel mx-auto p-4 p-md-5 animate__animated animate__fadeInUp" style="max-width: 900px; margin-top: 40px;">
-    <h2 class="fw-bold mb-5 text-center display-6"><i class="fa-solid fa-bag-shopping text-primary"></i> Tu Carrito</h2>
-    
     {% if items %}
-        <div class="table-responsive mb-4">
-            <table class="table table-glass text-center m-0">
-                <thead>
-                    <tr>
-                        <th class="text-start">Producto</th>
-                        <th>Precio</th>
-                        <th>Cant.</th>
-                        <th>Subtotal</th>
-                        <th></th>
-                    </tr>
-                </thead>
-                <tbody>
-                    {% for item in items %}
-                    <tr class="animate__animated animate__fadeIn">
-                        <td class="fw-bold text-start fs-5">{{ item.producto.nombre }}</td>
-                        <td class="text-secondary">${{ item.producto.precio }}</td>
-                        <td><span class="badge bg-dark border px-3 py-2 fs-6 rounded-pill">{{ item.cantidad }}</span></td>
-                        <td class="fw-bold text-success fs-5">${% widthratio item.producto.precio 1 item.cantidad %}</td>
-                        <td>
-                            <form action="{% url 'eliminar_del_carrito' item.id %}" method="POST" class="m-0">
-                                {% csrf_token %}
-                                <button class="btn btn-outline-danger btn-sm rounded-circle" style="width: 40px; height: 40px;"><i class="fa-solid fa-xmark"></i></button>
-                            </form>
-                        </td>
-                    </tr>
-                    {% endfor %}
-                </tbody>
-            </table>
-        </div>
-        
-        <div class="d-flex flex-column flex-md-row justify-content-between align-items-center mt-5 pt-4" style="border-top: 1px solid rgba(255,255,255,0.1);">
-            <a href="/" class="btn btn-outline-light rounded-pill mb-3 mb-md-0 px-4 py-3 fw-bold"><i class="fa-solid fa-arrow-left"></i> Seguir comprando</a>
-            <div class="text-center text-md-end">
-                <p class="text-secondary mb-1 text-uppercase letter-spacing-1">Total a pagar</p>
-                <h2 class="fw-bolder text-success mb-4" style="font-size: 3rem; text-shadow: 0 0 20px rgba(16,185,129,0.4);">${{ total }}</h2>
-                <button class="btn btn-gradient rounded-pill px-5 py-3 fw-bold fs-5 shadow-lg"><i class="fa-solid fa-credit-card"></i> Proceder al Pago</button>
+    <div class="row g-4">
+        <!-- Lista de productos en el carrito -->
+        <div class="col-lg-8">
+            <div class="glass-panel p-4">
+                <div class="table-responsive">
+                    <table class="table table-dark table-hover table-borderless align-middle m-0" style="background: transparent;">
+                        <thead style="border-bottom: 2px solid rgba(255,255,255,0.1);">
+                            <tr class="text-primary text-uppercase" style="letter-spacing: 1px;">
+                                <th>Producto</th>
+                                <th>Precio</th>
+                                <th>Cantidad</th>
+                                <th class="text-end">Subtotal</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for item in items %}
+                            <tr style="border-bottom: 1px solid rgba(255,255,255,0.05);">
+                                <td class="fw-bold fs-5">{{ item.producto.nombre }}</td>
+                                <td class="text-secondary">${{ item.producto.precio }}</td>
+                                <td><span class="badge bg-secondary rounded-pill px-3">{{ item.cantidad }}</span></td>
+                                <td class="text-end text-success fw-bold">${{ item.subtotal }}</td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
             </div>
         </div>
 
-    {% else %}
-        <div class="text-center py-5">
-            <i class="fa-solid fa-cart-arrow-down text-secondary mb-4" style="font-size: 5rem; opacity: 0.5;"></i>
-            <h3 class="fw-bold mb-3">Tu carrito está vacío</h3>
-            <p class="text-secondary mb-5 fs-5">¡Es el momento perfecto para llenarlo de cosas increíbles!</p>
-            <a href="/" class="btn btn-gradient px-5 py-3 rounded-pill fw-bold fs-5"><i class="fa-solid fa-store"></i> Ir a la tienda</a>
+        <!-- Resumen de compra y pago por WhatsApp -->
+        <div class="col-lg-4">
+            <div class="glass-panel p-4 text-center">
+                <h4 class="text-white fw-bold mb-3">Resumen del Pedido</h4>
+                <hr class="border-secondary">
+                <div class="d-flex justify-content-between align-items-center mb-4">
+                    <span class="text-secondary fs-5">Total a Pagar:</span>
+                    <span class="text-success fw-bold fs-3">${{ total }}</span>
+                </div>
+                
+                <button onclick="enviarWhatsApp()" class="btn btn-gradient rounded-pill w-100 py-3 fw-bold fs-5 shadow-lg" style="background: linear-gradient(135deg, #10b981, #059669); color: white;">
+                    <i class="fa-brands fa-whatsapp fs-4 me-2"></i> Pedir por WhatsApp
+                </button>
+            </div>
         </div>
+    </div>
+    {% else %}
+    <div class="glass-panel p-5 text-center">
+        <h4 class="text-secondary mb-3">Tu carrito está vacío</h4>
+        <p class="text-muted mb-4">¡Explora nuestro catálogo y agrega productos para comenzar!</p>
+        <a href="/" class="btn btn-outline-info rounded-pill px-4 py-2">Ver Productos</a>
+    </div>
     {% endif %}
 </div>
+
+<script>
+function enviarWhatsApp() {
+    // Reemplaza con tu número real (código de país + número, sin el símbolo +)
+    let telefono = "5493870000000"; 
+    let mensaje = "¡Hola! Quiero hacer este pedido desde la página web:%0A%0A";
+    let total = "{{ total }}";
+
+    {% for item in items %}
+        mensaje += "🛍️ {{ item.cantidad }}x {{ item.producto.nombre }} - ${{ item.producto.precio }}%0A";
+    {% endfor %}
+
+    mensaje += "%0A*Total a pagar: $" + total + "*%0A%0A¿Cómo podemos coordinar el pago?";
+    
+    let url = "https://wa.me/" + telefono + "?text=" + mensaje;
+    window.open(url, '_blank');
+}
+</script>
 {% endblock %}
