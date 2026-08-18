@@ -1,89 +1,174 @@
 {% extends 'base.html' %}
-{% block title %}Inicio | Mi Tienda{% endblock %}
+{% block title %}UrbanPulse | Inicio{% endblock %}
 
 {% block hero %}
 <style>
-    /* HERO SECTION INSPIRACIÓN */
-    .hero-section {
-        background: linear-gradient(rgba(15, 23, 42, 0.6), rgba(15, 23, 42, 0.9)), url('https://images.unsplash.com/photo-1441986300917-64674bd600d8?q=80&w=2670') center/cover;
-        padding: 120px 20px;
-        text-align: center;
-        border-bottom: 1px solid rgba(255,255,255,0.1);
-        transition: all 0.3s ease;
+    /* ESTILOS PARA EL LOGO URBANPULSE */
+    .brand-logo {
+        font-weight: 900;
+        font-size: 1.8rem;
+        letter-spacing: -0.5px;
+        text-decoration: none !important;
+        display: inline-flex;
+        align-items: center;
+        gap: 6px;
     }
-    .hero-title { font-size: 4rem; font-weight: 800; text-shadow: 0 10px 30px rgba(0,0,0,0.8); }
+    .brand-urban {
+        color: #0f172a; /* Oscuro para modo claro */
+    }
+    body:not(.light-mode) .brand-urban {
+        color: #ffffff; /* Blanco para modo oscuro si aplica en tu base */
+    }
+    .brand-pulse {
+        color: var(--primary, #0ea5e9);
+        position: relative;
+    }
+    .pulse-icon {
+        font-size: 1.2rem;
+        vertical-align: middle;
+        color: var(--primary, #0ea5e9);
+        animation: pulseAnim 1.5s infinite;
+    }
+    @keyframes pulseAnim {
+        0% { transform: scale(1); opacity: 1; }
+        50% { transform: scale(1.2); opacity: 0.7; }
+        100% { transform: scale(1); opacity: 1; }
+    }
+
+    /* ESTILOS PARA EL CARRUSEL DEL HERO */
+    .hero-carousel {
+        border-bottom: 1px solid rgba(255,255,255,0.1);
+        box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+    }
+    .carousel-item {
+        height: 420px;
+        background-size: cover;
+        background-position: center;
+        position: relative;
+    }
+    .carousel-item::before {
+        content: '';
+        position: absolute;
+        top: 0; left: 0; width: 100%; height: 100%;
+        background: linear-gradient(to right, rgba(15, 23, 42, 0.8), rgba(15, 23, 42, 0.3));
+    }
+    .carousel-caption-custom {
+        position: absolute;
+        bottom: 20%;
+        left: 8%;
+        z-index: 2;
+        max-width: 600px;
+        text-align: left;
+    }
+    .carousel-caption-custom h2 {
+        font-size: 3rem;
+        font-weight: 800;
+        color: white;
+        text-shadow: 0 5px 15px rgba(0,0,0,0.5);
+    }
+    .carousel-caption-custom p {
+        font-size: 1.2rem;
+        color: #e2e8f0;
+    }
+
+    /* BUSCADOR FLOTANTE */
     .search-box { max-width: 650px; margin: 30px auto; position: relative; }
     .search-box i { position: absolute; left: 20px; top: 50%; transform: translateY(-50%); color: var(--primary); font-size: 1.2rem;}
     .search-box input { padding: 20px 20px 20px 50px; border-radius: 50px; font-size: 1.1rem; border: 2px solid rgba(255,255,255,0.2) !important; background: rgba(0,0,0,0.5) !important; color: white !important;}
     
-    /* BLOQUES DE COLORES TIPO INSPIRACIÓN */
+    /* BLOQUES DE COLORES */
     .color-blocks { margin-top: -1px; }
-    .block-1 { background: #0ea5e9; color: white; } /* Celeste */
-    .block-2 { background: #0284c7; color: white; } /* Azul más oscuro */
-    .block-3 { background: #f59e0b; color: #0f172a; } /* Amarillo vibrante */
+    .block-1 { background: #0ea5e9; color: white; }
+    .block-2 { background: #0284c7; color: white; }
+    .block-3 { background: #f59e0b; color: #0f172a; }
     .info-block { padding: 40px 20px; text-align: center; height: 100%; transition: 0.3s; }
     .info-block:hover { filter: brightness(1.1); transform: translateY(-5px); }
     .info-block i { font-size: 2.5rem; margin-bottom: 15px; }
 
-    /* FILTROS CIRCULARES ESTILO FRÁVEGA */
-    .category-item {
-        min-width: 90px;
-        transition: transform 0.3s ease;
-    }
-    .category-item:hover {
-        transform: translateY(-5px);
-    }
+    /* FILTROS CIRCULARES */
+    .category-item { min-width: 90px; transition: transform 0.3s ease; }
+    .category-item:hover { transform: translateY(-5px); }
     .category-circle {
-        width: 75px;
-        height: 75px;
-        border-radius: 50%;
-        background: var(--glass-bg);
-        border: 2px solid rgba(14, 165, 233, 0.3);
-        backdrop-filter: blur(10px);
+        width: 75px; height: 75px; border-radius: 50%;
+        background: #ffffff; border: 2px solid rgba(14, 165, 233, 0.3);
+        box-shadow: 0 2px 5px rgba(0,0,0,0.05);
         transition: all 0.3s ease;
     }
-    .category-item:hover .category-circle {
-        border-color: var(--primary);
-        box-shadow: 0 0 15px rgba(14, 165, 233, 0.4);
-    }
+    .category-item:hover .category-circle { border-color: var(--primary); box-shadow: 0 0 15px rgba(14, 165, 233, 0.4); }
     .scrollbar-hidden::-webkit-scrollbar { display: none; }
     .scrollbar-hidden { -ms-overflow-style: none; scrollbar-width: none; }
 
-    /* TARJETAS DE PRODUCTO MEJORADAS */
-    .product-card { background: var(--glass-bg); backdrop-filter: blur(10px); border: 1px solid rgba(255,255,255,0.05); border-radius: 20px; overflow: hidden; transition: 0.4s; }
-    .product-card:hover { transform: translateY(-10px); box-shadow: 0 20px 40px rgba(14, 165, 233, 0.2); border-color: rgba(14, 165, 233, 0.5); }
-    .product-img { width: 100%; height: 250px; object-fit: contain; padding: 15px; transition: 0.5s; }
-    .product-card:hover .product-img { transform: scale(1.05); }
-    .img-wrapper { overflow: hidden; border-bottom: 2px solid rgba(255,255,255,0.05); }
+    /* TARJETAS DE PRODUCTO MODERNAS */
+    .product-card { 
+        background: #ffffff; color: #1e293b;
+        border: 1px solid #e2e8f0; border-radius: 12px; 
+        overflow: hidden; transition: all 0.3s ease; 
+        box-shadow: 0 2px 4px rgba(0,0,0,0.02);
+    }
+    .product-card:hover { transform: translateY(-5px); box-shadow: 0 10px 25px rgba(0, 0, 0, 0.08); border-color: #cbd5e1; }
+    .product-img { width: 100%; height: 160px; object-fit: contain; padding: 15px; transition: 0.3s; }
+    .product-card:hover .product-img { transform: scale(1.03); }
+    .img-wrapper { overflow: hidden; background: #ffffff; border-bottom: 1px solid #f1f5f9; }
+    
     .section-title { font-weight: 800; font-size: 2rem; display: inline-block; position: relative; margin-bottom: 30px;}
     .section-title::after { content: ''; position: absolute; left: 0; bottom: -5px; width: 50%; height: 4px; background: var(--primary); border-radius: 2px; }
-
-    /* ADAPTACIÓN PARA MODO CLARO EN EL HERO */
-    body.light-mode .hero-section {
-        background: linear-gradient(rgba(241, 245, 249, 0.85), rgba(241, 245, 249, 0.95)), url('https://images.unsplash.com/photo-1441986300917-64674bd600d8?q=80&w=2670') center/cover;
-        border-bottom: 1px solid rgba(0,0,0,0.08);
-    }
-    body.light-mode .hero-title {
-        color: #0f172a !important;
-        text-shadow: none !important;
-    }
-    body.light-mode .hero-section p {
-        color: #334155 !important;
-    }
-    body.light-mode .search-box input {
-        background: rgba(255, 255, 255, 0.9) !important;
-        color: #0f172a !important;
-        border: 2px solid rgba(0, 0, 0, 0.15) !important;
-    }
-    body.light-mode .search-box input::placeholder {
-        color: #64748b !important;
-    }
 </style>
 
-<div class="hero-section animate__animated animate__fadeIn">
-    <h1 class="hero-title text-white">Mi <span style="color: var(--primary);">Tienda</span></h1>
-    <p class="fs-4 text-light mt-3" style="opacity: 0.9;">Descubre los mejores productos al mejor precio.</p>
+<!-- SI QUIERES REEMPLAZAR EL LOGO EN EL NAVBAR O HEADER DE TU BASE.HTML, PUEDES USAR ESTE BLOQUE: -->
+<!-- 
+<a href="{% url 'home' %}" class="brand-logo">
+    <span class="brand-urban">Urban</span><span class="brand-pulse">P<i class="fa-solid fa-heart-pulse pulse-icon"></i>lse</span>
+</a> 
+-->
+
+<!-- PANTALLA DESLIZANTE / CARRUSEL PRINCIPAL -->
+<div id="heroCarousel" class="carousel slide hero-carousel" data-bs-ride="carousel" data-bs-interval="4000">
+    <div class="carousel-indicators">
+        <button type="button" data-bs-target="#heroCarousel" data-bs-slide-to="0" class="active" aria-current="true"></button>
+        <button type="button" data-bs-target="#heroCarousel" data-bs-slide-to="1"></button>
+        <button type="button" data-bs-target="#heroCarousel" data-bs-slide-to="2"></button>
+    </div>
     
+    <div class="carousel-inner">
+        <!-- Slide 1 -->
+        <div class="carousel-item active" style="background-image: url('https://images.unsplash.com/photo-1441986300917-64674bd600d8?q=80&w=2670');">
+            <div class="carousel-caption-custom">
+                <span class="badge bg-primary mb-2 px-3 py-2 fs-6">URBAN SALE</span>
+                <h2>Estilo Sin Límites</h2>
+                <p>Descubre las últimas tendencias urbanas con descuentos exclusivos.</p>
+            </div>
+        </div>
+        <!-- Slide 2 -->
+        <div class="carousel-item" style="background-image: url('https://images.unsplash.com/photo-1555529771-835f59fc5efe?q=80&w=2670');">
+            <div class="carousel-caption-custom">
+                <span class="badge bg-warning text-dark mb-2 px-3 py-2 fs-6">NUEVA COLECCIÓN</span>
+                <h2>Conéctate con tu Pulso</h2>
+                <p>Equipamiento y accesorios diseñados para tu día a día.</p>
+            </div>
+        </div>
+        <!-- Slide 3 -->
+        <div class="carousel-item" style="background-image: url('https://images.unsplash.com/photo-1526170375885-4d8ecf77b99f?q=80&w=2670');">
+            <div class="carousel-caption-custom">
+                <span class="badge bg-info text-dark mb-2 px-3 py-2 fs-6">FINANCIACIÓN</span>
+                <h2>Hasta 12 Sin Interés</h2>
+                <p>Aprovecha nuestras facilidades de pago en toda la tienda.</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Controles de Flechas -->
+    <button class="carousel-control-prev" type="button" data-bs-target="#heroCarousel" data-bs-slide="prev">
+        <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+        <span class="visually-hidden">Anterior</span>
+    </button>
+    <button class="carousel-control-next" type="button" data-bs-target="#heroCarousel" data-bs-slide="next">
+        <span class="carousel-control-next-icon" aria-hidden="true"></span>
+        <span class="visually-hidden">Siguiente</span>
+    </button>
+</div>
+
+<!-- Buscador debajo del carrusel -->
+<div class="container py-3">
     <div class="search-box">
         <i class="fa-solid fa-magnifying-glass"></i>
         <input type="text" id="buscador" placeholder="Busca productos, categorías o marcas...">
@@ -118,20 +203,18 @@
 {% endblock %}
 
 {% block content %}
-<!-- SECCIÓN DE FILTROS RÁPIDOS ESTILO FRÁVEGA CON IMÁGENES -->
+<!-- SECCIÓN DE FILTROS RÁPIDOS -->
 <div class="container my-5">
     <div class="category-slider-container position-relative">
         <div class="d-flex overflow-auto py-3 gap-4 scrollbar-hidden justify-content-lg-center" style="scroll-behavior: smooth; white-space: nowrap;">
             
-            <!-- Botón Todos -->
             <a href="{% url 'home' %}" class="category-item text-center text-decoration-none">
                 <div class="category-circle mb-2 mx-auto d-flex align-items-center justify-content-center shadow-sm">
                     <i class="fa-solid fa-border-all fs-4 text-primary"></i>
                 </div>
-                <span class="small fw-bold text-dynamic">Todos</span>
+                <span class="small fw-bold text-dark">Todos</span>
             </a>
 
-            <!-- Categorías dinámicas desde el Admin -->
             {% for cat in categorias %}
             <a href="?cat={{ cat.id }}" class="category-item text-center text-decoration-none">
                 <div class="category-circle mb-2 mx-auto d-flex align-items-center justify-content-center shadow-sm overflow-hidden position-relative">
@@ -141,7 +224,7 @@
                         <i class="fa-solid fa-tag fs-4 text-primary"></i>
                     {% endif %}
                 </div>
-                <span class="small fw-bold text-dynamic">{{ cat.nombre }}</span>
+                <span class="small fw-bold text-dark">{{ cat.nombre }}</span>
             </a>
             {% endfor %}
 
@@ -149,49 +232,42 @@
     </div>
 </div>
 
+{% if destacados %}
 <h3 class="section-title animate__animated animate__fadeInLeft"><i class="fa-solid fa-fire text-warning"></i> Destacados</h3>
-<div class="row g-4 mb-5">
+<div class="row g-3 mb-5">
     {% for p in destacados %}
-    <div class="col-md-4 animate__animated animate__zoomIn">
+    <div class="col-lg-3 col-md-4 col-sm-6 col-12 animate__animated animate__zoomIn">
         <div class="product-card d-flex flex-column h-100">
             <div class="img-wrapper">
                 {% if p.imagen %} <img src="{{ p.imagen.url }}" class="product-img"> {% endif %}
             </div>
-            <div class="p-4 d-flex flex-column flex-grow-1">
-                <h4 class="fw-bold mb-1">{{ p.nombre }}</h4>
-                <p class="text-info fw-bold fs-3 m-0 mb-3">${{ p.precio }}</p>
+            <div class="p-3 d-flex flex-column flex-grow-1">
+                <h4 class="fw-bold mb-1 fs-6 text-dark text-truncate">{{ p.nombre }}</h4>
+                <p class="text-primary fw-bold fs-4 m-0 mb-3">${{ p.precio }}</p>
                 <div class="mt-auto">
-                    <a href="{% url 'detalle' p.id %}" class="btn btn-gradient w-100 rounded-pill py-2 mb-2"><i class="fa-regular fa-eye"></i> Ver producto</a>
-                    {% if user.is_staff %}
-                    <div class="d-flex gap-2">
-                        <a href="{% url 'editar' p.id %}" class="btn btn-warning w-50 rounded-pill fw-bold"><i class="fa-solid fa-pen"></i></a>
-                        <form action="{% url 'eliminar' p.id %}" method="POST" class="w-50 m-0">
-                            {% csrf_token %}
-                            <button class="btn btn-danger w-100 rounded-pill fw-bold"><i class="fa-solid fa-trash"></i></button>
-                        </form>
-                    </div>
-                    {% endif %}
+                    <a href="{% url 'detalle' p.id %}" class="btn btn-outline-primary w-100 rounded-pill py-1 mb-1 fs-6 fw-bold"><i class="fa-regular fa-eye"></i> Ver producto</a>
                 </div>
             </div>
         </div>
     </div>
     {% endfor %}
 </div>
+{% endif %}
 
 <h3 class="section-title mt-4 animate__animated animate__fadeInLeft"><i class="fa-solid fa-star text-primary"></i> Nuestro Catálogo</h3>
-<div id="productos" class="row g-4 mb-5">
+<div id="productos" class="row g-3 mb-5">
     {% for producto in productos %}
-    <div class="col-md-4">
+    <div class="col-lg-3 col-md-4 col-sm-6 col-12">
         <div class="product-card d-flex flex-column h-100">
             <div class="img-wrapper">
                 {% if producto.imagen %} <img src="{{ producto.imagen.url }}" class="product-img"> {% endif %}
             </div>
-            <div class="p-4 d-flex flex-column flex-grow-1">
-                <h4 class="fw-bold mb-2">{{ producto.nombre }}</h4>
-                <p class="small flex-grow-1" style="color: inherit; opacity: 0.85;">{{ producto.descripcion|truncatechars:70 }}</p>
-                <p class="text-info fw-bold fs-3 mb-3">${{ producto.precio }}</p>
+            <div class="p-3 d-flex flex-column flex-grow-1">
+                <h4 class="fw-bold mb-1 fs-6 text-dark text-truncate">{{ producto.nombre }}</h4>
+                <p class="small flex-grow-1 text-muted mb-2" style="font-size: 0.8rem;">{{ producto.descripcion|truncatechars:50 }}</p>
+                <p class="text-primary fw-bold fs-4 mb-3">${{ producto.precio }}</p>
                 <div class="mt-auto">
-                    <a href="{% url 'detalle' producto.id %}" class="btn btn-outline-info w-100 rounded-pill py-2 mb-2"><i class="fa-regular fa-eye"></i> Ver producto</a>
+                    <a href="{% url 'detalle' producto.id %}" class="btn btn-outline-primary w-100 rounded-pill py-1 mb-1 fs-6 fw-bold"><i class="fa-regular fa-eye"></i> Ver producto</a>
                 </div>
             </div>
         </div>
@@ -200,7 +276,6 @@
 </div>
 
 <script>
-const esAdmin = {{ user.is_staff|yesno:"true,false" }};
 const input = document.getElementById("buscador");
 const contenedor = document.getElementById("productos");
 
@@ -212,15 +287,18 @@ input.addEventListener("keyup", function () {
             contenedor.innerHTML = "";
             data.productos.forEach(p => {
                 const img = p.imagen ? `<img src="${p.imagen}" class="product-img">` : '';
+                
                 contenedor.innerHTML += `
-                    <div class="col-md-4 animate__animated animate__fadeIn">
+                    <div class="col-lg-3 col-md-4 col-sm-6 col-12 animate__animated animate__fadeIn">
                         <div class="product-card d-flex flex-column h-100">
                             <div class="img-wrapper">${img}</div>
-                            <div class="p-4 d-flex flex-column flex-grow-1">
-                                <h4 class="fw-bold mb-2">${p.nombre}</h4>
-                                <p class="small flex-grow-1" style="color: inherit; opacity: 0.85;">${p.descripcion ? p.descripcion.slice(0,70) : ''}</p>
-                                <p class="text-info fw-bold fs-3 mb-3">$${p.precio}</p>
-                                <a href="/producto/${p.id}/" class="btn btn-outline-info w-100 rounded-pill py-2 mb-2"><i class="fa-regular fa-eye"></i> Ver producto</a>
+                            <div class="p-3 d-flex flex-column flex-grow-1">
+                                <h4 class="fw-bold mb-1 fs-6 text-dark text-truncate">${p.nombre}</h4>
+                                <p class="small flex-grow-1 text-muted mb-2" style="font-size: 0.8rem;">${p.descripcion ? p.descripcion.slice(0,50) : ''}</p>
+                                <p class="text-primary fw-bold fs-4 mb-3">$${p.precio}</p>
+                                <div class="mt-auto">
+                                    <a href="/producto/${p.id}/" class="btn btn-outline-primary w-100 rounded-pill py-1 mb-1 fs-6 fw-bold"><i class="fa-regular fa-eye"></i> Ver producto</a>
+                                </div>
                             </div>
                         </div>
                     </div>`;

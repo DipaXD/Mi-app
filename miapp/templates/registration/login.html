@@ -3,13 +3,53 @@
 {% block content %}
 
 <style>
-    .auth-card { max-width: 450px; margin: 60px auto; padding: 40px; border-top: 4px solid var(--primary); }
-    .error-box { background: rgba(220, 38, 38, 0.1); border-left: 4px solid #ef4444; color: #f87171; padding: 15px 20px; border-radius: 8px; margin-bottom: 20px; }
+    .auth-card { 
+        max-width: 450px; 
+        margin: 60px auto; 
+        padding: 40px; 
+        border-top: 4px solid var(--primary); 
+    }
+    .error-box { 
+        background: rgba(220, 38, 38, 0.1); 
+        border-left: 4px solid #ef4444; 
+        color: #f87171; 
+        padding: 15px 20px; 
+        border-radius: 8px; 
+        margin-bottom: 20px; 
+    }
     ul.errorlist { display: none !important; }
+
+    /* Estilos para que los inputs generados por {{ form.as_p }} adopten el diseño oscuro */
+    .auth-card p {
+        margin-bottom: 1.25rem;
+    }
+    .auth-card label {
+        display: block;
+        color: #94a3b8;
+        font-size: 0.85rem;
+        font-weight: 600;
+        margin-bottom: 0.5rem;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+    }
+    .auth-card input {
+        width: 100%;
+        background-color: #0b0f19 !important;
+        border: 1px solid rgba(255, 255, 255, 0.1) !important;
+        color: #f8fafc !important;
+        border-radius: 50px !important;
+        padding: 0.75rem 1.25rem !important;
+        outline: none;
+        transition: border-color 0.3s;
+    }
+    .auth-card input:focus {
+        border-color: var(--primary) !important;
+        box-shadow: 0 0 0 3px rgba(14, 165, 233, 0.15);
+    }
 </style>
 
 <div class="glass-panel auth-card animate__animated animate__fadeInUp">
-    <div class="text-center mb-5">
+    <div class="text-center mb-4">
         <div class="d-inline-block p-3 rounded-circle mb-3" style="background: rgba(14,165,233,0.1);">
             <i class="fa-solid fa-right-to-bracket fs-1 text-primary"></i>
         </div>
@@ -28,7 +68,7 @@
 
         {{ form.as_p }}
 
-        <button class="btn btn-gradient w-100 py-3 rounded-pill fw-bold text-uppercase mt-4 fs-5" type="submit">
+        <button class="btn btn-gradient w-100 py-3 rounded-pill fw-bold text-uppercase mt-3 fs-5" type="submit">
             Iniciar Sesión <i class="fa-solid fa-arrow-right ms-2"></i>
         </button>
     </form>

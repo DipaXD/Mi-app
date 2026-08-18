@@ -2,7 +2,7 @@
 <html lang="es">
 <head>
     <meta charset="UTF-8">
-    <title>{% block title %}Mi Tienda Pro{% endblock %}</title>
+    <title>{% block title %}UrbanPulse{% endblock %}</title>
     <!-- Bootstrap & Animate.css -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css" rel="stylesheet">
@@ -10,212 +10,258 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     
     <style>
-        @import url('https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;800&family=Poppins:wght@400;600&display=swap');
+        @import url('https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&family=Poppins:wght@400;600;700&display=swap');
 
         :root {
-            --primary: #0ea5e9; /* Celeste vibrante */
-            --secondary: #8b5cf6; /* Púrpura */
-            --accent: #f59e0b; /* Amarillo/Naranja de tu inspiración */
-            --dark-bg: #0f172a;
-            --glass-bg: rgba(30, 41, 59, 0.7);
+            --primary: #0ea5e9; 
+            --primary-glow: rgba(14, 165, 233, 0.25);
+            --secondary: #8b5cf6; 
+            --dark-bg: #07090e;
+            --glass-bg: rgba(15, 23, 42, 0.85);
+            --glass-border: rgba(255, 255, 255, 0.08);
         }
 
         body {
             font-family: 'Outfit', sans-serif;
             background-color: var(--dark-bg);
-            color: #f8fafc;
+            color: #f1f5f9;
             min-height: 100vh;
             margin: 0;
-            padding-bottom: 50px;
+            padding-bottom: 30px;
+            overflow-x: hidden;
             transition: background-color 0.3s ease, color 0.3s ease;
         }
 
-        /* Fondo para el MODO OSCURO (Tu foto de la tienda) */
+        /* Fondo dinámico avanzado */
         body::before {
             content: ''; position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-            background: url("https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?q=80&w=2564") center/cover no-repeat;
-            filter: brightness(0.25) blur(3px); z-index: -1;
+            background: radial-gradient(circle at 15% 20%, rgba(14, 165, 233, 0.08) 0%, transparent 40%),
+                        radial-gradient(circle at 85% 80%, rgba(139, 92, 246, 0.08) 0%, transparent 40%),
+                        url("https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?q=80&w=2564") center/cover no-repeat;
+            filter: brightness(0.2) blur(40px); z-index: -1;
             transition: all 0.4s ease;
         }
 
-        /* NAVBAR PRO */
-        .navbar-pro {
-            background: rgba(15, 23, 42, 0.85);
-            backdrop-filter: blur(20px);
-            border-bottom: 1px solid rgba(255,255,255,0.05);
-            padding: 15px 0;
-            box-shadow: 0 4px 30px rgba(0,0,0,0.5);
+        /* CORRECCIÓN PARA EL TEXTO DEL SLIDER / CARRUSEL (ALTÍSIMA LEGIBILIDAD) */
+        .carousel-item h1, .carousel-item h2, .carousel-item h3, 
+        .carousel-item h4, .carousel-item h5, .carousel-item p, 
+        .carousel-caption h1, .carousel-caption h2, .carousel-caption h3, 
+        .carousel-caption h4, .carousel-caption h5, .carousel-caption p {
+            color: #ffffff !important;
+            text-shadow: 0 2px 8px rgba(0, 0, 0, 0.8), 0 0 20px rgba(0, 0, 0, 0.5);
         }
-        .navbar-brand { font-family: 'Poppins', sans-serif; font-weight: 800; letter-spacing: 2px; color: white !important;}
-        .navbar-brand span { color: var(--primary); }
-        .nav-link { color: rgba(255,255,255,0.8) !important; font-weight: 600; transition: 0.3s; margin: 0 5px; border-radius: 8px;}
-        .nav-link:hover { color: #fff !important; background: rgba(255,255,255,0.1); transform: translateY(-2px); }
+
+        /* NAVBAR COMPACTO ESTILO E-COMMERCE */
+        .navbar {
+            padding: 6px 16px !important;
+            margin: 8px 12px !important;
+            border-radius: 12px;
+        }
+        .navbar-brand { font-family: 'Poppins', sans-serif; font-weight: 800; letter-spacing: -0.5px; color: white !important;}
+        
+        /* Animación de latido para el logo */
+        @keyframes pulseAnim {
+            0% { transform: scale(1); opacity: 1; }
+            50% { transform: scale(1.25); opacity: 0.8; }
+            100% { transform: scale(1); opacity: 1; }
+        }
+        .pulse-icon {
+            display: inline-block;
+            animation: pulseAnim 1.5s infinite;
+            color: var(--primary);
+        }
+
+        .nav-link { 
+            color: rgba(255,255,255,0.85) !important; 
+            font-weight: 500; 
+            font-size: 0.9rem;
+            transition: 0.2s; 
+            margin: 0 2px; 
+            border-radius: 6px; 
+            padding: 4px 10px !important;
+        }
+        .nav-link:hover { color: #fff !important; background: rgba(255,255,255,0.08); transform: translateY(-1px); }
 
         /* BOTONES GRADIENTES */
         .btn-gradient {
-            background: linear-gradient(135deg, var(--primary), #2563eb);
-            color: white; border: none; font-weight: 600; transition: 0.4s;
-            box-shadow: 0 5px 15px rgba(14, 165, 233, 0.4);
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            color: white; border: none; font-weight: 600; transition: 0.3s;
+            box-shadow: 0 2px 10px var(--primary-glow);
+            padding: 4px 12px;
+            font-size: 0.9rem;
         }
         .btn-gradient:hover {
-            transform: translateY(-3px) scale(1.02);
-            box-shadow: 0 8px 25px rgba(14, 165, 233, 0.6); color: white;
+            transform: translateY(-2px) scale(1.01);
+            box-shadow: 0 4px 20px rgba(14, 165, 233, 0.4); color: white;
         }
 
-        /* TARJETAS CRISTALINAS */
+        /* TARJETAS CRISTALINAS MODO OSCURO POR DEFECTO */
         .glass-panel {
-            background: var(--glass-bg); backdrop-filter: blur(16px);
-            border: 1px solid rgba(255,255,255,0.1); border-radius: 20px;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.3); transition: 0.4s;
+            background: var(--glass-bg);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            border: 1px solid var(--glass-border);
+            border-radius: 16px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3), inset 0 1px 0 rgba(255, 255, 255, 0.05);
+            transition: all 0.3s ease;
         }
 
-        /* INPUTS */
+        /* SECCIÓN DE BENEFICIOS COMPACTA Y PROFESIONAL */
+        .features-bar {
+            background: var(--glass-bg);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            border: 1px solid var(--glass-border);
+            border-radius: 16px;
+            padding: 12px 20px;
+            margin: 15px auto;
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.2);
+        }
+
+        .feature-item {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 6px 12px;
+        }
+
+        .feature-icon {
+            font-size: 1.3rem;
+            color: var(--primary);
+            background: var(--primary-glow);
+            padding: 8px;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            min-width: 40px;
+            height: 40px;
+        }
+
+        .feature-text h6 {
+            font-size: 0.85rem;
+            font-weight: 700;
+            margin: 0;
+            color: #f1f5f9;
+        }
+
+        .feature-text p {
+            font-size: 0.72rem;
+            margin: 0;
+            color: #94a3b8;
+        }
+
+        /* INPUTS COMPACTOS */
         input, textarea, select {
-            width: 100%; padding: 14px 18px; border-radius: 12px; font-family: 'Outfit', sans-serif;
-            border: 1px solid rgba(255,255,255,0.1) !important;
-            background: rgba(0,0,0,0.3) !important; color: white !important; margin-bottom: 15px; transition: 0.3s;
+            width: 100%; padding: 8px 12px; border-radius: 10px; font-family: 'Outfit', sans-serif; font-size: 0.9rem;
+            border: 1px solid rgba(255, 255, 255, 0.08) !important;
+            background: rgba(0, 0, 0, 0.4) !important; color: white !important; margin-bottom: 10px; transition: 0.2s;
         }
-        input:focus, textarea:focus {
+        input:focus, textarea:focus, select:focus {
             outline: none; border-color: var(--primary) !important;
-            box-shadow: 0 0 20px rgba(14, 165, 233, 0.3); background: rgba(255, 255, 255, 0.1) !important;
+            box-shadow: 0 0 0 3px var(--primary-glow); background: rgba(0, 0, 0, 0.6) !important;
         }
-        label { font-weight: 600; color: #cbd5e1; font-size: 0.95rem; margin-bottom: 8px; display: block;}
+        label { font-weight: 600; color: #cbd5e1; font-size: 0.85rem; margin-bottom: 4px; display: block;}
         .helptext { display: none !important; }
 
         /* SCROLLBAR AESTHETIC */
-        ::-webkit-scrollbar { width: 8px; }
+        ::-webkit-scrollbar { width: 6px; }
         ::-webkit-scrollbar-track { background: var(--dark-bg); }
-        ::-webkit-scrollbar-thumb { background: var(--primary); border-radius: 10px; }
+        ::-webkit-scrollbar-thumb { background: var(--primary); border-radius: 6px; }
 
         /* ==========================================
-           MODO CLARO (Fondo limpio y textos adaptados)
+            MODO CLARO ELEGANTE Y COMPACTO
            ========================================== */
         body.light-mode {
-            background-color: #f8fafc !important;
+            background-color: #f1f5f9 !important;
             color: #0f172a !important;
         }
 
-        /* Cambiamos el fondo para que en modo claro sea un tono minimalista claro */
         body.light-mode::before {
-            background: #f1f5f9 !important;
+            background: radial-gradient(circle at 15% 20%, rgba(14, 165, 233, 0.08) 0%, transparent 40%), #f1f5f9 !important;
             filter: none !important;
             opacity: 1 !important;
         }
 
-        body.light-mode .glass-panel {
-            background: rgba(255, 255, 255, 0.95) !important;
+        /* EN MODO CLARO: LAS TARJETAS Y BENEFICIOS SE PONEN BLANCAS */
+        body.light-mode .glass-panel, body.light-mode .features-bar {
+            background: rgba(255, 255, 255, 0.92) !important;
             backdrop-filter: blur(12px);
-            border: 1px solid rgba(0, 0, 0, 0.08) !important;
-            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.06) !important;
+            border: 1px solid rgba(0, 0, 0, 0.06) !important;
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.04) !important;
         }
 
-        /* Navbar en modo claro */
-        body.light-mode .navbar-brand {
+        body.light-mode .navbar-brand { color: #0f172a !important; }
+        body.light-mode .nav-link { color: #334155 !important; }
+        body.light-mode .nav-link:hover { color: #0f172a !important; background: rgba(0, 0, 0, 0.05) !important; }
+
+        body.light-mode .feature-text h6 { color: #0f172a !important; }
+        body.light-mode .feature-text p { color: #64748b !important; }
+
+        /* EN MODO CLARO: LOS TEXTOS CAMBIAN A OSCURO */
+        body.light-mode h1:not(.carousel-item h1):not(.carousel-caption h1), 
+        body.light-mode h2:not(.carousel-item h2):not(.carousel-caption h2), 
+        body.light-mode h3:not(.carousel-item h3):not(.carousel-caption h3), 
+        body.light-mode h4:not(.carousel-item h4):not(.carousel-caption h4), 
+        body.light-mode h5:not(.carousel-item h5):not(.carousel-caption h5), 
+        body.light-mode h6:not(.feature-text h6), 
+        body.light-mode p:not(.carousel-item p):not(.carousel-caption p):not(.feature-text p), 
+        body.light-mode span:not(.navbar-brand span), 
+        body.light-mode strong, body.light-mode small, body.light-mode li, body.light-mode label {
             color: #0f172a !important;
         }
 
-        body.light-mode .nav-link {
-            color: #334155 !important;
-        }
-
-        body.light-mode .nav-link:hover {
-            color: #0f172a !important;
-            background: rgba(0, 0, 0, 0.05) !important;
-        }
-
-        /* Clases dinámicas para títulos y textos principales de la portada */
-        .text-dynamic {
-            color: #ffffff !important;
-            text-shadow: 0 2px 4px rgba(0,0,0,0.5);
-        }
-
-        .text-dynamic-muted {
-            color: rgba(255, 255, 255, 0.9) !important;
-            text-shadow: 0 1px 3px rgba(0,0,0,0.5);
-        }
-
-        body.light-mode .text-dynamic {
-            color: #0f172a !important;
-            text-shadow: none !important;
-        }
-
-        body.light-mode .text-dynamic-muted {
-            color: #334155 !important;
-            text-shadow: none !important;
-        }
-
-        /* Forzar visibilidad absoluta de textos generales en modo claro */
-        body.light-mode h1, 
-        body.light-mode h2, 
-        body.light-mode h3, 
-        body.light-mode h4, 
-        body.light-mode h5, 
-        body.light-mode h6, 
-        body.light-mode p,
-        body.light-mode span, 
-        body.light-mode strong,
-        body.light-mode small,
-        body.light-mode li, 
-        body.light-mode label,
-        body.light-mode .text-white,
-        body.light-mode .text-light,
-        body.light-mode .text-secondary {
-            color: #0f172a !important;
-        }
-
-        body.light-mode input, 
-        body.light-mode textarea, 
-        body.light-mode select {
+        body.light-mode input, body.light-mode textarea, body.light-mode select {
             background: rgba(255, 255, 255, 0.95) !important;
             color: #0f172a !important;
-            border: 1px solid rgba(0, 0, 0, 0.2) !important;
+            border: 1px solid rgba(0, 0, 0, 0.12) !important;
         }
 
-        body.light-mode input::placeholder, 
-        body.light-mode textarea::placeholder {
+        body.light-mode input::placeholder, body.light-mode textarea::placeholder {
             color: #64748b !important;
         }
 
-        body.light-mode .table {
-            color: #0f172a !important;
-        }
+        body.light-mode .table { color: #0f172a !important; }
     </style>
 </head>
 <body>
 
-<nav class="navbar navbar-expand-lg navbar-dark glass-panel m-3 p-3 sticky-top" style="border-radius: 0.75rem;">
-    <div class="container-fluid">
-        <a class="navbar-brand fs-4 fw-bold" href="{% url 'home' %}">MI<span>TIENDA</span></a>
-        <button class="navbar-toggler border-0" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+<nav class="navbar navbar-expand-lg glass-panel sticky-top" style="z-index: 1000;">
+    <div class="container-fluid px-2">
+        <!-- LOGO URBANPULSE COMPACTO -->
+        <a class="navbar-brand fs-6 fw-bold d-flex align-items-center gap-1 text-decoration-none py-0" href="{% url 'home' %}">
+            <span style="color: inherit;">Urban</span><span style="color: var(--primary);">P<i class="fa-solid fa-heart-pulse pulse-icon" style="font-size: 0.8rem;"></i>lse</span>
+        </a>
+        <button class="navbar-toggler border-0 shadow-none text-white py-0 px-1" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" style="font-size: 1rem;">
             <span class="navbar-toggler-icon"></span>
         </button>
         <div class="collapse navbar-collapse justify-content-end" id="navbarNav">
-            <ul class="navbar-nav align-items-center gap-2">
-                <li class="nav-item"><a class="nav-link px-3" href="{% url 'home' %}"><i class="fa-solid fa-house"></i> Inicio</a></li>
+            <ul class="navbar-nav align-items-center gap-1">
+                <li class="nav-item"><a class="nav-link py-1" href="{% url 'home' %}"><i class="fa-solid fa-house"></i> Inicio</a></li>
                 
                 {% if user.is_authenticated %}
-                    <li class="nav-item"><a class="nav-link px-3" href="{% url 'ver_carrito' %}"><i class="fa-solid fa-cart-shopping"></i> Carrito</a></li>
-                    <li class="nav-item"><a class="nav-link px-3" href="{% url 'perfil' %}"><i class="fa-solid fa-user"></i> Perfil</a></li>
+                    <li class="nav-item"><a class="nav-link py-1" href="{% url 'ver_carrito' %}"><i class="fa-solid fa-cart-shopping"></i> Carrito</a></li>
+                    <li class="nav-item"><a class="nav-link py-1" href="{% url 'perfil' %}"><i class="fa-solid fa-user"></i> Perfil</a></li>
                     
                     {% if user.is_staff %}
-                        <li class="nav-item"><a class="nav-link px-3" href="{% url 'crear' %}"><i class="fa-solid fa-plus"></i> Agregar</a></li>
-                        <li class="nav-item"><a class="nav-link px-3 text-warning fw-bold" href="{% url 'dashboard' %}"><i class="fa-solid fa-chart-line"></i> Panel de Control</a></li>
+                        <li class="nav-item"><a class="nav-link py-1" href="{% url 'crear' %}"><i class="fa-solid fa-plus"></i> Agregar</a></li>
+                        <li class="nav-item"><a class="nav-link text-warning fw-bold py-1" href="{% url 'dashboard' %}"><i class="fa-solid fa-chart-line"></i> Panel</a></li>
                     {% endif %}
 
-                    <li class="nav-item">
+                    <li class="nav-item ms-lg-1">
                         <form action="{% url 'logout' %}" method="POST" class="d-inline">
                             {% csrf_token %}
-                            <button type="submit" class="btn btn-sm btn-outline-danger rounded-pill px-3 py-2"><i class="fa-solid fa-right-from-bracket"></i> Salir</button>
+                            <button type="submit" class="btn btn-sm btn-outline-danger rounded-pill px-2 py-1" style="font-size: 0.8rem;"><i class="fa-solid fa-right-from-bracket"></i> Salir</button>
                         </form>
                     </li>
                 {% else %}
-                    <li class="nav-item"><a class="nav-link px-3" href="{% url 'login' %}">Ingresar</a></li>
-                    <li class="nav-item"><a class="btn btn-success rounded-pill px-4 text-white fw-bold" href="{% url 'registro' %}">Registrarse</a></li>
+                    <li class="nav-item"><a class="nav-link py-1" href="{% url 'login' %}">Ingresar</a></li>
+                    <li class="nav-item"><a class="btn btn-gradient rounded-pill px-3 text-white fw-bold py-1" href="{% url 'registro' %}">Registrarse</a></li>
                 {% endif %}
 
                 <!-- Botón Modo Oscuro / Claro -->
-                <li class="nav-item d-flex align-items-center ms-2">
-                    <button onclick="toggleTheme()" class="btn btn-sm btn-outline-secondary rounded-circle" id="theme-btn" style="width: 40px; height: 40px;" title="Cambiar tema">
+                <li class="nav-item ms-lg-1">
+                    <button onclick="toggleTheme()" class="btn btn-sm btn-outline-secondary rounded-circle d-flex align-items-center justify-content-center shadow-sm" id="theme-btn" style="width: 30px; height: 30px; font-size: 0.8rem;" title="Cambiar tema">
                         <i class="fa-solid fa-moon" id="theme-icon"></i>
                     </button>
                 </li>
@@ -224,12 +270,12 @@
     </div>
 </nav>
 
-<div class="container mt-4" style="z-index: 10; position: relative;">
+<div class="container mt-2" style="z-index: 10; position: relative;">
     {% if messages %}
         {% for message in messages %}
-            <div class="alert alert-{{ message.tags|default:'info' }} alert-dismissible animate__animated animate__fadeInDown shadow-lg border-0 rounded-4 fw-bold text-center" role="alert" style="background: rgba(16, 185, 129, 0.95); color: white; backdrop-filter: blur(10px);">
+            <div class="alert alert-{{ message.tags|default:'info' }} alert-dismissible animate__animated animate__fadeInDown shadow-sm border-0 rounded-3 fw-bold text-center py-2 mb-2" role="alert" style="background: rgba(14, 165, 233, 0.95); color: white; backdrop-filter: blur(10px); font-size: 0.85rem;">
                 {{ message }}
-                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="alert"></button>
+                <button type="button" class="btn-close btn-close-white p-2" data-bs-dismiss="alert" style="font-size: 0.7rem;"></button>
             </div>
         {% endfor %}
     {% endif %}
@@ -237,13 +283,46 @@
 
 {% block hero %}{% endblock %}
 
-<div class="container mt-4">
+<!-- Barra de Beneficios Moderna y Compacta -->
+<div class="container">
+    <div class="row features-bar align-items-center justify-content-between g-2">
+        <div class="col-md-4 feature-item">
+            <div class="feature-icon">
+                <i class="fa-solid fa-truck-fast"></i>
+            </div>
+            <div class="feature-text">
+                <h6>Envíos Rápidos</h6>
+                <p>Llegamos a todo el país en tiempo récord.</p>
+            </div>
+        </div>
+        <div class="col-md-4 feature-item">
+            <div class="feature-icon">
+                <i class="fa-solid fa-shield-halved"></i>
+            </div>
+            <div class="feature-text">
+                <h6>Compra Segura</h6>
+                <p>Tus datos están 100% protegidos siempre.</p>
+            </div>
+        </div>
+        <div class="col-md-4 feature-item">
+            <div class="feature-icon">
+                <i class="fa-solid fa-headset"></i>
+            </div>
+            <div class="feature-text">
+                <h6>Atención 24/7</h6>
+                <p>Estamos aquí para ayudarte en cualquier momento.</p>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="container mt-2">
     {% block content %}{% endblock %}
 </div>
 
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 
-<!-- Script para el Modo Oscuro/Claro automático con persistencia -->
+<!-- Script para el Modo Oscuro/Claro con persistencia -->
 <script>
 function toggleTheme() {
     let body = document.body;
