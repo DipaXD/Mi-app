@@ -1,81 +1,127 @@
 {% extends 'base.html' %}
-{% block title %}Iniciar Sesión | Mi Tienda{% endblock %}
+
+{% block title %}Iniciar Sesión - UrbanPulse{% endblock %}
+
 {% block content %}
+<div class="row justify-content-center align-items-center" style="min-height: 75vh;">
+    <div class="col-md-5 col-lg-4">
+        
+        <div class="glass-panel p-4 p-md-5 shadow-lg animate__animated animate__fadeInUp">
+            
+            <!-- Encabezado del Formulario -->
+            <div class="text-center mb-4">
+                <div class="mb-2">
+                    <span class="fa-stack fa-2x" style="color: var(--primary);">
+                        <i class="fa-solid fa-circle fa-stack-2x" style="opacity: 0.15;"></i>
+                        <i class="fa-solid fa-lock fa-stack-1x"></i>
+                    </span>
+                </div>
+                <h3 class="fw-bold text-dark mb-1">¡Bienvenido!</h3>
+                <p class="text-muted small">Ingresá a tu cuenta en UrbanPulse</p>
+            </div>
 
+            <!-- Formulario -->
+            <form method="POST" autocomplete="off">
+                {% csrf_token %}
+
+                <!-- Campo Usuario / Username -->
+                <div class="mb-3">
+                    <label for="id_username" class="form-label">Usuario</label>
+                    <div class="input-group-custom">
+                        <span class="input-icon"><i class="fa-solid fa-user"></i></span>
+                        <!-- Usamos el campo de usuario o el renderizado de Django -->
+                        <input type="text" name="username" id="id_username" class="form-control-custom" placeholder="Ingresá tu usuario" required autofocus>
+                    </div>
+                </div>
+
+                <!-- Campo Contraseña Mejorado (Tipo Password + Botón Mostrar/Ocultar) -->
+                <div class="mb-4">
+                    <label for="id_password" class="form-label">Contraseña</label>
+                    <div class="input-group-custom position-relative">
+                        <span class="input-icon"><i class="fa-solid fa-key"></i></span>
+                        <input type="password" name="password" id="id_password" class="form-control-custom pe-5" placeholder="••••••••" required>
+                        <button type="button" id="togglePassword" class="btn-toggle-pass">
+                            <i class="fa-solid fa-eye" id="eyeIcon"></i>
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Botón de Ingreso -->
+                <button type="submit" class="btn btn-gradient w-100 py-2 rounded-pill fw-bold shadow-sm mb-3">
+                    <i class="fa-solid fa-right-to-bracket me-2"></i> Ingresar
+                </button>
+
+                <!-- Enlace de Registro -->
+                <div class="text-center">
+                    <p class="small text-muted mb-0">¿No tenés una cuenta? <a href="{% url 'registro' %}" class="text-primary fw-semibold text-decoration-none">Registrate acá</a></p>
+                </div>
+            </form>
+
+        </div>
+
+    </div>
+</div>
+
+<!-- Estilos específicos y Script para mostrar/ocultar contraseña -->
 <style>
-    .auth-card { 
-        max-width: 450px; 
-        margin: 60px auto; 
-        padding: 40px; 
-        border-top: 4px solid var(--primary); 
+    .input-group-custom {
+        position: relative;
+        display: flex;
+        align-items: center;
     }
-    .error-box { 
-        background: rgba(220, 38, 38, 0.1); 
-        border-left: 4px solid #ef4444; 
-        color: #f87171; 
-        padding: 15px 20px; 
-        border-radius: 8px; 
-        margin-bottom: 20px; 
+    .input-icon {
+        position: absolute;
+        left: 15px;
+        color: #64748b;
+        font-size: 0.95rem;
+        z-index: 10;
     }
-    ul.errorlist { display: none !important; }
-
-    /* Estilos para que los inputs generados por {{ form.as_p }} adopten el diseño oscuro */
-    .auth-card p {
-        margin-bottom: 1.25rem;
-    }
-    .auth-card label {
-        display: block;
-        color: #94a3b8;
-        font-size: 0.85rem;
-        font-weight: 600;
-        margin-bottom: 0.5rem;
-        text-transform: uppercase;
-        letter-spacing: 0.5px;
-    }
-    .auth-card input {
+    .form-control-custom {
         width: 100%;
-        background-color: #0b0f19 !important;
-        border: 1px solid rgba(255, 255, 255, 0.1) !important;
-        color: #f8fafc !important;
-        border-radius: 50px !important;
-        padding: 0.75rem 1.25rem !important;
-        outline: none;
-        transition: border-color 0.3s;
+        padding: 10px 15px 10px 42px !important;
+        border-radius: 12px !important;
+        background: #f8fafc !important;
+        border: 1px solid #cbd5e1 !important;
+        font-size: 0.9rem;
+        color: #0f172a !important;
+        transition: all 0.2s ease;
     }
-    .auth-card input:focus {
+    .form-control-custom:focus {
         border-color: var(--primary) !important;
-        box-shadow: 0 0 0 3px rgba(14, 165, 233, 0.15);
+        background: #ffffff !important;
+        box-shadow: 0 0 0 3px var(--primary-glow) !important;
+        outline: none;
+    }
+    .btn-toggle-pass {
+        position: absolute;
+        right: 12px;
+        background: transparent;
+        border: none;
+        color: #64748b;
+        cursor: pointer;
+        padding: 4px;
+        z-index: 10;
+        transition: color 0.2s;
+    }
+    .btn-toggle-pass:hover {
+        color: var(--primary);
     }
 </style>
 
-<div class="glass-panel auth-card animate__animated animate__fadeInUp">
-    <div class="text-center mb-4">
-        <div class="d-inline-block p-3 rounded-circle mb-3" style="background: rgba(14,165,233,0.1);">
-            <i class="fa-solid fa-right-to-bracket fs-1 text-primary"></i>
-        </div>
-        <h2 class="fw-bolder text-white m-0 display-6">¡Hola de nuevo!</h2>
-        <p class="text-secondary mt-2">Ingresa a tu cuenta para continuar</p>
-    </div>
-
-    <form method="POST">
-        {% csrf_token %}
+<script>
+    document.getElementById('togglePassword').addEventListener('click', function () {
+        const passwordInput = document.getElementById('id_password');
+        const eyeIcon = document.getElementById('eyeIcon');
         
-        {% if form.errors %}
-            <div class="error-box animate__animated animate__headShake">
-                <p class="m-0 fw-bold"><i class="fa-solid fa-triangle-exclamation"></i> Usuario o contraseña incorrectos.</p>
-            </div>
-        {% endif %}
-
-        {{ form.as_p }}
-
-        <button class="btn btn-gradient w-100 py-3 rounded-pill fw-bold text-uppercase mt-3 fs-5" type="submit">
-            Iniciar Sesión <i class="fa-solid fa-arrow-right ms-2"></i>
-        </button>
-    </form>
-    
-    <div class="text-center mt-4 pt-4" style="border-top: 1px solid rgba(255,255,255,0.05);">
-        <span class="text-secondary">¿No tienes una cuenta?</span> 
-        <a href="{% url 'registro' %}" class="text-primary fw-bold text-decoration-none ms-1">Regístrate aquí</a>
-    </div>
-</div>
+        if (passwordInput.type === 'password') {
+            passwordInput.type = 'text';
+            eyeIcon.classList.remove('fa-eye');
+            eyeIcon.classList.add('fa-eye-slash');
+        } else {
+            passwordInput.type = 'password';
+            eyeIcon.classList.remove('fa-eye-slash');
+            eyeIcon.classList.add('fa-eye');
+        }
+    });
+</script>
 {% endblock %}
