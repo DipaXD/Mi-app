@@ -16,8 +16,11 @@ urlpatterns = [
     path('perfil/', views.perfil, name='perfil'),
     path('api/buscar/', views.buscar_productos, name='buscar_productos'),
     path('carrito/', views.ver_carrito, name='ver_carrito'),
+    path('agregar/<int:producto_id>/', views.agregar_al_carrito, name='agregar_al_carrito'),
     path('carrito/agregar/<int:id>/', views.agregar_al_carrito, name='agregar_al_carrito'),
     path('carrito/eliminar/<int:id>/', views.eliminar_del_carrito, name='eliminar_del_carrito'),
     path('favoritos/toggle/<int:id>/', views.toggle_favorito, name='toggle_favorito'),
     path('dashboard/', views.dashboard, name='dashboard'),
+    path('carrito/sumar/<int:id>/', views.sumar_cantidad, name='sumar_cantidad'),
+    path('carrito/restar/<int:id>/', views.restar_cantidad, name='restar_cantidad'),
 ]

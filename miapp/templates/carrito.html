@@ -1,76 +1,128 @@
 {% extends 'base.html' %}
-{% block title %}Carrito de Compras | Mi Tienda{% endblock %}
+{% block title %}Mi carrito | UrbanPulse{% endblock %}
+
 {% block content %}
-<div class="animate__animated animate__fadeIn" style="margin-top: 40px;">
-    <h2 class="fw-bold text-white mb-4"><i class="fa-solid fa-cart-shopping text-warning me-2"></i> Tu Carrito de Compras</h2>
+<div class="animate__animated animate__fadeIn py-4" style="max-width: 1250px; margin: 0 auto;">
+    <h2 class="fw-bold text-dark mb-4" style="font-size: 1.8rem;">Mi carrito</h2>
 
     {% if items %}
     <div class="row g-4">
-        <!-- Lista de productos en el carrito -->
+        <!-- COLUMNA IZQUIERDA: LISTA DE PRODUCTOS -->
         <div class="col-lg-8">
-            <div class="glass-panel p-4">
-                <div class="table-responsive">
-                    <table class="table table-dark table-hover table-borderless align-middle m-0" style="background: transparent;">
-                        <thead style="border-bottom: 2px solid rgba(255,255,255,0.1);">
-                            <tr class="text-primary text-uppercase" style="letter-spacing: 1px;">
-                                <th>Producto</th>
-                                <th>Precio</th>
-                                <th>Cantidad</th>
-                                <th class="text-end">Subtotal</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            {% for item in items %}
-                            <tr style="border-bottom: 1px solid rgba(255,255,255,0.05);">
-                                <td class="fw-bold fs-5">{{ item.producto.nombre }}</td>
-                                <td class="text-secondary">${{ item.producto.precio }}</td>
-                                <td><span class="badge bg-secondary rounded-pill px-3">{{ item.cantidad }}</span></td>
-                                <td class="text-end text-success fw-bold">${{ item.subtotal }}</td>
-                            </tr>
-                            {% endfor %}
-                        </tbody>
-                    </table>
+            {% for item in items %}
+            <div class="p-4 rounded-4 shadow-sm bg-white border mb-3 position-relative">
+                <div class="text-muted small fw-bold mb-3 d-flex align-items-center gap-1">
+                    Vendido por <span class="text-dark">UrbanPulse</span> <i class="fa-solid fa-chevron-right" style="font-size: 0.7rem;"></i>
+                </div>
+
+                <hr class="text-secondary-subtle my-2">
+
+                <div class="row align-items-center pt-2">
+                    <!-- Imagen del producto -->
+                    <div class="col-md-2 col-3 text-center">
+                        {% if item.producto.imagen %}
+                            <img src="{{ item.producto.imagen.url }}" alt="" style="width: 75px; height: 75px; object-fit: contain;">
+                        {% else %}
+                            <div style="width: 75px; height: 75px; background: #f1f5f9; border-radius: 8px;" class="d-flex align-items-center justify-content-center text-muted">
+                                <i class="fa-solid fa-image"></i>
+                            </div>
+                        {% endif %}
+                    </div>
+
+                    <!-- Nombre y opción de eliminar -->
+                    <div class="col-md-5 col-9">
+                        <h6 class="fw-bold text-dark mb-2" style="font-size: 0.95rem; line-height: 1.4;">
+                            {{ item.producto.nombre }}
+                        </h6>
+                        <a href="{% url 'eliminar_del_carrito' item.id %}" class="text-decoration-none text-primary fw-medium" style="font-size: 0.85rem;">
+                            Eliminar
+                        </a>
+                    </div>
+
+                    <!-- Controles de cantidad (+ / -) -->
+                    <div class="col-md-3 col-6 mt-3 mt-md-0 text-center">
+                        <div class="d-inline-flex align-items-center border rounded-pill px-2 py-1 bg-white shadow-sm">
+                            <a href="{% url 'restar_cantidad' item.id %}" class="btn btn-sm border-0 p-0 text-primary fw-bold px-2 text-decoration-none" style="font-size: 1rem;">-</a>
+                            <span class="px-2 fw-semibold text-dark" style="font-size: 0.9rem;">{{ item.cantidad }}</span>
+                            <a href="{% url 'sumar_cantidad' item.id %}" class="btn btn-sm border-0 p-0 text-primary fw-bold px-2 text-decoration-none" style="font-size: 1rem;">+</a>
+                        </div>
+                    </div>
+
+                    <!-- Subtotal del producto -->
+                    <div class="col-md-2 col-6 mt-3 mt-md-0 text-end">
+                        <span class="fw-bold text-dark fs-5">${{ item.subtotal|floatformat:2 }}</span>
+                    </div>
                 </div>
             </div>
+            {% endfor %}
         </div>
 
-        <!-- Resumen de compra y pago por WhatsApp -->
+        <!-- COLUMNA DERECHA: CUPÓN Y RESUMEN DE COMPRA -->
         <div class="col-lg-4">
-            <div class="glass-panel p-4 text-center">
-                <h4 class="text-white fw-bold mb-3">Resumen del Pedido</h4>
-                <hr class="border-secondary">
+            
+            <!-- Caja de Cupón -->
+            <div class="p-3 rounded-4 shadow-sm bg-white border mb-3">
+                <div class="d-flex justify-content-between align-items-center mb-2" data-bs-toggle="collapse" data-bs-target="#collapseCupon" style="cursor: pointer;">
+                    <span class="fw-bold text-dark" style="font-size: 0.95rem;">Cupón de descuento</span>
+                    <i class="fa-solid fa-chevron-up text-muted" style="font-size: 0.8rem;"></i>
+                </div>
+                <div class="collapse show mt-3" id="collapseCupon">
+                    <div class="input-group">
+                        <input type="text" class="form-control form-control-sm rounded-start-pill border-secondary-subtle" placeholder="Ingresar cupón" style="font-size: 0.85rem;">
+                        <button class="btn btn-light border border-secondary-subtle rounded-end-pill px-3 text-muted fw-bold" type="button" style="font-size: 0.8rem; background: #e2e8f0;">AGREGAR</button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Resumen de compra -->
+            <div class="p-4 rounded-4 shadow-sm bg-white border">
+                <h5 class="fw-bold text-dark mb-3" style="font-size: 1.05rem;">Resumen de compra</h5>
+                
+                <div class="d-flex justify-content-between align-items-center mb-3 text-secondary" style="font-size: 0.9rem;">
+                    <span>Productos</span>
+                    <span class="fw-semibold text-dark">${{ total|floatformat:2 }}</span>
+                </div>
+
+                <hr style="border-color: #e2e8f0;" class="mb-3">
+
                 <div class="d-flex justify-content-between align-items-center mb-4">
-                    <span class="text-secondary fs-5">Total a Pagar:</span>
-                    <span class="text-success fw-bold fs-3">${{ total }}</span>
+                    <span class="fw-bold text-dark fs-6">Total</span>
+                    <span class="fw-bold text-dark fs-3">${{ total|floatformat:2 }}</span>
                 </div>
                 
-                <button onclick="enviarWhatsApp()" class="btn btn-gradient rounded-pill w-100 py-3 fw-bold fs-5 shadow-lg" style="background: linear-gradient(135deg, #10b981, #059669); color: white;">
-                    <i class="fa-brands fa-whatsapp fs-4 me-2"></i> Pedir por WhatsApp
+                <!-- Botón Finalizar Compra con tu Estilo Azul -->
+                <button onclick="enviarWhatsApp()" class="btn w-100 rounded-pill py-2.5 fw-bold text-white shadow-sm mb-2" style="background: #0ea5e9; border: none; font-size: 0.95rem;">
+                    Finalizar compra
                 </button>
+                
+                <!-- Botón Continuar comprando -->
+                <a href="{% url 'home' %}" class="btn btn-outline-secondary w-100 rounded-pill py-2 fw-semibold bg-white text-dark border-secondary-subtle" style="font-size: 0.9rem;">
+                    Continuar comprando
+                </a>
             </div>
         </div>
     </div>
     {% else %}
-    <div class="glass-panel p-5 text-center">
-        <h4 class="text-secondary mb-3">Tu carrito está vacío</h4>
-        <p class="text-muted mb-4">¡Explora nuestro catálogo y agrega productos para comenzar!</p>
-        <a href="/" class="btn btn-outline-info rounded-pill px-4 py-2">Ver Productos</a>
+    <div class="p-5 rounded-4 shadow-sm bg-white border text-center">
+        <i class="fa-solid fa-cart-arrow-down fs-1 text-muted mb-3"></i>
+        <h4 class="text-dark fw-bold mb-3">Tu carrito está vacío</h4>
+        <p class="text-muted mb-4 small">¡Explora nuestro catálogo y agrega productos para comenzar!</p>
+        <a href="{% url 'home' %}" class="btn btn-primary rounded-pill px-4 py-2 text-white fw-bold shadow-sm" style="background: #0ea5e9; border: none;">Ver Productos</a>
     </div>
     {% endif %}
 </div>
 
 <script>
 function enviarWhatsApp() {
-    // Reemplaza con tu número real (código de país + número, sin el símbolo +)
-    let telefono = "5493870000000"; 
-    let mensaje = "¡Hola! Quiero hacer este pedido desde la página web:%0A%0A";
+    let telefono = "5493870000000"; // Reemplaza con tu número real
+    let mensaje = "¡Hola! Quiero finalizar esta compra desde la web:%0A%0A";
     let total = "{{ total }}";
 
     {% for item in items %}
-        mensaje += "🛍️ {{ item.cantidad }}x {{ item.producto.nombre }} - ${{ item.producto.precio }}%0A";
+        mensaje += "🛍️ {{ item.cantidad }}x {{ item.producto.nombre|escapejs }} - Subtotal: ${{ item.subtotal }}%0A";
     {% endfor %}
 
-    mensaje += "%0A*Total a pagar: $" + total + "*%0A%0A¿Cómo podemos coordinar el pago?";
+    mensaje += "%0A*Total a pagar: $" + total + "*%0A%0A¿Cómo coordinamos el pago y envío?";
     
     let url = "https://wa.me/" + telefono + "?text=" + mensaje;
     window.open(url, '_blank');

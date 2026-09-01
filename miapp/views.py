@@ -6,26 +6,14 @@ from django.http import JsonResponse
 from django.db.models import Q
 from django.core.paginator import Paginator
 from django.contrib import messages
-from django.contrib.auth.decorators import user_passes_test
 from django.contrib.auth.models import User
-from django.shortcuts import render, redirect
 
-# Importamos todos tus modelos y formularios limpios
+# Importamos tus modelos y formularios
 from .models import Producto, Categoria, Carrito, Favorito
 from .forms import ProductoForm, RegistroForm
 
 def es_admin(user):
     return user.is_authenticated and user.is_staff
-
-def crear_producto(views, request):
-    if request.method == 'POST':
-        form = ProductoForm(request.POST, request.FILES)
-        if form.is_valid():
-            form.save()
-            return redirect('home')
-    else:
-        form = ProductoForm()
-    return render(request, 'crear_producto.html', {'form': form})
 
 # 🏠 HOME
 @login_required
@@ -78,7 +66,7 @@ def crear(request):
 @user_passes_test(es_admin)
 def editar(request, id):
     producto = get_object_or_404(Producto, id=id)
-    form = ProductoForm(request.POST or None, instance=producto)
+    form = ProductoForm(request.POST or None, request.FILES or None, instance=producto)
 
     if form.is_valid():
         form.save()
@@ -110,8 +98,6 @@ def registro(request):
             login(request, user)
             messages.success(request, f"¡Bienvenido {user.username}! Tu cuenta ha sido creada.")
             return redirect('home')
-        else:
-            print(form.errors) 
     else:
         form = RegistroForm()
     
@@ -223,9 +209,6 @@ def toggle_favorito(request, id):
         
     return redirect(request.META.get('HTTP_REFERER', 'home'))
 
-def es_admin(user):
-    return user.is_staff
-
 @user_passes_test(es_admin)
 def dashboard(request):
     total_productos = Producto.objects.count()
@@ -239,3 +222,23 @@ def dashboard(request):
         'total_favoritos': total_favoritos,
         'productos': productos
     })
+
+@login_required
+def sumar_cantidad(request, id):
+    item = get_object_or_404(Carrito, id=id, usuario=request.user)
+    item.cantidad += 1
+    item.save()
+    messages.success(request, f"Se actualizó la cantidad de '{item.producto.nombre}'.")
+    return redirect('ver_carrito')
+
+@login_required
+def restar_cantidad(request, id):
+    item = get_object_or_404(Carrito, id=id, usuario=request.user)
+    if item.cantidad > 1:
+        item.cantidad -= 1
+        item.save()
+        messages.success(request, f"Se actualizó la cantidad de '{item.producto.nombre}'.")
+    else:
+        item.delete()
+        messages.warning(request, f"'{item.producto.nombre}' fue eliminado del carrito.")
+    return redirect('ver_carrito')

@@ -16,33 +16,27 @@
             --primary: #0ea5e9; 
             --primary-glow: rgba(14, 165, 233, 0.25);
             --secondary: #8b5cf6; 
-            --dark-bg: #07090e;
-            --glass-bg: rgba(15, 23, 42, 0.85);
-            --glass-border: rgba(255, 255, 255, 0.08);
         }
 
+        /* MODO CLARO FIJO Y LIMPIO */
         body {
             font-family: 'Outfit', sans-serif;
-            background-color: var(--dark-bg);
-            color: #f1f5f9;
+            background-color: #f1f5f9 !important;
+            color: #0f172a !important;
             min-height: 100vh;
             margin: 0;
             padding-bottom: 30px;
             overflow-x: hidden;
-            transition: background-color 0.3s ease, color 0.3s ease;
         }
 
-        /* Fondo dinámico avanzado */
+        /* Fondo claro elegante */
         body::before {
             content: ''; position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-            background: radial-gradient(circle at 15% 20%, rgba(14, 165, 233, 0.08) 0%, transparent 40%),
-                        radial-gradient(circle at 85% 80%, rgba(139, 92, 246, 0.08) 0%, transparent 40%),
-                        url("https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?q=80&w=2564") center/cover no-repeat;
-            filter: brightness(0.2) blur(40px); z-index: -1;
-            transition: all 0.4s ease;
+            background: radial-gradient(circle at 15% 20%, rgba(14, 165, 233, 0.08) 0%, transparent 40%), #f1f5f9 !important;
+            z-index: -1;
         }
 
-        /* CORRECCIÓN PARA EL TEXTO DEL SLIDER / CARRUSEL (ALTÍSIMA LEGIBILIDAD) */
+        /* LEGIBILIDAD EN SLIDERS */
         .carousel-item h1, .carousel-item h2, .carousel-item h3, 
         .carousel-item h4, .carousel-item h5, .carousel-item p, 
         .carousel-caption h1, .carousel-caption h2, .carousel-caption h3, 
@@ -51,15 +45,80 @@
             text-shadow: 0 2px 8px rgba(0, 0, 0, 0.8), 0 0 20px rgba(0, 0, 0, 0.5);
         }
 
-        /* NAVBAR COMPACTO ESTILO E-COMMERCE */
-        .navbar {
-            padding: 6px 16px !important;
-            margin: 8px 12px !important;
-            border-radius: 12px;
+        /* BARRA UTILITARIA SUPERIOR */
+        .top-utility-bar {
+            background-color: #f8fafc;
+            border-bottom: 1px solid #e2e8f0;
+            font-size: 0.82rem;
+            padding: 8px 0;
         }
-        .navbar-brand { font-family: 'Poppins', sans-serif; font-weight: 800; letter-spacing: -0.5px; color: white !important;}
+        .top-utility-bar a, .top-utility-bar button {
+            color: #64748b !important;
+            text-decoration: none;
+            font-weight: 500;
+            transition: color 0.2s;
+            background: transparent;
+            border: none;
+            padding: 0;
+        }
+        .top-utility-bar a:hover, .top-utility-bar button:hover {
+            color: var(--primary) !important;
+        }
+        .top-utility-bar i {
+            color: #64748b;
+        }
+
+        /* ENCABEZADO PRINCIPAL ESTILO E-COMMERCE */
+        .main-header-bar {
+            background: rgba(255, 255, 255, 0.95) !important;
+            backdrop-filter: blur(12px);
+            border-bottom: 1px solid #e2e8f0;
+            padding: 12px 0;
+        }
+        .navbar-brand { 
+            font-family: 'Poppins', sans-serif; 
+            font-weight: 800; 
+            letter-spacing: -0.5px; 
+            color: #0f172a !important;
+        }
+
+        /* BUSCADOR CENTRAL ESTILIZADO */
+        .search-bar-container {
+            position: relative;
+            max-width: 550px;
+            width: 100%;
+        }
+        .search-input {
+            width: 100%;
+            border: 1px solid #cbd5e1;
+            border-radius: 8px;
+            padding: 8px 45px 8px 15px;
+            font-size: 0.9rem;
+            outline: none;
+            transition: border-color 0.2s;
+            background: #f8fafc !important;
+        }
+        .search-input:focus {
+            border-color: var(--primary) !important;
+            background: #fff !important;
+            box-shadow: 0 0 0 3px var(--primary-glow);
+        }
+        .search-btn {
+            position: absolute;
+            right: 4px;
+            top: 4px;
+            bottom: 4px;
+            background: #64748b;
+            border: none;
+            border-radius: 6px;
+            color: white;
+            padding: 0 15px;
+            transition: background 0.2s;
+        }
+        .search-btn:hover {
+            background: var(--primary);
+        }
         
-        /* Animación de latido para el logo */
         @keyframes pulseAnim {
             0% { transform: scale(1); opacity: 1; }
             50% { transform: scale(1.25); opacity: 0.8; }
@@ -72,15 +131,15 @@
         }
 
         .nav-link { 
-            color: rgba(255,255,255,0.85) !important; 
+            color: #334155 !important; 
             font-weight: 500; 
-            font-size: 0.9rem;
+            font-size: 0.88rem;
             transition: 0.2s; 
             margin: 0 2px; 
             border-radius: 6px; 
             padding: 4px 10px !important;
         }
-        .nav-link:hover { color: #fff !important; background: rgba(255,255,255,0.08); transform: translateY(-1px); }
+        .nav-link:hover { color: #0f172a !important; background: rgba(0, 0, 0, 0.05) !important; transform: translateY(-1px); }
 
         /* BOTONES GRADIENTES */
         .btn-gradient {
@@ -95,27 +154,21 @@
             box-shadow: 0 4px 20px rgba(14, 165, 233, 0.4); color: white;
         }
 
-        /* TARJETAS CRISTALINAS MODO OSCURO POR DEFECTO */
-        .glass-panel {
-            background: var(--glass-bg);
-            backdrop-filter: blur(16px);
-            -webkit-backdrop-filter: blur(16px);
-            border: 1px solid var(--glass-border);
+        /* TARJETAS LIMPIAS Y BLANCAS */
+        .glass-panel, .features-bar {
+            background: rgba(255, 255, 255, 0.92) !important;
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border: 1px solid rgba(0, 0, 0, 0.06) !important;
             border-radius: 16px;
-            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3), inset 0 1px 0 rgba(255, 255, 255, 0.05);
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.04) !important;
             transition: all 0.3s ease;
         }
 
-        /* SECCIÓN DE BENEFICIOS COMPACTA Y PROFESIONAL */
+        /* SECCIÓN DE BENEFICIOS */
         .features-bar {
-            background: var(--glass-bg);
-            backdrop-filter: blur(16px);
-            -webkit-backdrop-filter: blur(16px);
-            border: 1px solid var(--glass-border);
-            border-radius: 16px;
             padding: 12px 20px;
             margin: 15px auto;
-            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.2);
         }
 
         .feature-item {
@@ -142,133 +195,144 @@
             font-size: 0.85rem;
             font-weight: 700;
             margin: 0;
-            color: #f1f5f9;
+            color: #0f172a !important;
         }
 
         .feature-text p {
             font-size: 0.72rem;
             margin: 0;
-            color: #94a3b8;
-        }
-
-        /* INPUTS COMPACTOS */
-        input, textarea, select {
-            width: 100%; padding: 8px 12px; border-radius: 10px; font-family: 'Outfit', sans-serif; font-size: 0.9rem;
-            border: 1px solid rgba(255, 255, 255, 0.08) !important;
-            background: rgba(0, 0, 0, 0.4) !important; color: white !important; margin-bottom: 10px; transition: 0.2s;
-        }
-        input:focus, textarea:focus, select:focus {
-            outline: none; border-color: var(--primary) !important;
-            box-shadow: 0 0 0 3px var(--primary-glow); background: rgba(0, 0, 0, 0.6) !important;
-        }
-        label { font-weight: 600; color: #cbd5e1; font-size: 0.85rem; margin-bottom: 4px; display: block;}
-        .helptext { display: none !important; }
-
-        /* SCROLLBAR AESTHETIC */
-        ::-webkit-scrollbar { width: 6px; }
-        ::-webkit-scrollbar-track { background: var(--dark-bg); }
-        ::-webkit-scrollbar-thumb { background: var(--primary); border-radius: 6px; }
-
-        /* ==========================================
-            MODO CLARO ELEGANTE Y COMPACTO
-           ========================================== */
-        body.light-mode {
-            background-color: #f1f5f9 !important;
-            color: #0f172a !important;
-        }
-
-        body.light-mode::before {
-            background: radial-gradient(circle at 15% 20%, rgba(14, 165, 233, 0.08) 0%, transparent 40%), #f1f5f9 !important;
-            filter: none !important;
-            opacity: 1 !important;
-        }
-
-        /* EN MODO CLARO: LAS TARJETAS Y BENEFICIOS SE PONEN BLANCAS */
-        body.light-mode .glass-panel, body.light-mode .features-bar {
-            background: rgba(255, 255, 255, 0.92) !important;
-            backdrop-filter: blur(12px);
-            border: 1px solid rgba(0, 0, 0, 0.06) !important;
-            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.04) !important;
-        }
-
-        body.light-mode .navbar-brand { color: #0f172a !important; }
-        body.light-mode .nav-link { color: #334155 !important; }
-        body.light-mode .nav-link:hover { color: #0f172a !important; background: rgba(0, 0, 0, 0.05) !important; }
-
-        body.light-mode .feature-text h6 { color: #0f172a !important; }
-        body.light-mode .feature-text p { color: #64748b !important; }
-
-        /* EN MODO CLARO: LOS TEXTOS CAMBIAN A OSCURO */
-        body.light-mode h1:not(.carousel-item h1):not(.carousel-caption h1), 
-        body.light-mode h2:not(.carousel-item h2):not(.carousel-caption h2), 
-        body.light-mode h3:not(.carousel-item h3):not(.carousel-caption h3), 
-        body.light-mode h4:not(.carousel-item h4):not(.carousel-caption h4), 
-        body.light-mode h5:not(.carousel-item h5):not(.carousel-caption h5), 
-        body.light-mode h6:not(.feature-text h6), 
-        body.light-mode p:not(.carousel-item p):not(.carousel-caption p):not(.feature-text p), 
-        body.light-mode span:not(.navbar-brand span), 
-        body.light-mode strong, body.light-mode small, body.light-mode li, body.light-mode label {
-            color: #0f172a !important;
-        }
-
-        body.light-mode input, body.light-mode textarea, body.light-mode select {
-            background: rgba(255, 255, 255, 0.95) !important;
-            color: #0f172a !important;
-            border: 1px solid rgba(0, 0, 0, 0.12) !important;
-        }
-
-        body.light-mode input::placeholder, body.light-mode textarea::placeholder {
             color: #64748b !important;
         }
 
-        body.light-mode .table { color: #0f172a !important; }
+        /* INPUTS CLAROS */
+        input:not(.search-input), textarea, select {
+            width: 100%; padding: 8px 12px; border-radius: 10px; font-family: 'Outfit', sans-serif; font-size: 0.9rem;
+            background: rgba(255, 255, 255, 0.95) !important;
+            color: #0f172a !important;
+            border: 1px solid rgba(0, 0, 0, 0.12) !important;
+            margin-bottom: 10px; transition: 0.2s;
+        }
+        input:not(.search-input):focus, textarea:focus, select:focus {
+            outline: none; border-color: var(--primary) !important;
+            box-shadow: 0 0 0 3px var(--primary-glow);
+            background: #ffffff !important;
+        }
+        input::placeholder, textarea::placeholder { color: #64748b !important; }
+        
+        label { font-weight: 600; color: #0f172a !important; font-size: 0.85rem; margin-bottom: 4px; display: block;}
+        .helptext { display: none !important; }
+
+        /* TEXTOS GENERALES EN OSCURO */
+        h1:not(.carousel-item h1), h2:not(.carousel-item h2), h3:not(.carousel-item h3), 
+        h4:not(.carousel-item h4), h5:not(.carousel-item h5), h6:not(.feature-text h6), 
+        p:not(.carousel-item p), span:not(.navbar-brand span), 
+        strong, small, li {
+            color: #0f172a !important;
+        }
+
+        .table { color: #0f172a !important; }
+
+        /* SCROLLBAR AESTHETIC */
+        ::-webkit-scrollbar { width: 6px; }
+        ::-webkit-scrollbar-track { background: #f1f5f9; }
+        ::-webkit-scrollbar-thumb { background: var(--primary); border-radius: 6px; }
     </style>
 </head>
 <body>
 
-<nav class="navbar navbar-expand-lg glass-panel sticky-top" style="z-index: 1000;">
-    <div class="container-fluid px-2">
-        <!-- LOGO URBANPULSE COMPACTO -->
-        <a class="navbar-brand fs-6 fw-bold d-flex align-items-center gap-1 text-decoration-none py-0" href="{% url 'home' %}">
-            <span style="color: inherit;">Urban</span><span style="color: var(--primary);">P<i class="fa-solid fa-heart-pulse pulse-icon" style="font-size: 0.8rem;"></i>lse</span>
-        </a>
-        <button class="navbar-toggler border-0 shadow-none text-white py-0 px-1" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" style="font-size: 1rem;">
-            <span class="navbar-toggler-icon"></span>
-        </button>
-        <div class="collapse navbar-collapse justify-content-end" id="navbarNav">
-            <ul class="navbar-nav align-items-center gap-1">
-                <li class="nav-item"><a class="nav-link py-1" href="{% url 'home' %}"><i class="fa-solid fa-house"></i> Inicio</a></li>
+<!-- 1. BARRA UTILITARIA SUPERIOR -->
+<div class="top-utility-bar d-none d-lg-block">
+    <div class="container d-flex justify-content-between align-items-center">
+        <div class="d-flex align-items-center gap-4">
+            <a href="{% url 'home' %}"><i class="fa-solid fa-house me-1"></i> Inicio</a>
+            
+            {% if user.is_authenticated %}
+                <a href="{% url 'ver_carrito' %}"><i class="fa-solid fa-cart-shopping me-1"></i> Carrito</a>
+                <a href="{% url 'perfil' %}"><i class="fa-solid fa-user me-1"></i> Perfil</a>
                 
-                {% if user.is_authenticated %}
-                    <li class="nav-item"><a class="nav-link py-1" href="{% url 'ver_carrito' %}"><i class="fa-solid fa-cart-shopping"></i> Carrito</a></li>
-                    <li class="nav-item"><a class="nav-link py-1" href="{% url 'perfil' %}"><i class="fa-solid fa-user"></i> Perfil</a></li>
-                    
-                    {% if user.is_staff %}
-                        <li class="nav-item"><a class="nav-link py-1" href="{% url 'crear' %}"><i class="fa-solid fa-plus"></i> Agregar</a></li>
-                        <li class="nav-item"><a class="nav-link text-warning fw-bold py-1" href="{% url 'dashboard' %}"><i class="fa-solid fa-chart-line"></i> Panel</a></li>
-                    {% endif %}
-
-                    <li class="nav-item ms-lg-1">
-                        <form action="{% url 'logout' %}" method="POST" class="d-inline">
-                            {% csrf_token %}
-                            <button type="submit" class="btn btn-sm btn-outline-danger rounded-pill px-2 py-1" style="font-size: 0.8rem;"><i class="fa-solid fa-right-from-bracket"></i> Salir</button>
-                        </form>
-                    </li>
-                {% else %}
-                    <li class="nav-item"><a class="nav-link py-1" href="{% url 'login' %}">Ingresar</a></li>
-                    <li class="nav-item"><a class="btn btn-gradient rounded-pill px-3 text-white fw-bold py-1" href="{% url 'registro' %}">Registrarse</a></li>
+                {% if user.is_staff %}
+                    <a href="{% url 'crear' %}"><i class="fa-solid fa-plus me-1"></i> Agregar</a>
+                    <a href="{% url 'dashboard' %}" class="fw-bold"><i class="fa-solid fa-chart-line me-1 text-primary"></i> Panel</a>
                 {% endif %}
-
-                <!-- Botón Modo Oscuro / Claro -->
-                <li class="nav-item ms-lg-1">
-                    <button onclick="toggleTheme()" class="btn btn-sm btn-outline-secondary rounded-circle d-flex align-items-center justify-content-center shadow-sm" id="theme-btn" style="width: 30px; height: 30px; font-size: 0.8rem;" title="Cambiar tema">
-                        <i class="fa-solid fa-moon" id="theme-icon"></i>
-                    </button>
-                </li>
-            </ul>
+            {% endif %}
+        </div>
+        
+        <div class="d-flex align-items-center gap-3">
+            {% if user.is_authenticated %}
+                <form action="{% url 'logout' %}" method="POST" class="d-inline m-0">
+                    {% csrf_token %}
+                    <button type="submit"><i class="fa-solid fa-right-from-bracket me-1"></i> Salir</button>
+                </form>
+            {% else %}
+                <a href="{% url 'login' %}">Ingresar</a>
+                <a href="{% url 'registro' %}" class="fw-semibold">Registrarse</a>
+            {% endif %}
         </div>
     </div>
-</nav>
+</div>
+
+<!-- 2. ENCABEZADO PRINCIPAL -->
+<header class="main-header-bar sticky-top shadow-sm" style="z-index: 1000;">
+    <div class="container-fluid px-3">
+        <div class="d-flex align-items-center justify-content-between gap-3">
+            
+            <!-- Logo y Ubicación a la izquierda -->
+            <div class="d-flex flex-column">
+                <a class="navbar-brand fs-6 fw-bold d-flex align-items-center gap-1 text-decoration-none py-0" href="{% url 'home' %}">
+                    <span style="color: inherit;">Urban</span><span style="color: var(--primary);">P<i class="fa-solid fa-heart-pulse pulse-icon" style="font-size: 0.8rem;"></i>lse</span>
+                </a>
+                <div class="d-flex align-items-center text-muted small mt-0" style="font-size: 0.75rem;">
+                    <i class="fa-solid fa-location-dot text-primary me-1"></i>
+                    <span>Estás en <a href="#" class="text-primary text-decoration-none fw-semibold">Salta (4400)</a></span>
+                </div>
+            </div>
+
+            <!-- Buscador Central (Se oculta automáticamente en las vistas de Login y Registro, o si no está autenticado según prefieras) -->
+            {% if user.is_authenticated %}
+            <div class="search-bar-container">
+                <input type="text" class="search-input" placeholder="Buscá en UrbanPulse, productos, marcas y más...">
+                <button class="search-btn"><i class="fa-solid fa-magnifying-glass"></i></button>
+            </div>
+            {% else %}
+            <!-- Espaciador opcional para equilibrar el diseño cuando no hay buscador -->
+            <div class="d-none d-md-block"></div>
+            {% endif %}
+
+            <!-- Botón Toggler para Móviles -->
+            <button class="navbar-toggler d-lg-none border-0 shadow-none py-0 px-1" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+
+            <!-- Menú Colapsable para dispositivos móviles -->
+            <div class="collapse navbar-collapse justify-content-end flex-grow-0 d-lg-none" id="navbarNav">
+                <ul class="navbar-nav align-items-start gap-1 mt-2">
+                    <li class="nav-item"><a class="nav-link py-1" href="{% url 'home' %}"><i class="fa-solid fa-house"></i> Inicio</a></li>
+                    
+                    {% if user.is_authenticated %}
+                        <li class="nav-item"><a class="nav-link py-1" href="{% url 'ver_carrito' %}"><i class="fa-solid fa-cart-shopping"></i> Carrito</a></li>
+                        <li class="nav-item"><a class="nav-link py-1" href="{% url 'perfil' %}"><i class="fa-solid fa-user"></i> Perfil</a></li>
+                        
+                        {% if user.is_staff %}
+                            <li class="nav-item"><a class="nav-link py-1" href="{% url 'crear' %}"><i class="fa-solid fa-plus"></i> Agregar</a></li>
+                            <li class="nav-item"><a class="nav-link text-primary fw-bold py-1" href="{% url 'dashboard' %}"><i class="fa-solid fa-chart-line"></i> Panel</a></li>
+                        {% endif %}
+
+                        <li class="nav-item mt-1">
+                            <form action="{% url 'logout' %}" method="POST" class="d-inline">
+                                {% csrf_token %}
+                                <button type="submit" class="btn btn-sm btn-outline-danger rounded-pill px-3 py-1" style="font-size: 0.8rem;"><i class="fa-solid fa-right-from-bracket"></i> Salir</button>
+                            </form>
+                        </li>
+                    {% else %}
+                        <li class="nav-item"><a class="nav-link py-1" href="{% url 'login' %}">Ingresar</a></li>
+                        <li class="nav-item"><a class="btn btn-gradient rounded-pill px-3 text-white fw-bold py-1 mt-1" href="{% url 'registro' %}">Registrarse</a></li>
+                    {% endif %}
+                </ul>
+            </div>
+
+        </div>
+    </div>
+</header>
 
 <div class="container mt-2" style="z-index: 10; position: relative;">
     {% if messages %}
@@ -321,39 +385,5 @@
 </div>
 
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
-
-<!-- Script para el Modo Oscuro/Claro con persistencia -->
-<script>
-function toggleTheme() {
-    let body = document.body;
-    let icon = document.getElementById('theme-icon');
-    
-    body.classList.toggle('light-mode');
-    
-    if (body.classList.contains('light-mode')) {
-        localStorage.setItem('theme', 'light');
-        icon.classList.remove('fa-moon');
-        icon.classList.add('fa-sun');
-    } else {
-        localStorage.setItem('theme', 'dark');
-        icon.classList.remove('fa-sun');
-        icon.classList.add('fa-moon');
-    }
-}
-
-// Cargar preferencia guardada al iniciar la página
-window.addEventListener('DOMContentLoaded', () => {
-    let savedTheme = localStorage.getItem('theme');
-    let icon = document.getElementById('theme-icon');
-    
-    if (savedTheme === 'light') {
-        document.body.classList.add('light-mode');
-        if(icon) {
-            icon.classList.remove('fa-moon');
-            icon.classList.add('fa-sun');
-        }
-    }
-});
-</script>
 </body>
 </html>

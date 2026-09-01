@@ -1,53 +1,538 @@
 {% extends 'base.html' %}
-{% block title %}{{ producto.nombre }} | Mi Tienda{% endblock %}
+{% block title %}{{ producto.nombre }} | UrbanPulse{% endblock %}
+
 {% block content %}
+<style>
+    .product-detail-container {
+        background: #ffffff;
+        color: #1e293b;
+        border-radius: 16px;
+        box-shadow: 0 10px 30px rgba(0,0,0,0.08);
+        border: 1px solid #e2e8f0;
+    }
+    
+    /* Contenedor de la imagen con efecto lupa dinámico */
+    .main-image-box {
+        background: #ffffff;
+        border: 1px solid #f1f5f9;
+        border-radius: 12px;
+        overflow: hidden;
+        height: 400px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        position: relative;
+        cursor: crosshair;
+    }
+    .main-image-box img {
+        max-height: 100%;
+        max-width: 100%;
+        object-fit: contain;
+        transform-origin: center center;
+        transition: transform 0.1s ease-out; /* Transición muy rápida para que siga al mouse con fluidez */
+    }
 
-<div class="glass-panel mx-auto overflow-hidden animate__animated animate__zoomIn" style="max-width: 1000px; margin-top: 40px; border-radius: 30px;">
-    <div class="row g-0">
-        <!-- SECCIÓN DE LA IMAGEN CORREGIDA -->
-        <div class="col-md-6 position-relative d-flex align-items-center justify-content-center p-4 p-md-5" style="background: rgba(0,0,0,0.15);">
-            {% if producto.imagen %}
-                <img src="{{ producto.imagen.url }}" class="img-fluid" style="width: 100%; height: 100%; max-height: 450px; object-fit: contain; filter: drop-shadow(0 15px 25px rgba(0,0,0,0.4));">
-            {% else %}
-                <div class="w-100 d-flex align-items-center justify-content-center text-secondary fs-5" style="min-height: 400px;">
-                    <i class="fa-solid fa-image me-2"></i> Sin imagen
+    .thumbnail-box {
+        width: 70px;
+        height: 70px;
+        border: 2px solid #e2e8f0;
+        border-radius: 8px;
+        overflow: hidden;
+        cursor: pointer;
+        transition: 0.2s;
+    }
+    .thumbnail-box:hover, .thumbnail-box.active {
+        border-color: #0ea5e9;
+        transform: scale(1.05);
+    }
+    .thumbnail-box img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+    }
+    .price-tag {
+        font-size: 2.5rem;
+        font-weight: 800;
+        color: #0f172a;
+    }
+    .bank-promo-box {
+        background: #f8fafc;
+        border: 1px solid #e2e8f0;
+        border-radius: 10px;
+        padding: 15px;
+    }
+    .shipping-box {
+        border-top: 1px solid #e2e8f0;
+        border-bottom: 1px solid #e2e8f0;
+        padding: 15px 0;
+    }
+    
+    .custom-tabs .nav-link {
+        color: #64748b;
+        font-weight: 600;
+        border: none;
+        padding: 10px 20px;
+        transition: all 0.2s ease;
+    }
+    .custom-tabs .nav-link.active {
+        color: #0ea5e9 !important;
+        background: transparent !important;
+        border-bottom: 3px solid #0ea5e9 !important;
+    }
+
+    .dropdown-select-custom {
+        position: relative;
+        cursor: pointer;
+        user-select: none;
+        width: 100%;
+    }
+    .dropdown-box-toggle {
+        background: #fff;
+        border: 1px solid #cbd5e1;
+        border-radius: 8px;
+        padding: 12px 15px;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        width: 100%;
+        min-height: 52px;
+        transition: border-color 0.2s;
+    }
+    .dropdown-box-toggle:hover {
+        border-color: #0ea5e9;
+    }
+    .dropdown-options-container {
+        position: absolute;
+        top: 105%;
+        left: 0;
+        width: 100%;
+        background: #fff;
+        border: 1px solid #cbd5e1;
+        border-radius: 8px;
+        box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+        display: none;
+        z-index: 1050;
+        padding: 8px;
+        gap: 4px;
+    }
+    .dropdown-options-container.show {
+        display: flex;
+        flex-direction: column;
+    }
+    .option-item {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        padding: 10px 12px;
+        border-radius: 6px;
+        transition: background 0.2s;
+        cursor: pointer;
+    }
+    .option-item:hover {
+        background: #f1f5f9;
+    }
+</style>
+
+<div class="container my-5">
+    <div class="product-detail-container p-4 p-md-5">
+        <div class="row g-5">
+            
+            <!-- COLUMNA IZQUIERDA: IMÁGENES CON ZOOM DINÁMICO -->
+            <div class="col-lg-6">
+                <div class="main-image-box mb-3 shadow-sm" id="imageContainer">
+                    {% if producto.imagen %}
+                        <img id="imagenPrincipal" src="{{ producto.imagen.url }}" alt="{{ producto.nombre }}">
+                    {% else %}
+                        <i class="fa-solid fa-image text-muted fs-1"></i>
+                    {% endif %}
                 </div>
-            {% endif %}
-            
-            <a href="/" class="btn btn-dark rounded-circle position-absolute shadow" style="top: 20px; left: 20px; width: 45px; height: 45px; display: flex; align-items: center; justify-content: center; z-index: 10; border: 1px solid rgba(255,255,255,0.1);">
-                <i class="fa-solid fa-arrow-left"></i>
-            </a>
-        </div>
-        
-        <!-- SECCIÓN DE LA INFORMACIÓN -->
-        <div class="col-md-6 p-5 d-flex flex-column justify-content-center" style="background: rgba(15,23,42,0.6);">
-            <span class="badge bg-primary text-uppercase letter-spacing-1 mb-3 align-self-start py-2 px-3 rounded-pill">{{ producto.categoria.nombre|default:"Producto" }}</span>
-            <h1 class="fw-bold mb-3 display-5">{{ producto.nombre }}</h1>
-            <p class="text-light fs-5 mb-4 opacity-75" style="line-height: 1.6;">{{ producto.descripcion }}</p>
-            <div class="fw-bolder mb-5" style="font-size: 3.5rem; color: #0ea5e9; text-shadow: 0 0 20px rgba(14,165,233,0.3);">${{ producto.precio }}</div>
-            
-            <div class="d-flex flex-column gap-3 mt-auto">
-                <a href="{% url 'agregar_al_carrito' producto.id %}" class="btn btn-gradient py-3 fw-bold fs-5 rounded-pill shadow-lg"><i class="fa-solid fa-cart-plus"></i> Añadir al Carrito</a>
+
+                <div class="d-flex gap-2 justify-content-center">
+                    {% if producto.imagen %}
+                    <div class="thumbnail-box active" onclick="cambiarImagen('{{ producto.imagen.url }}', this)">
+                        <img src="{{ producto.imagen.url }}" alt="Vista previa">
+                    </div>
+                    {% endif %}
+                    <div class="thumbnail-box" onclick="cambiarImagen('https://images.unsplash.com/photo-1526170375885-4d8ecf77b99f?q=80&w=2670', this)">
+                        <img src="https://images.unsplash.com/photo-1526170375885-4d8ecf77b99f?q=80&w=2670" alt="Detalle extra">
+                    </div>
+                </div>
+            </div>
+
+            <!-- COLUMNA DERECHA: INFORMACIÓN Y ACCIONES -->
+            <div class="col-lg-6 d-flex flex-column">
                 
-                {% if user.is_authenticated %}
-                    <form action="{% url 'toggle_favorito' producto.id %}" method="POST" class="m-0">
-                        {% csrf_token %}
-                        <button class="btn btn-outline-danger w-100 py-3 fw-bold rounded-pill"><i class="fa-solid fa-heart"></i> Guardar en Favoritos</button>
-                    </form>
-                {% endif %}
+                <h1 class="fw-bold fs-2 text-dark mb-1">{{ producto.nombre }}</h1>
+                <p class="text-muted small mb-3">Vendido por <span class="text-primary fw-bold">UrbanPulse Official</span></p>
 
-                {% if user.is_staff %}
-                <hr class="my-4" style="border-color: rgba(255,255,255,0.1);">
-                <div class="d-flex gap-2">
-                    <a href="{% url 'editar' producto.id %}" class="btn btn-warning w-50 py-2 fw-bold rounded-pill text-dark"><i class="fa-solid fa-pen"></i> Editar</a>
-                    <form action="{% url 'eliminar' producto.id %}" method="POST" class="w-50 m-0">
-                        {% csrf_token %}
-                        <button class="btn btn-danger w-100 py-2 fw-bold rounded-pill"><i class="fa-solid fa-trash"></i> Eliminar</button>
-                    </form>
+                <!-- Precio -->
+                <div class="mb-3">
+                    <div class="text-muted text-decoration-line-through fs-5">${{ producto.precio|floatformat:2 }}</div>
+                    <div class="d-flex align-items-center gap-3">
+                        <span class="price-tag">${{ producto.precio|floatformat:2 }}</span>
+                        <span class="badge bg-success fs-6 px-2 py-1">15% OFF</span>
+                    </div>
                 </div>
-                {% endif %}
+
+                <!-- Promociones bancarias -->
+                <div class="bank-promo-box mb-4">
+                    <h6 class="fw-bold text-dark mb-2"><i class="fa-solid fa-credit-card text-primary me-1"></i> ¡Nuestras promociones bancarias!</h6>
+                    <div class="small text-success fw-bold mb-1">Pagá en cuotas con tarjetas participantes.</div>
+                    <div class="text-muted small mb-2">Financiación disponible para este producto.</div>
+                    <a href="#" data-bs-toggle="modal" data-bs-target="#modalMediosPago" class="text-primary text-decoration-none small fw-bold">Ver todos los medios de pago</a>
+                </div>
+
+                <!-- Envíos -->
+                <div class="shipping-box mb-4">
+                    <div class="d-flex align-items-start gap-3 mb-2">
+                        <i class="fa-solid fa-truck-fast text-success fs-4 mt-1"></i>
+                        <div>
+                            <span class="text-success fw-bold">Envío GRATIS</span> a todo el país<br>
+                            <span class="text-muted small">Llega en 48hs hábiles</span>
+                        </div>
+                    </div>
+                    <div class="d-flex align-items-start gap-3">
+                        <i class="fa-solid fa-store text-primary fs-4 mt-1"></i>
+                        <div>
+                            <span class="fw-bold text-dark">Retiro GRATIS en sucursal</span><br>
+                            <span class="text-muted small">Disponible a partir de mañana</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Descripción corta -->
+                <p class="text-muted small mb-4">{{ producto.descripcion }}</p>
+
+                <!-- Botones de Acción -->
+                <div class="mt-auto d-flex flex-column gap-3">
+                    <a href="{% url 'agregar_al_carrito' producto.id %}" class="btn btn-primary btn-lg rounded-pill fw-bold shadow-sm py-3 text-white" style="background: #0ea5e9; border: none;">
+                        Comprar ahora
+                    </a>
+                    <a href="{% url 'agregar_al_carrito' producto.id %}" class="btn btn-outline-primary btn-lg rounded-pill fw-bold py-3">
+                        <i class="fa-solid fa-cart-shopping me-2"></i> Agregar al carrito
+                    </a>
+                </div>
+
             </div>
         </div>
     </div>
 </div>
+
+<!-- VENTANA MODAL DE MEDIOS DE PAGO Y CUOTAS -->
+<div class="modal fade" id="modalMediosPago" tabindex="-1" aria-labelledby="modalMediosPagoLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered modal-lg">
+        <div class="modal-content rounded-4 border-0 shadow-lg">
+            
+            <div class="modal-header border-bottom-0 pb-0 px-4 pt-4">
+                <h5 class="modal-title fw-bold text-dark fs-4" id="modalMediosPagoLabel">Medios de pago y cuotas</h5>
+                <button type="button" class="btn-close shadow-none" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+
+            <div class="modal-body px-4 pb-4">
+                <!-- Pestañas de navegación -->
+                <ul class="nav nav-tabs custom-tabs border-bottom mb-4" id="pagoTab" role="tablist">
+                    <li class="nav-item" role="presentation">
+                        <button class="nav-link active" id="tab-destacados" data-bs-toggle="tab" data-bs-target="#pane-destacados" type="button" role="tab">Destacados</button>
+                    </li>
+                    <li class="nav-item" role="presentation">
+                        <button class="nav-link" id="tab-todos" data-bs-toggle="tab" data-bs-target="#pane-todos" type="button" role="tab">Ver todos los medios de pago</button>
+                    </li>
+                </ul>
+
+                <div class="tab-content" id="pagoTabContent">
+                    <!-- Contenido Pestaña Destacados -->
+                    <div class="tab-pane fade show active" id="pane-destacados" role="tabpanel">
+                        
+                        <div class="mb-4 pb-3 border-bottom">
+                            <div class="fw-bold text-success mb-2" style="font-size: 1.05rem;">
+                                9 cuotas sin interés de <span id="cuota9">--</span>
+                            </div>
+                            <div class="d-flex gap-2 align-items-center flex-wrap">
+                                <span class="badge bg-light text-dark border px-3 py-2 fw-bold shadow-sm">BNA</span>
+                                <span class="badge bg-light text-danger border px-3 py-2 fw-bold shadow-sm">NaranjaX</span>
+                            </div>
+                        </div>
+
+                        <div class="mb-4 pb-3 border-bottom">
+                            <div class="fw-bold text-success mb-2" style="font-size: 1.05rem;">
+                                6 cuotas sin interés de <span id="cuota6">--</span>
+                            </div>
+                            <div class="d-flex gap-2 align-items-center flex-wrap">
+                                <span class="badge bg-light text-primary border px-3 py-2 fw-bold shadow-sm">Macro</span>
+                                <span class="badge bg-light text-dark border px-3 py-2 fw-bold shadow-sm">Mastercard</span>
+                                <span class="badge bg-light text-info border px-3 py-2 fw-bold shadow-sm">Cabal</span>
+                                <span class="badge bg-light text-primary border px-3 py-2 fw-bold shadow-sm">American Express</span>
+                                <span class="badge bg-light text-primary border px-3 py-2 fw-bold shadow-sm">Visa</span>
+                            </div>
+                        </div>
+
+                        <div class="mb-3">
+                            <div class="fw-bold text-dark mb-1" style="font-size: 1.05rem;">
+                                18 cuotas de <span id="cuota18">--</span>
+                            </div>
+                            <div class="text-muted small mb-2">Precio financiado con interés (CFT aplicable).</div>
+                            <div class="d-flex gap-2 align-items-center flex-wrap">
+                                <span class="badge bg-light text-dark border px-3 py-2 fw-bold shadow-sm">Mastercard</span>
+                                <span class="badge bg-light text-primary border px-3 py-2 fw-bold shadow-sm">Visa</span>
+                                <span class="badge bg-light text-info border px-3 py-2 fw-bold shadow-sm">Cabal</span>
+                            </div>
+                        </div>
+
+                    </div>
+
+                    <!-- Contenido Pestaña Ver todos -->
+                    <div class="tab-pane fade" id="pane-todos" role="tabpanel">
+                        
+                        <div class="row g-3 mb-4">
+                            <!-- Selector visual de Tarjetas -->
+                            <div class="col-md-6">
+                                <label class="form-label small fw-bold text-muted mb-1">Medio de pago</label>
+                                <div class="dropdown-select-custom" id="dropdownTarjeta" onclick="toggleDropdown('tarjeta', event)">
+                                    <div class="dropdown-box-toggle">
+                                        <div class="d-flex align-items-center gap-2" id="tarjetaSeleccionadaDisplay">
+                                            <svg width="24" height="16" viewBox="0 0 38 24" xmlns="http://www.w3.org/2000/svg"><circle cx="14" cy="12" r="10" fill="#eb001b"/><circle cx="24" cy="12" r="10" fill="#f79e1b" fill-opacity="0.8"/></svg>
+                                            <span class="fw-semibold text-dark">Mastercard</span>
+                                        </div>
+                                        <i class="fa-solid fa-chevron-down text-muted small"></i>
+                                    </div>
+                                    <div class="dropdown-options-container" id="listaOpcionesTarjetas">
+                                        <div class="option-item" onclick="seleccionarTarjeta('mastercard', 'Mastercard', `<svg width=\\'24\\' height=\\'16\\' viewBox=\\'0 0 38 24\\' xmlns=\\'http://www.w3.org/2000/svg\\'><circle cx=\\'14\\' cy=\\'12\\' r=\\'10\\' fill=\\'#eb001b\\'/><circle cx=\\'24\\' cy=\\'12\\' r=\\'10\\' fill=\\'#f79e1b\\' fill-opacity=\\'0.8\\'/></svg>`, event)">
+                                            <svg width="24" height="16" viewBox="0 0 38 24" xmlns="http://www.w3.org/2000/svg"><circle cx="14" cy="12" r="10" fill="#eb001b"/><circle cx="24" cy="12" r="10" fill="#f79e1b" fill-opacity="0.8"/></svg>
+                                            <span class="fw-semibold text-dark small">Mastercard</span>
+                                        </div>
+                                        <div class="option-item" onclick="seleccionarTarjeta('visa', 'Visa', `<span class=\\'badge bg-primary text-white px-2 py-1\\'>VISA</span>`, event)">
+                                            <span class="badge bg-primary text-white px-2 py-1">VISA</span>
+                                            <span class="fw-semibold text-dark small">Visa</span>
+                                        </div>
+                                        <div class="option-item" onclick="seleccionarTarjeta('amex', 'American Express', `<span class=\\'badge bg-info text-white px-2 py-1\\'>AMEX</span>`, event)">
+                                            <span class="badge bg-info text-white px-2 py-1">AMEX</span>
+                                            <span class="fw-semibold text-dark small">American Express</span>
+                                        </div>
+                                        <div class="option-item" onclick="seleccionarTarjeta('cabal', 'Cabal', `<span class=\\'badge bg-secondary text-white px-2 py-1\\'>CABAL</span>`, event)">
+                                            <span class="badge bg-secondary text-white px-2 py-1">CABAL</span>
+                                            <span class="fw-semibold text-dark small">Cabal</span>
+                                        </div>
+                                        <div class="option-item" onclick="seleccionarTarjeta('naranja', 'Naranja X', `<span class=\\'badge bg-warning text-dark px-2 py-1\\'>NaranjaX</span>`, event)">
+                                            <span class="badge bg-warning text-dark px-2 py-1">NaranjaX</span>
+                                            <span class="fw-semibold text-dark small">Naranja X</span>
+                                        </div>
+                                    </div>
+                                </div>
+                                <input type="hidden" id="valorTarjetaInput" value="mastercard">
+                            </div>
+
+                            <!-- Selector visual de Bancos -->
+                            <div class="col-md-6">
+                                <label class="form-label small fw-bold text-muted mb-1">Banco</label>
+                                <div class="dropdown-select-custom" id="dropdownBanco" onclick="toggleDropdown('banco', event)">
+                                    <div class="dropdown-box-toggle">
+                                        <div class="d-flex align-items-center gap-2" id="bancoSeleccionadoDisplay">
+                                            <span class="badge bg-warning text-dark px-2 py-1">GALICIA</span>
+                                            <span class="fw-semibold text-dark">Banco Galicia</span>
+                                        </div>
+                                        <i class="fa-solid fa-chevron-down text-muted small"></i>
+                                    </div>
+                                    <div class="dropdown-options-container" id="listaOpcionesBancos">
+                                        <div class="option-item" onclick="seleccionarBanco('galicia', 'Banco Galicia', `<span class=\\'badge bg-warning text-dark px-2 py-1\\'>GALICIA</span>`, event)">
+                                            <span class="badge bg-warning text-dark px-2 py-1">GALICIA</span>
+                                            <span class="fw-semibold text-dark small">Banco Galicia</span>
+                                        </div>
+                                        <div class="option-item" onclick="seleccionarBanco('bbva', 'Banco BBVA', `<span class=\\'badge bg-danger text-white px-2 py-1\\'>BBVA</span>`, event)">
+                                            <span class="badge bg-danger text-white px-2 py-1">BBVA</span>
+                                            <span class="fw-semibold text-dark small">Banco BBVA</span>
+                                        </div>
+                                        <div class="option-item" onclick="seleccionarBanco('macro', 'Banco Macro', `<span class=\\'badge bg-primary text-white px-2 py-1\\'>MACRO</span>`, event)">
+                                            <span class="badge bg-primary text-white px-2 py-1">MACRO</span>
+                                            <span class="fw-semibold text-dark small">Banco Macro</span>
+                                        </div>
+                                        <div class="option-item" onclick="seleccionarBanco('bna', 'Banco Nación (BNA)', `<span class=\\'badge bg-success text-white px-2 py-1\\'>BNA</span>`, event)">
+                                            <span class="badge bg-success text-white px-2 py-1">BNA</span>
+                                            <span class="fw-semibold text-dark small">Banco Nación (BNA)</span>
+                                        </div>
+                                        <div class="option-item" onclick="seleccionarBanco('otros', 'Otros Bancos', `<span class=\\'badge bg-secondary text-white px-2 py-1\\'>OTROS</span>`, event)">
+                                            <span class="badge bg-secondary text-white px-2 py-1">OTROS</span>
+                                            <span class="fw-semibold text-dark small">Otros Bancos</span>
+                                        </div>
+                                    </div>
+                                </div>
+                                <input type="hidden" id="valorBancoInput" value="galicia">
+                            </div>
+                        </div>
+
+                        <!-- Precio en 1 pago y Tabla Detallada -->
+                        <div class="mb-3 text-end text-dark fw-bold" id="precioUnPagoLabel" style="font-size: 0.95rem;">
+                            Precio en 1 pago: $--
+                        </div>
+
+                        <div class="table-responsive border rounded-3 p-3 bg-white shadow-sm">
+                            <table class="table align-middle mb-2">
+                                <thead>
+                                    <tr class="text-muted small border-bottom">
+                                        <th class="fw-semibold pb-2">Cantidad de cuotas</th>
+                                        <th class="fw-semibold pb-2">Valor de la cuota</th>
+                                        <th class="fw-semibold pb-2 text-end">Precio total financiado</th>
+                                        <th class="fw-semibold pb-2 text-end">Intereses</th>
+                                        <th class="fw-semibold pb-2 text-end">CFT¹</th>
+                                        <th class="fw-semibold pb-2 text-end">TEA²</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="tablaCuotasBody">
+                                    <!-- Dinámico -->
+                                </tbody>
+                            </table>
+                            <div class="text-muted" style="font-size: 0.75rem;">
+                                1. Costo financiero total — 2. Tasa efectiva anual
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    function cambiarImagen(url, elemento) {
+        document.getElementById('imagenPrincipal').src = url;
+        document.querySelectorAll('.thumbnail-box').forEach(box => {
+            box.classList.remove('active');
+        });
+        elemento.classList.add('active');
+    }
+
+    // Lógica para el Zoom interactivo que sigue el movimiento del cursor
+    const container = document.getElementById('imageContainer');
+    const img = document.getElementById('imagenPrincipal');
+
+    if (container && img) {
+        container.addEventListener('mousemove', (e) => {
+            const rect = container.getBoundingClientRect();
+            // Calcular la posición del cursor en porcentaje (0 a 100) respecto al contenedor
+            const x = ((e.clientX - rect.left) / rect.width) * 100;
+            const y = ((e.clientY - rect.top) / rect.height) * 100;
+
+            // Cambiar el punto de origen del zoom hacia donde está apuntando el mouse
+            img.style.transformOrigin = `${x}% ${y}%`;
+            // Aplicar el zoom (escala 2.2 para mayor acercamiento)
+            img.style.transform = 'scale(2.2)';
+        });
+
+        container.addEventListener('mouseleave', () => {
+            // Restablecer la posición y el tamaño original al retirar el cursor
+            img.style.transformOrigin = 'center center';
+            img.style.transform = 'scale(1)';
+        });
+    }
+
+    function toggleDropdown(tipo, event) {
+        event.stopPropagation();
+        const tarContainer = document.getElementById('listaOpcionesTarjetas');
+        const banContainer = document.getElementById('listaOpcionesBancos');
+
+        if (tipo === 'tarjeta') {
+            banContainer.classList.remove('show');
+            tarContainer.classList.toggle('show');
+        } else {
+            tarContainer.classList.remove('show');
+            banContainer.classList.toggle('show');
+        }
+    }
+
+    function seleccionarTarjeta(valor, nombre, htmlIcono, event) {
+        event.stopPropagation();
+        document.getElementById('valorTarjetaInput').value = valor;
+        document.getElementById('tarjetaSeleccionadaDisplay').innerHTML = htmlIcono + `<span class="fw-semibold text-dark">${nombre}</span>`;
+        document.getElementById('listaOpcionesTarjetas').classList.remove('show');
+        actualizarTablaCuotas();
+    }
+
+    function seleccionarBanco(valor, nombre, htmlIcono, event) {
+        event.stopPropagation();
+        document.getElementById('valorBancoInput').value = valor;
+        document.getElementById('bancoSeleccionadoDisplay').innerHTML = htmlIcono + `<span class="fw-semibold text-dark">${nombre}</span>`;
+        document.getElementById('listaOpcionesBancos').classList.remove('show');
+        actualizarTablaCuotas();
+    }
+
+    window.addEventListener('click', function() {
+        const tarContainer = document.getElementById('listaOpcionesTarjetas');
+        const banContainer = document.getElementById('listaOpcionesBancos');
+        if (tarContainer) tarContainer.classList.remove('show');
+        if (banContainer) banContainer.classList.remove('show');
+    });
+
+    function actualizarTablaCuotas() {
+        let precioBase = parseFloat("{{ producto.precio }}");
+        if (isNaN(precioBase)) precioBase = 5300000;
+
+        document.getElementById('precioUnPagoLabel').innerText = "Precio en 1 pago: $" + precioBase.toLocaleString('es-AR', {minimumFractionDigits: 2, maximumFractionDigits: 2});
+
+        let tarjeta = document.getElementById('valorTarjetaInput').value;
+        let banco = document.getElementById('valorBancoInput').value;
+        let tbody = document.getElementById('tablaCuotasBody');
+        if (!tbody) return;
+        tbody.innerHTML = "";
+
+        let planes = [];
+
+        if (banco === 'bna' || tarjeta === 'naranja') {
+            planes = [
+                { cuotas: 9, interesPorc: 0, cft: '0%', tea: '0%' },
+                { cuotas: 6, interesPorc: 0, cft: '0%', tea: '0%' },
+                { cuotas: 3, interesPorc: 0, cft: '0%', tea: '0%' }
+            ];
+        } else if (banco === 'galicia' || banco === 'bbva') {
+            planes = [
+                { cuotas: 6, interesPorc: 0, cft: '0%', tea: '0%' },
+                { cuotas: 3, interesPorc: 0, cft: '0%', tea: '0%' },
+                { cuotas: 12, interesPorc: 0.25, cft: '28.4%', tea: '22.1%' }
+            ];
+        } else if (banco === 'macro') {
+            planes = [
+                { cuotas: 6, interesPorc: 0, cft: '0%', tea: '0%' },
+                { cuotas: 12, interesPorc: 0.18, cft: '21.0%', tea: '17.5%' }
+            ];
+        } else {
+            planes = [
+                { cuotas: 18, interesPorc: 0.35, cft: '42.5%', tea: '35.0%' },
+                { cuotas: 12, interesPorc: 0.22, cft: '26.8%', tea: '21.4%' },
+                { cuotas: 6, interesPorc: 0.12, cft: '15.2%', tea: '12.8%' },
+                { cuotas: 3, interesPorc: 0.05, cft: '8.1%', tea: '6.5%' }
+            ];
+        }
+
+        planes.forEach(plan => {
+            let totalFinanciado = precioBase * (1 + plan.interesPorc);
+            let valorCuota = totalFinanciado / plan.cuotas;
+            let montoInteres = precioBase * plan.interesPorc;
+            
+            let row = `
+                <tr class="border-bottom">
+                    <td class="py-3 fw-bold" style="${plan.interesPorc === 0 ? 'color: #db2777 !important;' : 'color: #1e293b;'}">${plan.cuotas} cuotas</td>
+                    <td class="py-3 fw-bold text-dark">$${valorCuota.toLocaleString('es-AR', {minimumFractionDigits: 2, maximumFractionDigits: 2})}</td>
+                    <td class="py-3 text-end text-muted fw-semibold">$${totalFinanciado.toLocaleString('es-AR', {minimumFractionDigits: 2, maximumFractionDigits: 2})}</td>
+                    <td class="py-3 text-end text-muted">$${montoInteres.toLocaleString('es-AR', {minimumFractionDigits: 2, maximumFractionDigits: 2})}</td>
+                    <td class="py-3 text-end text-muted">${plan.cft}</td>
+                    <td class="py-3 text-end text-muted">${plan.tea}</td>
+                </tr>
+            `;
+            tbody.innerHTML += row;
+        });
+    }
+
+    document.addEventListener("DOMContentLoaded", function() {
+        let precio = parseFloat("{{ producto.precio }}");
+        if (!isNaN(precio)) {
+            let el9 = document.getElementById('cuota9');
+            let el6 = document.getElementById('cuota6');
+            let el18 = document.getElementById('cuota18');
+            if(el9) el9.innerText = '$' + (precio / 9).toLocaleString('es-AR', {minimumFractionDigits: 2, maximumFractionDigits: 2});
+            if(el6) el6.innerText = '$' + (precio / 6).toLocaleString('es-AR', {minimumFractionDigits: 2, maximumFractionDigits: 2});
+            if(el18) el18.innerText = '$' + ((precio * 1.35) / 18).toLocaleString('es-AR', {minimumFractionDigits: 2, maximumFractionDigits: 2});
+        }
+        actualizarTablaCuotas();
+    });
+</script>
 {% endblock %}

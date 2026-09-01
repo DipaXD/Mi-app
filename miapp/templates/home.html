@@ -14,10 +14,7 @@
         gap: 6px;
     }
     .brand-urban {
-        color: #0f172a; /* Oscuro para modo claro */
-    }
-    body:not(.light-mode) .brand-urban {
-        color: #ffffff; /* Blanco para modo oscuro si aplica en tu base */
+        color: #0f172a;
     }
     .brand-pulse {
         color: var(--primary, #0ea5e9);
@@ -37,8 +34,11 @@
 
     /* ESTILOS PARA EL CARRUSEL DEL HERO */
     .hero-carousel {
-        border-bottom: 1px solid rgba(255,255,255,0.1);
-        box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+        border-bottom: 1px solid rgba(0,0,0,0.05);
+        box-shadow: 0 10px 30px rgba(0,0,0,0.04);
+        border-radius: 16px;
+        overflow: hidden;
+        margin: 15px 0;
     }
     .carousel-item {
         height: 420px;
@@ -50,7 +50,7 @@
         content: '';
         position: absolute;
         top: 0; left: 0; width: 100%; height: 100%;
-        background: linear-gradient(to right, rgba(15, 23, 42, 0.8), rgba(15, 23, 42, 0.3));
+        background: linear-gradient(to right, rgba(15, 23, 42, 0.7), rgba(15, 23, 42, 0.2));
     }
     .carousel-caption-custom {
         position: absolute;
@@ -71,57 +71,83 @@
         color: #e2e8f0;
     }
 
-    /* BUSCADOR FLOTANTE */
-    .search-box { max-width: 650px; margin: 30px auto; position: relative; }
-    .search-box i { position: absolute; left: 20px; top: 50%; transform: translateY(-50%); color: var(--primary); font-size: 1.2rem;}
-    .search-box input { padding: 20px 20px 20px 50px; border-radius: 50px; font-size: 1.1rem; border: 2px solid rgba(255,255,255,0.2) !important; background: rgba(0,0,0,0.5) !important; color: white !important;}
-    
-    /* BLOQUES DE COLORES */
-    .color-blocks { margin-top: -1px; }
-    .block-1 { background: #0ea5e9; color: white; }
-    .block-2 { background: #0284c7; color: white; }
-    .block-3 { background: #f59e0b; color: #0f172a; }
-    .info-block { padding: 40px 20px; text-align: center; height: 100%; transition: 0.3s; }
-    .info-block:hover { filter: brightness(1.1); transform: translateY(-5px); }
-    .info-block i { font-size: 2.5rem; margin-bottom: 15px; }
-
-    /* FILTROS CIRCULARES */
-    .category-item { min-width: 90px; transition: transform 0.3s ease; }
-    .category-item:hover { transform: translateY(-5px); }
-    .category-circle {
-        width: 75px; height: 75px; border-radius: 50%;
-        background: #ffffff; border: 2px solid rgba(14, 165, 233, 0.3);
-        box-shadow: 0 2px 5px rgba(0,0,0,0.05);
-        transition: all 0.3s ease;
+    /* BUSCADOR FLOTANTE CLARO */
+    .search-box { 
+        max-width: 650px; 
+        margin: 20px auto; 
+        position: relative; 
     }
-    .category-item:hover .category-circle { border-color: var(--primary); box-shadow: 0 0 15px rgba(14, 165, 233, 0.4); }
-    .scrollbar-hidden::-webkit-scrollbar { display: none; }
-    .scrollbar-hidden { -ms-overflow-style: none; scrollbar-width: none; }
+    .search-box i { 
+        position: absolute; 
+        left: 22px; 
+        top: 50%; 
+        transform: translateY(-50%); 
+        color: var(--primary); 
+        font-size: 1.2rem;
+        z-index: 5;
+    }
+    .search-box input { 
+        padding: 15px 20px 15px 52px !important; 
+        border-radius: 50px !important; 
+        font-size: 1.1rem !important; 
+        border: 1px solid #cbd5e1 !important; 
+        background: #ffffff !important; 
+        color: #0f172a !important; 
+        box-shadow: 0 4px 15px rgba(0,0,0,0.04) !important;
+    }
+    .search-box input::placeholder {
+        color: #94a3b8 !important;
+    }
 
     /* TARJETAS DE PRODUCTO MODERNAS */
     .product-card { 
-        background: #ffffff; color: #1e293b;
-        border: 1px solid #e2e8f0; border-radius: 12px; 
-        overflow: hidden; transition: all 0.3s ease; 
+        background: #ffffff; 
+        color: #1e293b;
+        border: 1px solid #e2e8f0; 
+        border-radius: 12px; 
+        overflow: hidden; 
+        transition: all 0.3s ease; 
         box-shadow: 0 2px 4px rgba(0,0,0,0.02);
     }
-    .product-card:hover { transform: translateY(-5px); box-shadow: 0 10px 25px rgba(0, 0, 0, 0.08); border-color: #cbd5e1; }
-    .product-img { width: 100%; height: 160px; object-fit: contain; padding: 15px; transition: 0.3s; }
+    .product-card:hover { 
+        transform: translateY(-5px); 
+        box-shadow: 0 10px 25px rgba(0, 0, 0, 0.08); 
+        border-color: #cbd5e1; 
+    }
+    .product-img { 
+        width: 100%; 
+        height: 160px; 
+        object-fit: contain; 
+        padding: 15px; 
+        transition: 0.3s; 
+    }
     .product-card:hover .product-img { transform: scale(1.03); }
     .img-wrapper { overflow: hidden; background: #ffffff; border-bottom: 1px solid #f1f5f9; }
     
-    .section-title { font-weight: 800; font-size: 2rem; display: inline-block; position: relative; margin-bottom: 30px;}
-    .section-title::after { content: ''; position: absolute; left: 0; bottom: -5px; width: 50%; height: 4px; background: var(--primary); border-radius: 2px; }
+    .section-title { 
+        font-weight: 800; 
+        font-size: 2rem; 
+        display: inline-block; 
+        position: relative; 
+        margin-bottom: 30px;
+        color: #0f172a;
+    }
+    .section-title::after { 
+        content: ''; 
+        position: absolute; 
+        left: 0; 
+        bottom: -5px; 
+        width: 50%; 
+        height: 4px; 
+        background: var(--primary); 
+        border-radius: 2px; 
+    }
+    
+    .filter-link { color: #334155 !important; transition: 0.2s; }
+    .filter-link:hover { color: var(--primary) !important; padding-left: 5px; }
 </style>
 
-<!-- SI QUIERES REEMPLAZAR EL LOGO EN EL NAVBAR O HEADER DE TU BASE.HTML, PUEDES USAR ESTE BLOQUE: -->
-<!-- 
-<a href="{% url 'home' %}" class="brand-logo">
-    <span class="brand-urban">Urban</span><span class="brand-pulse">P<i class="fa-solid fa-heart-pulse pulse-icon"></i>lse</span>
-</a> 
--->
-
-<!-- PANTALLA DESLIZANTE / CARRUSEL PRINCIPAL -->
+<!-- CARRUSEL PRINCIPAL -->
 <div id="heroCarousel" class="carousel slide hero-carousel" data-bs-ride="carousel" data-bs-interval="4000">
     <div class="carousel-indicators">
         <button type="button" data-bs-target="#heroCarousel" data-bs-slide-to="0" class="active" aria-current="true"></button>
@@ -130,7 +156,6 @@
     </div>
     
     <div class="carousel-inner">
-        <!-- Slide 1 -->
         <div class="carousel-item active" style="background-image: url('https://images.unsplash.com/photo-1441986300917-64674bd600d8?q=80&w=2670');">
             <div class="carousel-caption-custom">
                 <span class="badge bg-primary mb-2 px-3 py-2 fs-6">URBAN SALE</span>
@@ -138,7 +163,6 @@
                 <p>Descubre las últimas tendencias urbanas con descuentos exclusivos.</p>
             </div>
         </div>
-        <!-- Slide 2 -->
         <div class="carousel-item" style="background-image: url('https://images.unsplash.com/photo-1555529771-835f59fc5efe?q=80&w=2670');">
             <div class="carousel-caption-custom">
                 <span class="badge bg-warning text-dark mb-2 px-3 py-2 fs-6">NUEVA COLECCIÓN</span>
@@ -146,7 +170,6 @@
                 <p>Equipamiento y accesorios diseñados para tu día a día.</p>
             </div>
         </div>
-        <!-- Slide 3 -->
         <div class="carousel-item" style="background-image: url('https://images.unsplash.com/photo-1526170375885-4d8ecf77b99f?q=80&w=2670');">
             <div class="carousel-caption-custom">
                 <span class="badge bg-info text-dark mb-2 px-3 py-2 fs-6">FINANCIACIÓN</span>
@@ -156,7 +179,6 @@
         </div>
     </div>
 
-    <!-- Controles de Flechas -->
     <button class="carousel-control-prev" type="button" data-bs-target="#heroCarousel" data-bs-slide="prev">
         <span class="carousel-control-prev-icon" aria-hidden="true"></span>
         <span class="visually-hidden">Anterior</span>
@@ -168,111 +190,118 @@
 </div>
 
 <!-- Buscador debajo del carrusel -->
-<div class="container py-3">
+<div class="container py-2">
     <div class="search-box">
         <i class="fa-solid fa-magnifying-glass"></i>
         <input type="text" id="buscador" placeholder="Busca productos, categorías o marcas...">
     </div>
 </div>
-
-<div class="container-fluid px-0 color-blocks animate__animated animate__fadeInUp">
-    <div class="row g-0">
-        <div class="col-md-4">
-            <div class="info-block block-1">
-                <i class="fa-solid fa-truck-fast"></i>
-                <h3 class="fw-bold">Envíos Rápidos</h3>
-                <p class="m-0">Llegamos a todo el país en tiempo récord.</p>
-            </div>
-        </div>
-        <div class="col-md-4">
-            <div class="info-block block-2">
-                <i class="fa-solid fa-shield-halved"></i>
-                <h3 class="fw-bold">Compra Segura</h3>
-                <p class="m-0">Tus datos están 100% protegidos siempre.</p>
-            </div>
-        </div>
-        <div class="col-md-4">
-            <div class="info-block block-3">
-                <i class="fa-solid fa-headset"></i>
-                <h3 class="fw-bold">Atención 24/7</h3>
-                <p class="m-0">Estamos aquí para ayudarte en cualquier momento.</p>
-            </div>
-        </div>
-    </div>
-</div>
 {% endblock %}
 
 {% block content %}
-<!-- SECCIÓN DE FILTROS RÁPIDOS -->
-<div class="container my-5">
-    <div class="category-slider-container position-relative">
-        <div class="d-flex overflow-auto py-3 gap-4 scrollbar-hidden justify-content-lg-center" style="scroll-behavior: smooth; white-space: nowrap;">
+<div class="container my-4">
+    <div class="row">
+        
+        <!-- ================= COLUMNA IZQUIERDA: FILTROS CLAROS ================= -->
+        <div class="col-lg-3 col-md-4 mb-4">
+            <div class="p-4 rounded-4 shadow-sm" style="background: #ffffff; border: 1px solid #e2e8f0; color: #0f172a;">
+                
+                <h5 class="fw-bold mb-3 text-dark"><i class="fa-solid fa-list text-primary"></i> Categorías</h5>
+                <ul class="list-unstyled mb-4">
+                    <li class="mb-2">
+                        <a href="{% url 'home' %}" class="text-decoration-none filter-link d-block py-1 fw-semibold">
+                            <i class="fa-solid fa-folder-open text-warning me-2"></i> Todos los productos
+                        </a>
+                    </li>
+                    {% for cat in categorias %}
+                    <li class="mb-2">
+                        <a href="?cat={{ cat.id }}" class="text-decoration-none filter-link d-block py-1">
+                            <i class="fa-solid fa-diamond text-primary me-2" style="font-size: 0.7rem;"></i> {{ cat.nombre }}
+                        </a>
+                    </li>
+                    {% endfor %}
+                </ul>
+
+                <hr style="border-color: #e2e8f0;">
+
+                <h6 class="fw-bold mb-2 text-dark"><i class="fa-solid fa-arrow-down-wide-short text-primary"></i> Ordenar por</h6>
+                <select class="form-select bg-white text-dark border-secondary-subtle mb-4 shadow-sm" onchange="location = this.value;">
+                    <option value="?orden=recientes">Más recientes</option>
+                    <option value="?orden=precio_asc">Menor precio</option>
+                    <option value="?orden=precio_desc">Mayor precio</option>
+                </select>
+
+                <h6 class="fw-bold mb-3 text-dark"><i class="fa-solid fa-filter text-primary"></i> Filtros rápidos</h6>
+                <div class="form-check form-switch mb-2">
+                    <input class="form-check-input" type="checkbox" id="envioGratis" style="cursor: pointer; width: 2.5em;">
+                    <label class="form-check-label text-secondary small fw-medium" for="envioGratis" style="cursor: pointer;">Envío gratis</label>
+                </div>
+                <div class="form-check form-switch mb-2">
+                    <input class="form-check-input" type="checkbox" id="cuotasSinInteres" style="cursor: pointer; width: 2.5em;">
+                    <label class="form-check-label text-secondary small fw-medium" for="cuotasSinInteres" style="cursor: pointer;">Cuotas sin interés</label>
+                </div>
+            </div>
+        </div>
+
+        <!-- ================= COLUMNA DERECHA: CATÁLOGO ================= -->
+        <div class="col-lg-9 col-md-8">
             
-            <a href="{% url 'home' %}" class="category-item text-center text-decoration-none">
-                <div class="category-circle mb-2 mx-auto d-flex align-items-center justify-content-center shadow-sm">
-                    <i class="fa-solid fa-border-all fs-4 text-primary"></i>
+            {% if destacados %}
+            <div class="mb-5">
+                <h3 class="section-title animate__animated animate__fadeInLeft"><i class="fa-solid fa-fire text-warning"></i> Destacados</h3>
+                <div class="row g-3">
+                    {% for p in destacados %}
+                    <div class="col-lg-4 col-md-6 col-sm-6 col-12 animate__animated animate__zoomIn">
+                        <div class="product-card d-flex flex-column h-100">
+                            <div class="img-wrapper">
+                                {% if p.imagen %} <img src="{{ p.imagen.url }}" class="product-img"> {% endif %}
+                            </div>
+                            <div class="p-3 d-flex flex-column flex-grow-1">
+                                <h4 class="fw-bold mb-1 fs-6 text-dark text-truncate">{{ p.nombre }}</h4>
+                                <p class="text-primary fw-bold fs-4 m-0 mb-3">${{ p.precio|floatformat:2 }}</p>
+                                <div class="mt-auto">
+                                    <a href="{% url 'detalle' p.id %}" class="btn btn-outline-primary w-100 rounded-pill py-1 mb-1 fs-6 fw-bold"><i class="fa-regular fa-eye"></i> Ver producto</a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    {% endfor %}
                 </div>
-                <span class="small fw-bold text-dark">Todos</span>
-            </a>
+            </div>
+            {% endif %}
 
-            {% for cat in categorias %}
-            <a href="?cat={{ cat.id }}" class="category-item text-center text-decoration-none">
-                <div class="category-circle mb-2 mx-auto d-flex align-items-center justify-content-center shadow-sm overflow-hidden position-relative">
-                    {% if cat.imagen %}
-                        <img src="{{ cat.imagen.url }}" alt="{{ cat.nombre }}" class="w-100 h-100 position-absolute top-0 start-0" style="object-fit: cover;">
-                    {% else %}
-                        <i class="fa-solid fa-tag fs-4 text-primary"></i>
-                    {% endif %}
+            <h3 class="section-title mt-2 animate__animated animate__fadeInLeft"><i class="fa-solid fa-star text-primary"></i> Nuestro Catálogo</h3>
+            
+            <div id="productos" class="row g-3 mb-5">
+                {% for producto in productos %}
+                <div class="col-lg-4 col-md-6 col-sm-6 col-12">
+                    <div class="product-card d-flex flex-column h-100 position-relative">
+                        <div class="img-wrapper">
+                            {% if producto.imagen %} <img src="{{ producto.imagen.url }}" class="product-img"> {% endif %}
+                        </div>
+                        <div class="p-3 d-flex flex-column flex-grow-1">
+                            <h4 class="fw-bold mb-1 fs-6 text-dark text-truncate">{{ producto.nombre }}</h4>
+                            <p class="small flex-grow-1 text-muted mb-2" style="font-size: 0.8rem;">{{ producto.descripcion|truncatechars:50 }}</p>
+                            <p class="text-primary fw-bold fs-4 mb-3">${{ producto.precio|floatformat:2 }}</p>
+                            <div class="mt-auto">
+                                <a href="{% url 'detalle' producto.id %}" class="btn btn-outline-primary w-100 rounded-pill py-1 mb-1 fs-6 fw-bold"><i class="fa-regular fa-eye"></i> Ver producto</a>
+                            </div>
+                        </div>
+                    </div>
                 </div>
-                <span class="small fw-bold text-dark">{{ cat.nombre }}</span>
-            </a>
-            {% endfor %}
+                {% empty %}
+                <div class="col-12 text-center py-5">
+                    <div class="p-5 text-dark bg-white rounded-4 shadow-sm border">
+                        <i class="fa-solid fa-box-open fs-1 mb-3 text-secondary"></i>
+                        <h4>No se encontraron productos</h4>
+                        <p class="text-muted">Intenta buscando con otra categoría o término.</p>
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
 
         </div>
     </div>
-</div>
-
-{% if destacados %}
-<h3 class="section-title animate__animated animate__fadeInLeft"><i class="fa-solid fa-fire text-warning"></i> Destacados</h3>
-<div class="row g-3 mb-5">
-    {% for p in destacados %}
-    <div class="col-lg-3 col-md-4 col-sm-6 col-12 animate__animated animate__zoomIn">
-        <div class="product-card d-flex flex-column h-100">
-            <div class="img-wrapper">
-                {% if p.imagen %} <img src="{{ p.imagen.url }}" class="product-img"> {% endif %}
-            </div>
-            <div class="p-3 d-flex flex-column flex-grow-1">
-                <h4 class="fw-bold mb-1 fs-6 text-dark text-truncate">{{ p.nombre }}</h4>
-                <p class="text-primary fw-bold fs-4 m-0 mb-3">${{ p.precio }}</p>
-                <div class="mt-auto">
-                    <a href="{% url 'detalle' p.id %}" class="btn btn-outline-primary w-100 rounded-pill py-1 mb-1 fs-6 fw-bold"><i class="fa-regular fa-eye"></i> Ver producto</a>
-                </div>
-            </div>
-        </div>
-    </div>
-    {% endfor %}
-</div>
-{% endif %}
-
-<h3 class="section-title mt-4 animate__animated animate__fadeInLeft"><i class="fa-solid fa-star text-primary"></i> Nuestro Catálogo</h3>
-<div id="productos" class="row g-3 mb-5">
-    {% for producto in productos %}
-    <div class="col-lg-3 col-md-4 col-sm-6 col-12">
-        <div class="product-card d-flex flex-column h-100">
-            <div class="img-wrapper">
-                {% if producto.imagen %} <img src="{{ producto.imagen.url }}" class="product-img"> {% endif %}
-            </div>
-            <div class="p-3 d-flex flex-column flex-grow-1">
-                <h4 class="fw-bold mb-1 fs-6 text-dark text-truncate">{{ producto.nombre }}</h4>
-                <p class="small flex-grow-1 text-muted mb-2" style="font-size: 0.8rem;">{{ producto.descripcion|truncatechars:50 }}</p>
-                <p class="text-primary fw-bold fs-4 mb-3">${{ producto.precio }}</p>
-                <div class="mt-auto">
-                    <a href="{% url 'detalle' producto.id %}" class="btn btn-outline-primary w-100 rounded-pill py-1 mb-1 fs-6 fw-bold"><i class="fa-regular fa-eye"></i> Ver producto</a>
-                </div>
-            </div>
-        </div>
-    </div>
-    {% endfor %}
 </div>
 
 <script>
@@ -285,11 +314,22 @@ input.addEventListener("keyup", function () {
         .then(res => res.json())
         .then(data => {
             contenedor.innerHTML = "";
+            if (data.productos.length === 0) {
+                contenedor.innerHTML = `
+                    <div class="col-12 text-center py-5">
+                        <div class="p-5 text-dark bg-white rounded-4 shadow-sm border">
+                            <i class="fa-solid fa-box-open fs-1 mb-3 text-secondary"></i>
+                            <h4>No se encontraron productos</h4>
+                            <p class="text-muted">Intenta buscando con otro término.</p>
+                        </div>
+                    </div>`;
+                return;
+            }
             data.productos.forEach(p => {
                 const img = p.imagen ? `<img src="${p.imagen}" class="product-img">` : '';
                 
                 contenedor.innerHTML += `
-                    <div class="col-lg-3 col-md-4 col-sm-6 col-12 animate__animated animate__fadeIn">
+                    <div class="col-lg-4 col-md-6 col-sm-6 col-12 animate__animated animate__fadeIn">
                         <div class="product-card d-flex flex-column h-100">
                             <div class="img-wrapper">${img}</div>
                             <div class="p-3 d-flex flex-column flex-grow-1">
