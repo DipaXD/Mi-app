@@ -7,10 +7,122 @@ from django.db.models import Q
 from django.core.paginator import Paginator
 from django.contrib import messages
 from django.contrib.auth.models import User
+from datetime import datetime
+from .models import Direccion
+from .models import Compra
 
 # Importamos tus modelos y formularios
 from .models import Producto, Categoria, Carrito, Favorito
 from .forms import ProductoForm, RegistroForm
+
+@login_required
+def mis_compras_view(request):
+    # Buscamos las compras del usuario logueado
+    compras = Compra.objects.filter(user=request.user).order_by('-creado_en')
+    
+    context = {
+        'compras': compras,
+    }
+    return render(request, 'mis_compras.html', context)
+
+@login_required
+def direcciones_view(request):
+    if request.method == 'POST':
+        # Capturamos los datos del formulario que enviamos
+        pais = request.POST.get('pais', 'Argentina')
+        codigo_postal = request.POST.get('codigo_postal')
+        calle = request.POST.get('calle')
+        numero = request.POST.get('numero')
+        info_adicional = request.POST.get('info_adicional')
+        ciudad = request.POST.get('ciudad')
+        
+        if codigo_postal and calle and numero and ciudad:
+            # Guardamos en la base de datos
+            Direccion.objects.create(
+                user=request.user,
+                pais=pais,
+                codigo_postal=codigo_postal,
+                calle=calle,
+                numero=numero,
+                info_adicional=info_adicional,
+                ciudad=ciudad
+            )
+            messages.success(request, '¡Dirección guardada con éxito!')
+            return redirect('direcciones')
+        else:
+            messages.error(request, 'Por favor, completa los campos obligatorios.')
+
+    # Buscamos todas las direcciones del usuario actual para listarlas
+    direcciones = Direccion.objects.filter(user=request.user).order_by('-creado_en')
+    
+    context = {
+        'direcciones': direcciones,
+    }
+    return render(request, 'direcciones.html', context)
+
+@login_required
+def mi_cuenta_view(request):
+    return render(request, 'perfil.html')
+
+@login_required
+def autenticacion_view(request):
+    """Muestra la sección de autenticación con el estado de contraseña y sesiones activas"""
+    return render(request, 'autenticacion.html')
+
+@login_required
+def cambiar_contrasena_view(request):
+    """Muestra el formulario para ingresar el código de verificación y la nueva contraseña"""
+    if request.method == 'POST':
+        # Aquí puedes agregar la lógica para validar el código y actualizar la contraseña del usuario
+        messages.success(request, "¡Tu contraseña ha sido actualizada con éxito!")
+        return redirect('autenticacion')
+        
+    return render(request, 'cambiar_contrasena.html')
+
+@login_required
+def sesiones_view(request):
+    """Muestra la sesión activa del usuario con su IP y detalles de acceso"""
+    
+    # Obtener la IP real del usuario desde la petición
+    x_forwarded_for = request.META.get('HTTP_X_FORWARDED_FOR')
+    if x_forwarded_for:
+        ip = x_forwarded_for.split(',')[0]
+    else:
+        ip = request.META.get('REMOTE_ADDR', '186.123.111.9')
+
+    context = {
+        'user_ip': ip,
+        'current_time': datetime.now(),
+    }
+    return render(request, 'sesiones.html', context)
+
+@login_required
+def direcciones_view(request):
+    """Muestra las direcciones guardadas del usuario o el estado vacío"""
+    # Si tienes un modelo de direcciones, puedes consultarlas aquí:
+    # direcciones = Direccion.objects.filter(user=request.user)
+    direcciones = []  # Lista vacía para mostrar el estado de la imagen
+    
+    context = {
+        'direcciones': direcciones,
+    }
+    return render(request, 'direcciones.html', context)
+
+@login_required
+def mis_datos_view(request):
+    # Detecta si se mandó el formulario para guardar cambios
+    if request.method == 'POST':
+        user = request.user
+        user.first_name = request.POST.get('first_name', '')
+        user.last_name = request.POST.get('last_name', '')
+        # Si tienes campos personalizados o modelo de perfil para DNI/Teléfono, los guardas aquí.
+        # Por ahora actualizamos los campos nativos de Django:
+        user.save()
+        
+        messages.success(request, "¡Tus datos han sido actualizados con éxito!")
+        return redirect('mis_datos')
+
+    return render(request, 'mis_datos.html')
 
 def es_admin(user):
     return user.is_authenticated and user.is_staff

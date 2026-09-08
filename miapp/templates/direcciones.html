@@ -1,0 +1,254 @@
+{% extends 'base.html' %}
+
+{% block title %}Direcciones - UrbanPulse{% endblock %}
+
+{% block content %}
+<div class="container py-4">
+    
+    <!-- Migas de pan / Ruta -->
+    <nav aria-label="breadcrumb" class="mb-3">
+        <ol class="breadcrumb small mb-0" style="background: transparent; padding: 0;">
+            <li class="breadcrumb-item"><a href="{% url 'home' %}" class="text-decoration-none text-muted">UrbanPulse</a></li>
+            <li class="breadcrumb-item"><a href="{% url 'perfil' %}" class="text-decoration-none text-muted">Mi cuenta</a></li>
+            <li class="breadcrumb-item active fw-semibold text-dark" aria-current="page">Direcciones</li>
+        </ol>
+    </nav>
+
+    <!-- Mensajes de alerta de Django -->
+    {% if messages %}
+        {% for message in messages %}
+            <div class="alert alert-success alert-dismissible fade show rounded-4 shadow-sm mb-4 border-0" role="alert" style="background: #ecfdf5; color: #065f46;">
+                <i class="fa-solid fa-circle-check me-2"></i> {{ message }}
+                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+            </div>
+        {% endfor %}
+    {% endif %}
+
+    <!-- Encabezado superior -->
+    <div class="d-flex flex-column flex-md-row justify-content-between align-items-md-center gap-3 mb-4">
+        <div class="d-flex align-items-center gap-3">
+            <h2 class="fw-bold text-dark mb-0">Direcciones</h2>
+            <a href="{% url 'perfil' %}" class="text-decoration-none small fw-semibold text-muted d-flex align-items-center gap-1 mt-1">
+                <i class="fa-solid fa-arrow-left"></i> Volver
+            </a>
+        </div>
+        
+        <div>
+            <button type="button" id="btnAbrirForm" class="btn px-4 py-2 rounded-pill fw-bold text-uppercase small text-white shadow-sm" style="background-color: var(--primary); letter-spacing: 0.5px;">
+                + Nueva dirección
+            </button>
+        </div>
+    </div>
+
+    <div class="row g-4">
+        
+        <!-- MENÚ LATERAL IZQUIERDO -->
+        <div class="col-lg-3">
+            <div class="list-group profile-menu border-0 shadow-sm rounded-4 overflow-hidden" style="background: rgba(255, 255, 255, 0.95); backdrop-filter: blur(10px);">
+                <a href="{% url 'mis_datos' %}" class="list-group-item list-group-item-action border-0 py-3 px-4 text-muted d-flex align-items-center gap-3">
+                    Datos personales
+                </a>
+                <a href="{% url 'autenticacion' %}" class="list-group-item list-group-item-action border-0 py-3 px-4 text-muted d-flex align-items-center gap-3">
+                    Autenticación
+                </a>
+                <a href="{% url 'direcciones' %}" class="list-group-item list-group-item-action active border-0 py-3 px-4 fw-semibold d-flex align-items-center gap-3">
+                    Direcciones
+                </a>
+                
+                <!-- Botón Salir -->
+                <form action="{% url 'logout' %}" method="POST" class="m-0">
+                    {% csrf_token %}
+                    <button type="submit" class="list-group-item list-group-item-action border-0 py-3 px-4 text-danger fw-semibold d-flex align-items-center gap-3 w-100 text-start bg-transparent">
+                        Salir
+                    </button>
+                </form>
+            </div>
+        </div>
+
+        <!-- CONTENIDO PRINCIPAL -->
+        <div class="col-lg-9">
+            <div class="glass-panel p-4 p-md-5 shadow-sm rounded-4" style="background: rgba(255, 255, 255, 0.95); border: 1px solid #e2e8f0;">
+                
+                <h5 class="fw-bold text-dark mb-4">Listado de direcciones</h5>
+
+                <!-- FORMULARIO NUEVA DIRECCIÓN -->
+                <div id="formDireccionContainer" class="d-none mb-4 pb-4 border-bottom">
+                    <form method="POST" autocomplete="off">
+                        {% csrf_token %}
+                        
+                        <!-- País -->
+                        <div class="mb-3">
+                            <label for="pais" class="form-label fw-bold text-dark small mb-1">País</label>
+                            <select name="pais" id="pais" class="form-select form-control-custom rounded-3 py-2 px-3">
+                                <option value="Argentina" selected>Argentina</option>
+                                <option value="Uruguay">Uruguay</option>
+                                <option value="Chile">Chile</option>
+                            </select>
+                        </div>
+
+                        <!-- Código postal -->
+                        <div class="mb-3">
+                            <label for="codigo_postal" class="form-label fw-bold text-dark small mb-1">Código postal</label>
+                            <input type="text" name="codigo_postal" id="codigo_postal" class="form-control form-control-custom rounded-3 py-2 px-3" placeholder="Ej: 4400" required>
+                            <div class="mt-1 d-flex justify-content-between align-items-center">
+                                <a href="https://www.correoargentino.com.ar/formularios/cpa" target="_blank" class="small text-decoration-none text-primary">
+                                    No conozco mi código postal
+                                </a>
+                                <span id="provinciaLabel" class="small text-muted fw-semibold d-none">Salta</span>
+                            </div>
+                        </div>
+
+                        <!-- SECCIÓN DESPLEGABLE QUE APARECE AL ESCRIBIR EL CÓDIGO POSTAL -->
+                        <div id="seccionDetalleDireccion" class="d-none">
+                            <!-- Calle -->
+                            <div class="mb-3">
+                                <label for="calle" class="form-label fw-bold text-dark small mb-1">Calle</label>
+                                <input type="text" name="calle" id="calle" class="form-control form-control-custom rounded-3 py-2 px-3" placeholder="Nombre de la calle">
+                            </div>
+
+                            <!-- Número -->
+                            <div class="mb-3">
+                                <label for="numero" class="form-label fw-bold text-dark small mb-1">Número</label>
+                                <input type="text" name="numero" id="numero" class="form-control form-control-custom rounded-3 py-2 px-3" placeholder="Ej: 123">
+                            </div>
+
+                            <!-- Información adicional -->
+                            <div class="mb-3">
+                                <label for="info_adicional" class="form-label fw-bold text-dark small mb-1">Información adicional (ej.: apto. 201)</label>
+                                <input type="text" name="info_adicional" id="info_adicional" class="form-control form-control-custom rounded-3 py-2 px-3" placeholder="Opcional">
+                            </div>
+
+                            <!-- Ciudad -->
+                            <div class="mb-4">
+                                <label for="ciudad" class="form-label fw-bold text-dark small mb-1">Ciudad</label>
+                                <select name="ciudad" id="ciudad" class="form-select form-control-custom rounded-3 py-2 px-3">
+                                    <option value="" selected disabled>Ciudad</option>
+                                    <option value="Salta">Salta</option>
+                                    <option value="San Lorenzo">San Lorenzo</option>
+                                    <option value="Rosario de Lerma">Rosario de Lerma</option>
+                                </select>
+                            </div>
+                        </div>
+
+                        <!-- Botones Cancelar y Guardar -->
+                        <div class="d-flex gap-2 justify-content-end align-items-center pt-2">
+                            <button type="button" id="btnCancelarDir" class="btn btn-outline-secondary px-4 py-2 rounded-pill fw-bold text-uppercase small">
+                                Cancelar
+                            </button>
+                            <button type="submit" class="btn px-4 py-2 rounded-pill fw-bold text-uppercase small text-white shadow-sm" style="background-color: var(--primary); letter-spacing: 0.5px;">
+                                GUARDAR DIRECCIÓN
+                            </button>
+                        </div>
+                    </form>
+                </div>
+
+                <!-- APARTADO DE LISTADO DE DIRECCIONES GUARDADAS -->
+                <div class="mt-3">
+                    {% if direcciones %}
+                        <div class="row g-3">
+                            {% for dir in direcciones %}
+                                <div class="col-12">
+                                    <div class="p-3 rounded-3 border bg-white d-flex justify-content-between align-items-center shadow-sm">
+                                        <div>
+                                            <div class="fw-bold text-dark" style="font-size: 1rem;">
+                                                <i class="fa-solid fa-location-dot text-primary me-2"></i>{{ dir.calle }} {{ dir.numero }}{% if dir.info_adicional %}, {{ dir.info_adicional }}{% endif %}
+                                            </div>
+                                            <div class="small text-muted mt-1">
+                                                Ciudad: {{ dir.ciudad }} — C.P: {{ dir.codigo_postal }} — País: {{ dir.pais }}
+                                            </div>
+                                        </div>
+                                        <div>
+                                            <span class="badge bg-primary rounded-pill px-3 py-2">Guardada</span>
+                                        </div>
+                                    </div>
+                                </div>
+                            {% endfor %}
+                        </div>
+                    {% else %}
+                        <div class="text-center py-5 border border-dashed rounded-3 bg-light">
+                            <i class="fa-regular fa-map text-muted mb-2" style="font-size: 2rem;"></i>
+                            <p class="text-muted mb-0 small">
+                                Aún no tienes direcciones guardadas. Haz clic en "+ Nueva dirección" para agregar una.
+                            </p>
+                        </div>
+                    {% endif %}
+                </div>
+
+            </div>
+        </div>
+
+    </div>
+</div>
+
+<style>
+    .form-control-custom {
+        background: #f8fafc !important;
+        border: 1px solid #cbd5e1 !important;
+        font-size: 0.9rem;
+        color: #0f172a !important;
+        transition: all 0.2s ease;
+    }
+    .form-control-custom:focus {
+        border-color: var(--primary) !important;
+        background: #ffffff !important;
+        box-shadow: 0 0 0 3px var(--primary-glow) !important;
+        outline: none;
+    }
+    .profile-menu .list-group-item {
+        background: transparent;
+        color: #334155;
+        transition: all 0.2s ease;
+        font-size: 0.9rem;
+    }
+    .profile-menu .list-group-item:hover {
+        background: rgba(14, 165, 233, 0.08);
+        color: var(--primary);
+    }
+    .profile-menu .list-group-item.active {
+        background: rgba(14, 165, 233, 0.12) !important;
+        color: var(--primary) !important;
+        font-weight: 700;
+        border-left: 4px solid var(--primary) !important;
+    }
+</style>
+
+<script>
+    document.addEventListener("DOMContentLoaded", function() {
+        const btnAbrirForm = document.getElementById('btnAbrirForm');
+        const btnCancelarDir = document.getElementById('btnCancelarDir');
+        const formContainer = document.getElementById('formDireccionContainer');
+        const inputCodigoPostal = document.getElementById('codigo_postal');
+        const seccionDetalle = document.getElementById('seccionDetalleDireccion');
+        const provinciaLabel = document.getElementById('provinciaLabel');
+
+        // Abrir/Cerrar formulario general
+        if (btnAbrirForm && formContainer) {
+            btnAbrirForm.addEventListener('click', function() {
+                formContainer.classList.remove('d-none');
+                btnAbrirForm.classList.add('d-none');
+            });
+
+            btnCancelarDir.addEventListener('click', function() {
+                formContainer.classList.add('d-none');
+                seccionDetalle.classList.add('d-none');
+                provinciaLabel.classList.add('d-none');
+                btnAbrirForm.classList.remove('d-none');
+                inputCodigoPostal.value = '';
+            });
+        }
+
+        // Mostrar campos de calle, número y ciudad cuando escribe el código postal
+        if (inputCodigoPostal && seccionDetalle) {
+            inputCodigoPostal.addEventListener('input', function() {
+                if (inputCodigoPostal.value.trim().length > 0) {
+                    seccionDetalle.classList.remove('d-none');
+                    provinciaLabel.classList.remove('d-none');
+                } else {
+                    seccionDetalle.classList.add('d-none');
+                    provinciaLabel.classList.add('d-none');
+                }
+            });
+        }
+    });
+</script>
+{% endblock %}

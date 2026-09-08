@@ -1,0 +1,172 @@
+{% extends 'base.html' %}
+
+{% block title %}Cambiar Contraseña - UrbanPulse{% endblock %}
+
+{% block content %}
+<div class="container py-4">
+    
+    <!-- Migas de pan / Ruta -->
+    <nav aria-label="breadcrumb" class="mb-3">
+        <ol class="breadcrumb small mb-0" style="background: transparent; padding: 0;">
+            <li class="breadcrumb-item"><a href="{% url 'home' %}" class="text-decoration-none text-muted">UrbanPulse</a></li>
+            <li class="breadcrumb-item"><a href="{% url 'perfil' %}" class="text-decoration-none text-muted">Mi cuenta</a></li>
+            <li class="breadcrumb-item"><a href="{% url 'autenticacion' %}" class="text-decoration-none text-muted">Autenticación</a></li>
+            <li class="breadcrumb-item active fw-semibold text-dark" aria-current="page">Cambiar contraseña</li>
+        </ol>
+    </nav>
+
+    <div class="row justify-content-center">
+        <div class="col-md-7 col-lg-6">
+            
+            <div class="glass-panel p-4 p-md-5 shadow-sm rounded-4" style="background: rgba(255, 255, 255, 0.95); border: 1px solid #e2e8f0;">
+                
+                <p class="text-dark fw-medium mb-4" style="font-size: 0.95rem; line-height: 1.5;">
+                    Se ha enviado un código de verificación a <span class="fw-bold">{{ user.email }}</span>.
+                </p>
+
+                <form method="POST" autocomplete="off">
+                    {% csrf_token %}
+
+                    <!-- Código de verificación -->
+                    <div class="mb-4">
+                        <label for="verification_code" class="form-label fw-bold text-dark mb-2">Código</label>
+                        <input type="text" name="verification_code" id="verification_code" class="form-control form-control-custom rounded-3 py-2 px-3" placeholder="Ingresá el código" required>
+                    </div>
+
+                    <!-- Botón Reenviar Código -->
+                    <div class="mb-4 text-center">
+                        <button type="button" class="btn btn-outline-primary px-4 py-2 rounded-pill fw-bold text-uppercase small shadow-sm" style="border-color: var(--primary); color: var(--primary);">
+                            REENVIAR CÓDIGO
+                        </button>
+                    </div>
+
+                    <!-- Nueva Contraseña -->
+                    <div class="mb-4">
+                        <label for="id_new_password" class="form-label fw-bold text-dark mb-2">Nueva contraseña</label>
+                        <div class="position-relative">
+                            <input type="password" name="new_password" id="id_new_password" class="form-control form-control-custom rounded-3 py-2 px-3 pe-5" required>
+                            <button type="button" id="togglePass" class="btn border-0 position-absolute top-50 end-0 translate-middle-y text-muted bg-transparent">
+                                <i class="fa-solid fa-eye" id="eyeIcon"></i>
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Requisitos de seguridad -->
+                    <div class="password-requirements mb-4 p-3 rounded-3" style="background: #f8fafc; border: 1px solid #e2e8f0;">
+                        <p class="small fw-bold text-dark mb-2">Su contraseña debe tener al menos:</p>
+                        <div class="row g-2 small" style="font-size: 0.8rem;">
+                            <div class="col-6">
+                                <div id="req-length" class="text-muted">
+                                    <i class="fa-solid fa-circle-xmark me-1 text-danger"></i> 8 caracteres
+                                </div>
+                            </div>
+                            <div class="col-6">
+                                <div id="req-lower" class="text-muted">
+                                    <i class="fa-solid fa-circle-xmark me-1 text-danger"></i> 1 letra minúscula
+                                </div>
+                            </div>
+                            <div class="col-6">
+                                <div id="req-number" class="text-muted">
+                                    <i class="fa-solid fa-circle-xmark me-1 text-danger"></i> 1 número
+                                </div>
+                            </div>
+                            <div class="col-6">
+                                <div id="req-upper" class="text-muted">
+                                    <i class="fa-solid fa-circle-xmark me-1 text-danger"></i> 1 letra mayúscula
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Botón Guardar Contraseña -->
+                    <div class="text-center">
+                        <button type="submit" id="btnSubmit" class="btn px-5 py-2 rounded-pill fw-bold text-uppercase small text-white shadow-sm" style="background-color: #cbd5e1; cursor: not-allowed;" disabled>
+                            GUARDAR CONTRASEÑA
+                        </button>
+                    </div>
+
+                </form>
+
+            </div>
+
+        </div>
+    </div>
+</div>
+
+<style>
+    .form-control-custom {
+        background: #f8fafc !important;
+        border: 1px solid #cbd5e1 !important;
+        font-size: 0.9rem;
+        color: #0f172a !important;
+        transition: all 0.2s ease;
+    }
+    .form-control-custom:focus {
+        border-color: var(--primary) !important;
+        background: #ffffff !important;
+        box-shadow: 0 0 0 3px var(--primary-glow) !important;
+        outline: none;
+    }
+</style>
+
+<!-- Script para validación dinámica -->
+<script>
+    document.addEventListener("DOMContentLoaded", function() {
+        const passInput = document.getElementById('id_new_password');
+        const btnSubmit = document.getElementById('btnSubmit');
+        const togglePass = document.getElementById('togglePass');
+        const eyeIcon = document.getElementById('eyeIcon');
+
+        const reqLength = document.getElementById('req-length');
+        const reqLower = document.getElementById('req-lower');
+        const reqNumber = document.getElementById('req-number');
+        const reqUpper = document.getElementById('req-upper');
+
+        togglePass.addEventListener('click', function() {
+            if (passInput.type === 'password') {
+                passInput.type = 'text';
+                eyeIcon.classList.remove('fa-eye');
+                eyeIcon.classList.add('fa-eye-slash');
+            } else {
+                passInput.type = 'password';
+                eyeIcon.classList.remove('fa-eye-slash');
+                eyeIcon.classList.add('fa-eye');
+            }
+        });
+
+        passInput.addEventListener('input', function() {
+            const val = passInput.value;
+
+            const hasLength = val.length >= 8;
+            const hasLower = /[a-z]/.test(val);
+            const hasNumber = /[0-9]/.test(val);
+            const hasUpper = /[A-Z]/.test(val);
+
+            updateReq(reqLength, hasLength, "8 caracteres");
+            updateReq(reqLower, hasLower, "1 letra minúscula");
+            updateReq(reqNumber, hasNumber, "1 número");
+            updateReq(reqUpper, hasUpper, "1 letra mayúscula");
+
+            if (hasLength && hasLower && hasNumber && hasUpper) {
+                btnSubmit.removeAttribute('disabled');
+                btnSubmit.style.backgroundColor = 'var(--primary)';
+                btnSubmit.style.cursor = 'pointer';
+            } else {
+                btnSubmit.setAttribute('disabled', 'true');
+                btnSubmit.style.backgroundColor = '#cbd5e1';
+                btnSubmit.style.cursor = 'not-allowed';
+            }
+        });
+
+        function updateReq(element, isValid, text) {
+            if (isValid) {
+                element.className = "text-success fw-semibold";
+                element.innerHTML = `<i class="fa-solid fa-circle-check me-1 text-success"></i> ${text}`;
+            } else {
+                element.className = "text-muted";
+                element.innerHTML = `<i class="fa-solid fa-circle-xmark me-1 text-danger"></i> ${text}`;
+            }
+        }
+    });
+</script>
+{% endblock %}

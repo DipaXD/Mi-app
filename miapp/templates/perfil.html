@@ -1,39 +1,115 @@
 {% extends 'base.html' %}
-{% block title %}Mi Perfil{% endblock %}
+
+{% block title %}Mi Cuenta - UrbanPulse{% endblock %}
+
 {% block content %}
-
-<style>
-.avatar-pro { width: 120px; height: 120px; border-radius: 50%; background: linear-gradient(135deg, var(--primary), var(--secondary)); color: white; font-size: 50px; font-weight: 800; display: flex; align-items: center; justify-content: center; margin: 0 auto 20px auto; box-shadow: 0 10px 30px rgba(14,165,233,0.5); border: 4px solid rgba(255,255,255,0.1);}
-.info-row { display: flex; justify-content: space-between; padding: 20px; border-bottom: 1px solid rgba(255,255,255,0.05); align-items: center;}
-.info-row:last-child { border: none; }
-.info-label { color: #94a3b8; font-weight: 600; text-transform: uppercase; font-size: 0.85rem; letter-spacing: 1px;}
-.info-value { color: white; font-size: 1.2rem; font-weight: bold; }
-</style>
-
-<div class="glass-panel mx-auto p-0 overflow-hidden animate__animated animate__fadeIn" style="max-width: 600px; margin-top: 50px;">
-    <div class="text-center p-5 position-relative" style="background: rgba(0,0,0,0.3);">
-        <div class="avatar-pro">{{ user.username|first|upper }}</div>
-        <h2 class="fw-bolder m-0 display-6">{{ user.username }}</h2>
-        {% if user.is_staff %}<span class="badge bg-gradient-primary mt-3 px-4 py-2 rounded-pill fs-6"><i class="fa-solid fa-crown text-warning"></i> Administrador</span>{% endif %}
-    </div>
+<div class="container py-4">
     
-    <div class="p-4">
-        <div class="info-row">
-            <div class="info-label"><i class="fa-solid fa-user text-primary"></i> Usuario</div>
-            <div class="info-value">{{ user.username }}</div>
-        </div>
-        <div class="info-row">
-            <div class="info-label"><i class="fa-solid fa-envelope text-primary"></i> Correo</div>
-            <div class="info-value">{{ user.email|default:"No especificado" }}</div>
-        </div>
-        <div class="info-row">
-            <div class="info-label"><i class="fa-solid fa-box-open text-primary"></i> Publicaciones</div>
-            <div class="info-value text-success fs-3">{{ total }}</div>
+    <!-- Migas de pan / Ruta -->
+    <nav aria-label="breadcrumb" class="mb-3">
+        <ol class="breadcrumb small mb-0" style="background: transparent; padding: 0;">
+            <li class="breadcrumb-item"><a href="{% url 'home' %}" class="text-decoration-none text-muted">UrbanPulse</a></li>
+            <li class="breadcrumb-item active fw-semibold text-dark" aria-current="page">Mi cuenta</li>
+        </ol>
+    </nav>
+
+    <h2 class="fw-bold text-dark mb-4">Mi cuenta</h2>
+
+    <!-- Cuadrícula de 4 tarjetas principales estilo Frávega -->
+    <div class="row g-4">
+        
+        <!-- Tarjeta 1: Mis Datos -->
+        <div class="col-md-6">
+            <div class="glass-panel p-4 h-100 shadow-sm rounded-4 d-flex align-items-center justify-content-between position-relative card-hover-effect" style="background: rgba(255, 255, 255, 0.95); border: 1px solid #e2e8f0;">
+                <div class="d-flex align-items-start gap-3">
+                    <div class="profile-card-icon">
+                        <i class="fa-solid fa-user"></i>
+                    </div>
+                    <div>
+                        <h4 class="fw-bold text-dark mb-1 fs-5">Mis datos</h4>
+                        <p class="text-muted small mb-2" style="font-size: 0.85rem;">Editá tus datos personales, tus direcciones, tus tarjetas y contraseñas.</p>
+                        <a href="{% url 'mis_datos' %}" class="text-primary fw-semibold text-decoration-none small">Ir a Mis datos <i class="fa-solid fa-chevron-right ms-1" style="font-size: 0.7rem;"></i></a>
+                    </div>
+                </div>
+            </div>
         </div>
 
-        <div class="text-center mt-5 mb-2">
-            <a href="/" class="btn btn-outline-light w-100 py-3 rounded-pill fw-bold fs-5"><i class="fa-solid fa-house"></i> Volver al Inicio</a>
+        <!-- Tarjeta 2: Mis Compras -->
+        <div class="col-md-6">
+            <div class="glass-panel p-4 h-100 shadow-sm rounded-4 d-flex align-items-center justify-content-between position-relative card-hover-effect" style="background: rgba(255, 255, 255, 0.95); border: 1px solid #e2e8f0;">
+                <div class="d-flex align-items-start gap-3">
+                    <div class="profile-card-icon">
+                        <i class="fa-solid fa-bag-shopping"></i>
+                    </div>
+                    <div>
+                        <h4 class="fw-bold text-dark mb-1 fs-5">Mis compras</h4>
+                        <p class="text-muted small mb-2" style="font-size: 0.85rem;">Seguí el estado de tus compras y consultá tus facturas.</p>
+                        <a href="{% url 'ver_carrito' %}" class="text-primary fw-semibold text-decoration-none small">Ir a Mis compras <i class="fa-solid fa-chevron-right ms-1" style="font-size: 0.7rem;"></i></a>
+                    </div>
+                </div>
+            </div>
         </div>
+
+        <!-- Tarjeta 3: Mis Créditos -->
+        <div class="col-md-6">
+            <div class="glass-panel p-4 h-100 shadow-sm rounded-4 d-flex align-items-center justify-content-between position-relative card-hover-effect" style="background: rgba(255, 255, 255, 0.95); border: 1px solid #e2e8f0;">
+                <div class="d-flex align-items-start gap-3">
+                    <div class="profile-card-icon">
+                        <i class="fa-solid fa-money-bill-wave"></i>
+                    </div>
+                    <div>
+                        <h4 class="fw-bold text-dark mb-1 fs-5">Mis créditos</h4>
+                        <p class="text-muted small mb-2" style="font-size: 0.85rem;">Consultá el detalle de tus créditos y vencimientos de cuotas.</p>
+                        <a href="#" class="text-primary fw-semibold text-decoration-none small">Ir a Mis créditos <i class="fa-solid fa-chevron-right ms-1" style="font-size: 0.7rem;"></i></a>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Tarjeta 4: Centro de ayuda -->
+        <div class="col-md-6">
+            <div class="glass-panel p-4 h-100 shadow-sm rounded-4 d-flex align-items-center justify-content-between position-relative card-hover-effect" style="background: rgba(255, 255, 255, 0.95); border: 1px solid #e2e8f0;">
+                <div class="d-flex align-items-start gap-3">
+                    <div class="profile-card-icon">
+                        <i class="fa-solid fa-circle-question"></i>
+                    </div>
+                    <div>
+                        <h4 class="fw-bold text-dark mb-1 fs-5">Centro de ayuda</h4>
+                        <p class="text-muted small mb-2" style="font-size: 0.85rem;">Realizá consultas y reclamos. Contactanos para poder ayudarte.</p>
+                        <a href="#" class="text-primary fw-semibold text-decoration-none small">Ir al Centro de ayuda <i class="fa-solid fa-chevron-right ms-1" style="font-size: 0.7rem;"></i></a>
+                    </div>
+                </div>
+            </div>
+        </div>
+
     </div>
 </div>
+
+<style>
+    .profile-card-icon {
+        width: 55px;
+        height: 55px;
+        min-width: 55px;
+        background: rgba(14, 165, 233, 0.1);
+        color: var(--primary);
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 1.3rem;
+        transition: all 0.3s ease;
+    }
+    .card-hover-effect {
+        transition: transform 0.2s ease, box-shadow 0.2s ease;
+    }
+    .card-hover-effect:hover {
+        transform: translateY(-3px);
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08) !important;
+        border-color: var(--primary) !important;
+    }
+    .card-hover-effect:hover .profile-card-icon {
+        background: var(--primary);
+        color: white;
+    }
+</style>
 {% endblock %}

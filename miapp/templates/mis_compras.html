@@ -1,0 +1,117 @@
+{% extends 'base.html' %}
+
+{% block title %}Mis Compras - UrbanPulse{% endblock %}
+
+{% block content %}
+<div class="container py-4">
+    
+    <!-- Migas de pan / Ruta -->
+    <nav aria-label="breadcrumb" class="mb-3">
+        <ol class="breadcrumb small mb-0" style="background: transparent; padding: 0;">
+            <li class="breadcrumb-item"><a href="{% url 'home' %}" class="text-decoration-none text-muted">Mi cuenta</a></li>
+            <li class="breadcrumb-item active fw-semibold text-dark" aria-current="page">Mis compras</li>
+        </ol>
+    </nav>
+
+    <h2 class="fw-bold text-dark mb-4">Mis compras</h2>
+
+    <div class="row g-4">
+        
+        <!-- MENÚ LATERAL IZQUIERDO -->
+        <div class="col-lg-3">
+            <div class="list-group profile-menu border-0 shadow-sm rounded-4 overflow-hidden" style="background: rgba(255, 255, 255, 0.95); backdrop-filter: blur(10px);">
+                <a href="{% url 'mis_datos' %}" class="list-group-item list-group-item-action border-0 py-3 px-4 text-muted d-flex align-items-center gap-3">
+                    Datos personales
+                </a>
+                <a href="{% url 'autenticacion' %}" class="list-group-item list-group-item-action border-0 py-3 px-4 text-muted d-flex align-items-center gap-3">
+                    Autenticación
+                </a>
+                <a href="{% url 'direcciones' %}" class="list-group-item list-group-item-action border-0 py-3 px-4 text-muted d-flex align-items-center gap-3">
+                    Direcciones
+                </a>
+                <a href="{% url 'mis_compras' %}" class="list-group-item list-group-item-action active border-0 py-3 px-4 fw-semibold d-flex align-items-center gap-3">
+                    Mis compras
+                </a>
+                
+                <!-- Botón Salir -->
+                <form action="{% url 'logout' %}" method="POST" class="m-0">
+                    {% csrf_token %}
+                    <button type="submit" class="list-group-item list-group-item-action border-0 py-3 px-4 text-danger fw-semibold d-flex align-items-center gap-3 w-100 text-start bg-transparent">
+                        Salir
+                    </button>
+                </form>
+            </div>
+        </div>
+
+        <!-- CONTENIDO PRINCIPAL -->
+        <div class="col-lg-9">
+            <div class="glass-panel p-4 p-md-5 shadow-sm rounded-4 text-center" style="background: rgba(255, 255, 255, 0.95); border: 1px solid #e2e8f0; min-height: 400px; display: flex; flex-direction: column; justify-content: center; align-items: center;">
+                
+                {% if compras %}
+                    <!-- SI HAY COMPRAS, SE MUESTRAN EN UN LISTADO -->
+                    <div class="w-100 text-start">
+                        <h5 class="fw-bold text-dark mb-4">Historial de pedidos</h5>
+                        <div class="row g-3">
+                            {% for compra in compras %}
+                                <div class="col-12">
+                                    <div class="p-3 rounded-3 border bg-light d-flex justify-content-between align-items-center shadow-sm">
+                                        <div>
+                                            <span class="fw-bold text-dark d-block">Orden #{{ compra.numero_orden }}</span>
+                                            <span class="small text-muted">Fecha: {{ compra.creado_en|date:"d/m/Y H:i" }}</span>
+                                        </div>
+                                        <div class="text-end">
+                                            <span class="fw-bold text-primary d-block">${{ compra.total }}</span>
+                                            <span class="badge bg-success rounded-pill px-2 py-1 small">{{ compra.estado }}</span>
+                                        </div>
+                                    </div>
+                                </div>
+                            {% endfor %}
+                        </div>
+                    </div>
+                {% else %}
+                    <!-- SI NO HAY COMPRAS (ESTILO IDÉNTICO A TU IMAGEN) -->
+                    <div class="my-auto">
+                        <!-- Icono de bolsa de compras -->
+                        <div class="mb-3">
+                            <div class="rounded-circle d-inline-flex align-items-center justify-content-center shadow-sm" style="width: 80px; height: 80px; background-color: #f1f5f9;">
+                                <i class="fa-solid fa-bag-shopping text-muted" style="font-size: 2rem; opacity: 0.6;"></i>
+                            </div>
+                        </div>
+
+                        <h5 class="fw-bold text-dark mb-2" style="color: #1e293b !important;">No encontramos compras con tu mail</h5>
+                        <p class="text-muted small mb-4">Si compraste recién, tu compra puede demorar unos minutos en aparecer.</p>
+                        
+                        <p class="text-muted small mb-3">¿Todavía no compraste? ¡Conocé nuestras ofertas!</p>
+                        
+                        <!-- Botón morado idéntico al de tu diseño -->
+                        <a href="{% url 'home' %}" class="btn px-4 py-2 rounded-pill fw-bold text-uppercase small text-white shadow-sm" style="background-color: #6b21a8; letter-spacing: 0.5px;">
+                            Conocer ofertas
+                        </a>
+                    </div>
+                {% endif %}
+
+            </div>
+        </div>
+
+    </div>
+</div>
+
+<style>
+    .profile-menu .list-group-item {
+        background: transparent;
+        color: #334155;
+        transition: all 0.2s ease;
+        font-size: 0.9rem;
+    }
+    .profile-menu .list-group-item:hover {
+        background: rgba(14, 165, 233, 0.08);
+        color: var(--primary);
+    }
+    .profile-menu .list-group-item.active {
+        background: rgba(14, 165, 233, 0.12) !important;
+        color: var(--primary) !important;
+        font-weight: 700;
+        border-left: 4px solid var(--primary) !important;
+    }
+</style>
+{% endblock %}

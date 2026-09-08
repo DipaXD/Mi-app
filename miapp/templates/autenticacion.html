@@ -1,0 +1,129 @@
+{% extends 'base.html' %}
+
+{% block title %}Autenticación - UrbanPulse{% endblock %}
+
+{% block content %}
+<div class="container py-4">
+    
+    <!-- Migas de pan / Ruta -->
+    <nav aria-label="breadcrumb" class="mb-3">
+        <ol class="breadcrumb small mb-0" style="background: transparent; padding: 0;">
+            <li class="breadcrumb-item"><a href="{% url 'home' %}" class="text-decoration-none text-muted">UrbanPulse</a></li>
+            <li class="breadcrumb-item"><a href="{% url 'perfil' %}" class="text-decoration-none text-muted">Mi cuenta</a></li>
+            <li class="breadcrumb-item active fw-semibold text-dark" aria-current="page">Autenticación</li>
+        </ol>
+    </nav>
+
+    <!-- Mensajes de alerta de Django -->
+    {% if messages %}
+        {% for message in messages %}
+            <div class="alert alert-success alert-dismissible fade show rounded-4 shadow-sm mb-4 border-0" role="alert" style="background: #ecfdf5; color: #065f46;">
+                <i class="fa-solid fa-circle-check me-2"></i> {{ message }}
+                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+            </div>
+        {% endfor %}
+    {% endif %}
+
+    <h2 class="fw-bold text-dark mb-4">Autenticación</h2>
+
+    <div class="row g-4">
+        
+        <!-- MENÚ LATERAL IZQUIERDO -->
+        <div class="col-lg-3">
+            <div class="list-group profile-menu border-0 shadow-sm rounded-4 overflow-hidden" style="background: rgba(255, 255, 255, 0.95); backdrop-filter: blur(10px);">
+                <a href="{% url 'mis_datos' %}" class="list-group-item list-group-item-action border-0 py-3 px-4 text-muted d-flex align-items-center gap-3">
+                    Datos personales
+                </a>
+                <a href="{% url 'autenticacion' %}" class="list-group-item list-group-item-action active border-0 py-3 px-4 fw-semibold d-flex align-items-center gap-3">
+                    Autenticación
+                </a>
+                <a href="{% url 'direcciones' %}" class="list-group-item list-group-item-action border-0 py-3 px-4 text-muted d-flex align-items-center gap-3">
+                    Direcciones
+                </a>
+                
+                <!-- Botón Salir -->
+                <form action="{% url 'logout' %}" method="POST" class="m-0">
+                    {% csrf_token %}
+                    <button type="submit" class="list-group-item list-group-item-action border-0 py-3 px-4 text-danger fw-semibold d-flex align-items-center gap-3 w-100 text-start bg-transparent">
+                        Salir
+                    </button>
+                </form>
+            </div>
+        </div>
+
+        <!-- CONTENIDO PRINCIPAL -->
+        <div class="col-lg-9">
+            <div class="row g-4">
+                
+                <!-- Tarjeta 1: Contraseña -->
+                <div class="col-xl-6">
+                    <div class="glass-panel p-4 p-md-4 h-100 d-flex flex-column justify-content-between shadow-sm rounded-4" style="background: rgba(255, 255, 255, 0.95); border: 1px solid #e2e8f0;">
+                        <div>
+                            <h5 class="fw-bold text-dark mb-3">Contraseña</h5>
+                            <p class="text-muted small mb-4" style="font-size: 0.9rem; line-height: 1.5;">
+                                {% if user.has_usable_password %}
+                                    Tu contraseña se encuentra definida y protegida.
+                                {% else %}
+                                    Usted Todavía No Tiene Una Contraseña Definida.
+                                {% endif %}
+                            </p>
+                        </div>
+
+                        <!-- Botón Cambiar Contraseña -->
+                        <div class="text-center pt-3 border-top mt-3">
+                            <a href="{% url 'cambiar_contrasena' %}" class="btn btn-outline-primary px-4 py-2 rounded-pill fw-bold text-uppercase small shadow-sm w-100 text-decoration-none" style="letter-spacing: 0.5px; border-color: var(--primary); color: var(--primary);">
+                                {% if user.has_usable_password %} CAMBIAR CONTRASEÑA {% else %} DEFINIR CONTRASEÑA {% endif %}
+                            </a>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Tarjeta 2: Gestión de Sesiones -->
+                <div class="col-xl-6">
+                    <div class="glass-panel p-4 p-md-4 h-100 d-flex flex-column justify-content-between shadow-sm rounded-4" style="background: rgba(255, 255, 255, 0.95); border: 1px solid #e2e8f0;">
+                        <div>
+                            <h5 class="fw-bold text-dark mb-3">Gestión de sesiones</h5>
+                            <p class="text-muted small mb-4" style="font-size: 0.9rem; line-height: 1.5;">
+                                Usted Tiene 1 Sesiones Activas
+                            </p>
+                        </div>
+
+                        <!-- Botón Ver Sesiones -->
+                        <div class="text-center pt-3 border-top mt-3">
+                            <a href="{% url 'sesiones' %}" class="btn btn-outline-primary px-4 py-2 rounded-pill fw-bold text-uppercase small shadow-sm w-100 text-decoration-none" style="letter-spacing: 0.5px; border-color: var(--primary); color: var(--primary);">
+                                VER SESIONES
+                            </a>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+
+    </div>
+</div>
+
+<!-- Estilos unificados -->
+<style>
+    .profile-menu .list-group-item {
+        background: transparent;
+        color: #334155;
+        transition: all 0.2s ease;
+        font-size: 0.9rem;
+    }
+    .profile-menu .list-group-item:hover {
+        background: rgba(14, 165, 233, 0.08);
+        color: var(--primary);
+    }
+    .profile-menu .list-group-item.active {
+        background: rgba(14, 165, 233, 0.12) !important;
+        color: var(--primary) !important;
+        font-weight: 700;
+        border-left: 4px solid var(--primary) !important;
+    }
+    .btn-outline-primary:hover {
+        background-color: var(--primary) !important;
+        color: white !important;
+    }
+</style>
+{% endblock %}

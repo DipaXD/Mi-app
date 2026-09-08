@@ -1,7 +1,25 @@
 from django.db import models
 from django.contrib.auth.models import User
 
+class Direccion(models.Model):
+    user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='direcciones')
+    pais = models.CharField(max_length=100, default='Argentina')
+    codigo_postal = models.CharField(max_length=20)
+    creado_en = models.DateTimeField(auto_now_add=True)
 
+    def __str__(self):
+        return f"{self.pais} - CP: {self.codigo_postal}"
+
+class Compra(models.Model):
+    user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='compras')
+    numero_orden = models.CharField(max_length=50, unique=True)
+    total = models.DecimalField(max_digits=10, decimal_places=2)
+    estado = models.CharField(max_length=50, default='Completado')
+    creado_en = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self):
+        return f"Orden #{self.numero_orden} - {self.user.username}"
+    
 class Categoria(models.Model):
     nombre = models.CharField(max_length=100)
     imagen = models.ImageField(upload_to='categorias/', null=True, blank=True)

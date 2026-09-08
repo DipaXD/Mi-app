@@ -1,0 +1,96 @@
+{% extends 'base.html' %}
+
+{% block title %}Gestión de Sesiones - UrbanPulse{% endblock %}
+
+{% block content %}
+<div class="container py-4">
+    
+    <!-- Migas de pan / Ruta -->
+    <nav aria-label="breadcrumb" class="mb-3">
+        <ol class="breadcrumb small mb-0" style="background: transparent; padding: 0;">
+            <li class="breadcrumb-item"><a href="{% url 'home' %}" class="text-decoration-none text-muted">UrbanPulse</a></li>
+            <li class="breadcrumb-item"><a href="{% url 'perfil' %}" class="text-decoration-none text-muted">Mi cuenta</a></li>
+            <li class="breadcrumb-item"><a href="{% url 'autenticacion' %}" class="text-decoration-none text-muted">Autenticación</a></li>
+            <li class="breadcrumb-item active fw-semibold text-dark" aria-current="page">Sesiones activas</li>
+        </ol>
+    </nav>
+
+    <h2 class="fw-bold text-dark mb-4">Gestión de sesiones</h2>
+
+    <div class="row g-4">
+        
+        <!-- MENÚ LATERAL IZQUIERDO -->
+        <div class="col-lg-3">
+            <div class="list-group profile-menu border-0 shadow-sm rounded-4 overflow-hidden" style="background: rgba(255, 255, 255, 0.95); backdrop-filter: blur(10px);">
+                <a href="{% url 'mis_datos' %}" class="list-group-item list-group-item-action border-0 py-3 px-4 text-muted d-flex align-items-center gap-3">
+                    Datos personales
+                </a>
+                <a href="{% url 'autenticacion' %}" class="list-group-item list-group-item-action active border-0 py-3 px-4 fw-semibold d-flex align-items-center gap-3">
+                    Autenticación
+                </a>
+                <a href="#" class="list-group-item list-group-item-action border-0 py-3 px-4 text-muted d-flex align-items-center gap-3">
+                    Direcciones
+                </a>
+                
+                <!-- Botón Salir -->
+                <form action="{% url 'logout' %}" method="POST" class="m-0">
+                    {% csrf_token %}
+                    <button type="submit" class="list-group-item list-group-item-action border-0 py-3 px-4 text-danger fw-semibold d-flex align-items-center gap-3 w-100 text-start bg-transparent">
+                        Salir
+                    </button>
+                </form>
+            </div>
+        </div>
+
+        <!-- CONTENIDO PRINCIPAL (SESIÓN ACTUAL) -->
+        <div class="col-lg-9">
+            <div class="glass-panel p-4 p-md-5 shadow-sm rounded-4" style="background: rgba(255, 255, 255, 0.95); border: 1px solid #e2e8f0;">
+                
+                <!-- Encabezado con punto indicador verde -->
+                <div class="d-flex align-items-center gap-2 mb-3 pb-3 border-bottom">
+                    <span class="rounded-circle d-inline-block" style="width: 10px; height: 10px; background-color: #22c55e;"></span>
+                    <h5 class="fw-bold text-dark mb-0 fs-6">Sesión actual</h5>
+                </div>
+
+                <!-- Detalles de la sesión -->
+                <div class="session-details">
+                    <h4 class="fw-bold text-dark mb-3 fs-5">Escritorio</h4>
+                    
+                    <div class="text-secondary small d-flex flex-column gap-2" style="font-size: 0.95rem; line-height: 1.6;">
+                        <div>
+                            <span class="text-dark">Último acceso:</span> hace unos momentos
+                        </div>
+                        <div>
+                            <span class="text-dark">Chrome, Windows y IP:</span> <span class="fw-semibold text-dark">{{ user_ip }}</span>
+                        </div>
+                        <div>
+                            <span class="text-dark">Primer acceso:</span> {{ current_time|date:"j \d\e F \d\e Y \a \l\a\s g:i a" }}
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+
+    </div>
+</div>
+
+<style>
+    .profile-menu .list-group-item {
+        background: transparent;
+        color: #334155;
+        transition: all 0.2s ease;
+        font-size: 0.9rem;
+    }
+    .profile-menu .list-group-item:hover {
+        background: rgba(14, 165, 233, 0.08);
+        color: var(--primary);
+    }
+    .profile-menu .list-group-item.active {
+        background: rgba(14, 165, 233, 0.12) !important;
+        color: var(--primary) !important;
+        font-weight: 700;
+        border-left: 4px solid var(--primary) !important;
+    }
+</style>
+{% endblock %}

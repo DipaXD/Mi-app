@@ -1,0 +1,225 @@
+{% extends 'base.html' %}
+
+{% block title %}Mis Datos - UrbanPulse{% endblock %}
+
+{% block content %}
+<div class="container py-4">
+    
+    <!-- Migas de pan / Ruta -->
+    <nav aria-label="breadcrumb" class="mb-3">
+        <ol class="breadcrumb small mb-0" style="background: transparent; padding: 0;">
+            <li class="breadcrumb-item"><a href="{% url 'home' %}" class="text-decoration-none text-muted">UrbanPulse</a></li>
+            <li class="breadcrumb-item"><a href="{% url 'perfil' %}" class="text-decoration-none text-muted">Mi cuenta</a></li>
+            <li class="breadcrumb-item active fw-semibold text-dark" aria-current="page">Mis datos</li>
+        </ol>
+    </nav>
+
+    <!-- Mensajes de alerta de Django -->
+    {% if messages %}
+        {% for message in messages %}
+            <div class="alert alert-success alert-dismissible fade show rounded-4 shadow-sm mb-4 border-0" role="alert" style="background: #ecfdf5; color: #065f46;">
+                <i class="fa-solid fa-circle-check me-2"></i> {{ message }}
+                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+            </div>
+        {% endfor %}
+    {% endif %}
+
+    <h2 class="fw-bold text-dark mb-4">Mis datos</h2>
+
+    <div class="row g-4">
+        
+        <!-- MENÚ LATERAL IZQUIERDO -->
+        <div class="col-lg-3">
+            <div class="list-group profile-menu border-0 shadow-sm rounded-4 overflow-hidden" style="background: rgba(255, 255, 255, 0.95); backdrop-filter: blur(10px);">
+                <a href="{% url 'mis_datos' %}" class="list-group-item list-group-item-action active border-0 py-3 px-4 fw-semibold d-flex align-items-center gap-3">
+                    Datos personales
+                </a>
+                <a href="{% url 'autenticacion' %}" class="list-group-item list-group-item-action border-0 py-3 px-4 text-muted d-flex align-items-center gap-3">
+                    Autenticación
+                </a>
+                <!-- Enlace de Direcciones actualizado -->
+                <a href="{% url 'direcciones' %}" class="list-group-item list-group-item-action border-0 py-3 px-4 text-muted d-flex align-items-center gap-3">
+                    Direcciones
+                </a>
+                
+                <!-- Botón Salir -->
+                <form action="{% url 'logout' %}" method="POST" class="m-0">
+                    {% csrf_token %}
+                    <button type="submit" class="list-group-item list-group-item-action border-0 py-3 px-4 text-danger fw-semibold d-flex align-items-center gap-3 w-100 text-start bg-transparent">
+                        Salir
+                    </button>
+                </form>
+            </div>
+        </div>
+
+        <!-- CONTENIDO PRINCIPAL -->
+        <div class="col-lg-9">
+            <div class="row g-4">
+                
+                <!-- Tarjeta Central: Datos del Usuario (Vista vs Edición) -->
+                <div class="col-xl-8">
+                    <div class="glass-panel p-4 p-md-4 h-100 d-flex flex-column justify-content-between shadow-sm rounded-4" style="background: rgba(255, 255, 255, 0.95); border: 1px solid #e2e8f0;">
+                        
+                        <!-- VISTA NORMAL (LECTURA) -->
+                        <div id="viewMode">
+                            <div>
+                                <div class="row mb-4">
+                                    <div class="col-6">
+                                        <span class="small text-muted d-block mb-1">Nombre</span>
+                                        <span class="fw-semibold text-dark">{{ user.first_name|default:"No especificado" }}</span>
+                                    </div>
+                                    <div class="col-6">
+                                        <span class="small text-muted d-block mb-1">Apellido</span>
+                                        <span class="fw-semibold text-dark">{{ user.last_name|default:"No especificado" }}</span>
+                                    </div>
+                                </div>
+
+                                <div class="mb-4">
+                                    <span class="small text-muted d-block mb-1">Email</span>
+                                    <span class="fw-semibold text-dark">{{ user.email }}</span>
+                                </div>
+
+                                <div class="row mb-4">
+                                    <div class="col-6">
+                                        <span class="small text-muted d-block mb-1">DNI</span>
+                                        <span class="fw-semibold text-dark">-</span>
+                                    </div>
+                                    <div class="col-6">
+                                        <span class="small text-muted d-block mb-1">Teléfono</span>
+                                        <span class="fw-semibold text-dark">-</span>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Botón Editar -->
+                            <div class="text-center pt-3 border-top mt-3">
+                                <button type="button" id="btnEdit" class="btn btn-outline-primary px-5 py-2 rounded-pill fw-bold text-uppercase small shadow-sm" style="letter-spacing: 1px; border-color: var(--primary); color: var(--primary);">
+                                    EDITAR
+                                </button>
+                            </div>
+                        </div>
+
+                        <!-- VISTA DE EDICIÓN (FORMULARIO ESTILIZADO) -->
+                        <form method="POST" id="editMode" class="d-none">
+                            {% csrf_token %}
+                            <div>
+                                <div class="row mb-3">
+                                    <div class="col-6">
+                                        <label for="first_name" class="form-label fw-bold small text-dark">Nombre</label>
+                                        <input type="text" name="first_name" id="first_name" class="form-control form-control-custom rounded-3 py-2 px-3" value="{{ user.first_name }}" required>
+                                    </div>
+                                    <div class="col-6">
+                                        <label for="last_name" class="form-label fw-bold small text-dark">Apellido</label>
+                                        <input type="text" name="last_name" id="last_name" class="form-control form-control-custom rounded-3 py-2 px-3" value="{{ user.last_name }}" required>
+                                    </div>
+                                </div>
+
+                                <div class="mb-3">
+                                    <label class="form-label fw-bold small text-dark">Email</label>
+                                    <input type="email" class="form-control form-control-custom rounded-3 py-2 px-3 bg-light text-muted" value="{{ user.email }}" disabled>
+                                </div>
+
+                                <div class="row mb-3">
+                                    <div class="col-6">
+                                        <label class="form-label fw-bold small text-dark">DNI</label>
+                                        <input type="text" class="form-control form-control-custom rounded-3 py-2 px-3" placeholder="Opcional">
+                                    </div>
+                                    <div class="col-6">
+                                        <label class="form-label fw-bold small text-dark">Teléfono</label>
+                                        <input type="text" class="form-control form-control-custom rounded-3 py-2 px-3" placeholder="Opcional">
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Botones Cancelar y Guardar Cambios -->
+                            <div class="text-center pt-3 border-top mt-3 d-flex gap-2 justify-content-center align-items-center">
+                                <button type="button" id="btnCancel" class="btn btn-outline-secondary px-4 py-2 rounded-pill fw-bold text-uppercase small">
+                                    Cancelar
+                                </button>
+                                <button type="submit" class="btn px-4 py-2 rounded-pill fw-bold text-uppercase small text-white shadow-sm" style="background-color: var(--primary); letter-spacing: 0.5px;">
+                                    GUARDAR CAMBIOS
+                                </button>
+                            </div>
+                        </form>
+
+                    </div>
+                </div>
+
+                <!-- Tarjeta Derecha: Boletín Informativo -->
+                <div class="col-xl-4">
+                    <div class="glass-panel p-4 shadow-sm rounded-4 h-100" style="background: rgba(255, 255, 255, 0.95); border: 1px solid #e2e8f0;">
+                        <h6 class="fw-bold text-dark mb-2">Boletín informativo</h6>
+                        <p class="small text-muted mb-3" style="font-size: 0.82rem;">¿Quiere recibir boletines informativos promocionales?</p>
+                        
+                        <div class="form-check d-flex align-items-start gap-2">
+                            <input class="form-check-input mt-1" type="checkbox" value="" id="newsletterCheck" style="cursor: pointer;">
+                            <label class="form-check-label small text-dark" for="newsletterCheck" style="font-size: 0.82rem; line-height: 1.4;">
+                                Quiero recibir el boletín informativo con promociones.
+                            </label>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+
+    </div>
+</div>
+
+<style>
+    .profile-menu .list-group-item {
+        background: transparent;
+        color: #334155;
+        transition: all 0.2s ease;
+        font-size: 0.9rem;
+    }
+    .profile-menu .list-group-item:hover {
+        background: rgba(14, 165, 233, 0.08);
+        color: var(--primary);
+    }
+    .profile-menu .list-group-item.active {
+        background: rgba(14, 165, 233, 0.12) !important;
+        color: var(--primary) !important;
+        font-weight: 700;
+        border-left: 4px solid var(--primary) !important;
+    }
+    .form-control-custom {
+        background: #f8fafc !important;
+        border: 1px solid #cbd5e1 !important;
+        font-size: 0.9rem;
+        color: #0f172a !important;
+        transition: all 0.2s ease;
+    }
+    .form-control-custom:focus {
+        border-color: var(--primary) !important;
+        background: #ffffff !important;
+        box-shadow: 0 0 0 3px var(--primary-glow) !important;
+        outline: none;
+    }
+    .form-check-input:checked {
+        background-color: var(--primary);
+        border-color: var(--primary);
+    }
+</style>
+
+<script>
+    document.addEventListener("DOMContentLoaded", function() {
+        const btnEdit = document.getElementById('btnEdit');
+        const btnCancel = document.getElementById('btnCancel');
+        const viewMode = document.getElementById('viewMode');
+        const editMode = document.getElementById('editMode');
+
+        if (btnEdit && btnCancel) {
+            btnEdit.addEventListener('click', function() {
+                viewMode.classList.add('d-none');
+                editMode.classList.remove('d-none');
+            });
+
+            btnCancel.addEventListener('click', function() {
+                editMode.classList.add('d-none');
+                viewMode.classList.remove('d-none');
+            });
+        }
+    });
+</script>
+{% endblock %}
